@@ -88,7 +88,7 @@ class Program
                 DisplayShopUI();
                 break;
             case 4:
-                //여관으로 가는 UI
+                DisplayRestUI();
                 break;
             case 5:
                // DisplayDungeonEntrance(); //던전 입장UI
@@ -343,56 +343,12 @@ class Program
                     DisplaySellUI();
                     break;
             }
-
-
-        }
-
-        static void DisplayRestUI()
-        {
-            Console.Clear();
-            Console.WriteLine("휴식하기");
-            Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G");
-            Console.WriteLine();
-            Console.WriteLine("1. 휴식하기");
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-            int result = CheckInput(0, 1);
-
-            switch (result)
-            {
-                case 0:
-                    DisplayMainUI();
-                    break;
-
-                case 1:
-                    if (player.Gold >= 500)
-                    {
-                        player.Rest();
-                        Console.WriteLine();
-                        Console.WriteLine("휴식을 완료 했습니다");
-                        Console.WriteLine("Enter 를 눌러주세요.");
-                        Console.ReadLine();
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("골드가 부족합니다.");
-                        Console.WriteLine("Enter 를 눌러주세요.");
-                        Console.ReadLine();
-                    }
-                    DisplayMainUI();
-                    DisplayMainUI();
-                    break;
-
-                // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
-                // default로 설정하였습니다.
-                default:
-                    Dungeon dungeon = new Dungeon(result);
-                    dungeon.DungeonSystem(player);
-                    break;
-            }
+            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
+            // default로 설정하였습니다.
+            /// default:
+            //     Dungeon dungeon = new Dungeon(result);
+            //     dungeon.DungeonSystem(player);
+            //     break;
         }
 
         static int CheckInput(int min, int max)
@@ -453,6 +409,46 @@ class Program
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");
+        }
+    }
+    static void DisplayRestUI()
+    {
+        Console.Clear();
+        Console.WriteLine("휴식하기");
+        Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G)");
+        Console.WriteLine();
+        Console.WriteLine("1. 휴식하기");
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, 1);
+
+        switch (result)
+        {
+            case 0:
+                DisplayMainUI();
+                break;
+
+            case 1:
+                if (player.Gold >= 500)
+                {
+                    player.Rest();
+                    Console.WriteLine();
+                    Console.WriteLine("휴식을 완료 했습니다");
+                    Console.WriteLine("Enter 를 눌러주세요.");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("골드가 부족합니다.");
+                    Console.WriteLine("Enter 를 눌러주세요.");
+                    Console.ReadLine();
+                }
+                DisplayMainUI();
+                DisplayMainUI();
+                break;
         }
     }
 }
