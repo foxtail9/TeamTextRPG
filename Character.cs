@@ -58,6 +58,7 @@ class Character
 
     public void EquipItem(Item item)
     {
+
         if (IsEquipped(item))
         {
             EquipList.Remove(item);
@@ -83,6 +84,7 @@ class Character
 
     public void BuyItem(Item item)
     {
+
         Gold -= item.Value;
         Inventory.Add(item);
     }

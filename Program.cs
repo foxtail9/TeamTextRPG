@@ -174,7 +174,7 @@ class Program
                 break;
 
             default:
-                int itemIdx = result - 1;
+                int itemIdx = result-1;
                 Item targetItem = itemDb[itemIdx];
                 player.EquipItem(targetItem);
 
