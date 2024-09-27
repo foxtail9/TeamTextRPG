@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace TeamTextRPG;
 public class Character
 {
@@ -113,7 +107,7 @@ public class Character
             string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
         }
-        
+
     }
 
 

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using TeamTextRPG;
-
-namespace TeamTextRPG;
+﻿namespace TeamTextRPG;
 
 public class DungeonManager
 {
@@ -75,7 +67,7 @@ public class DungeonManager
         int result = CheckInput(0, 5);
         switch (result)
         {
-            case 0 :
+            case 0:
 
                 break;
         }
@@ -85,15 +77,15 @@ public class DungeonManager
     private void DisplayMonstersInfo(bool showIdx)
     {
 
-/*        for (int i = 0; i < Monsters_in_battle[i].Count; i++)
-        {
-            string monster_info = "";
-            if (showIdx) monster_info += "(i+1).ToString() ";
+        /*        for (int i = 0; i < Monsters_in_battle[i].Count; i++)
+                {
+                    string monster_info = "";
+                    if (showIdx) monster_info += "(i+1).ToString() ";
 
-            // ~ 몬스터 정보 출력
-            // ~ 레벨 / 이름 / 체력
-            // ~ 몬스터 생사 여부에 따라 글씨 색 변경...
-        }*/
+                    // ~ 몬스터 정보 출력
+                    // ~ 레벨 / 이름 / 체력
+                    // ~ 몬스터 생사 여부에 따라 글씨 색 변경...
+                }*/
 
     }
 

@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-public class Item
+﻿public class Item
 {
     public string Rare { get; }
     public string Name { get; }
