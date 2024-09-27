@@ -53,6 +53,10 @@ class Program
         Console.WriteLine("1. 상태 보기");
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 상점");
+
+        // 작성자 : 김동현
+        Console.WriteLine("4. 던전 입장");
+
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
@@ -71,6 +75,10 @@ class Program
 
             case 3:
                 DisplayShopUI();
+                break;
+
+            case 4:
+                DisplayDungeonEntrance();
                 break;
         }
     }
@@ -267,6 +275,43 @@ class Program
                 }
 
                 DisplayBuyUI();
+                break;
+        }
+    }
+
+
+    /// <summary>
+    /// 던전을 선택할 때 보여지는 함수입니다.
+    /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
+    /// 작성자 : 김동현
+    /// </summary>
+    static void DisplayDungeonEntrance()
+    {
+        Console.Clear();
+        Console.WriteLine("<<던전 입구에 도착했습니다>>");
+        Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
+        Console.WriteLine("1.엘프의 숲 -난이도 : 쉬움");
+        Console.WriteLine("2.저주받은 땅 -난이도 : 보통");
+        Console.WriteLine("3.함락한 성 -난이도 : 어려움");
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, 3);
+
+        switch (result)
+        {
+            case 0:
+                DisplayMainUI();
+                break;
+
+            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
+            // default로 설정하였습니다.
+            default:
+                Dungeon dungeon = new Dungeon(result);
+                dungeon.DungeonSystem(player);
                 break;
         }
     }
