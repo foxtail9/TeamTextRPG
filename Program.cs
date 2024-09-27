@@ -76,7 +76,7 @@ class Program
                 DisplayShopUI();
                 break;
 
-            case 4:
+            case 5:
                 DisplayDungeonEntrance();
                 break;
         }
@@ -309,8 +309,11 @@ class Program
             // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
             // default로 설정하였습니다.
             default:
-                Dungeon dungeon = new Dungeon(result);
-                dungeon.DungeonSystem(player);
+                //Dungeon dungeon = new Dungeon(result);
+                //dungeon.DungeonSystem(player);
+
+                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result], player);
+                DM.DungeonSystem();
                 break;
         }
     }

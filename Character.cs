@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TeamTextRPG;
-class Character
+public class Character
 {
     public int Level { get; }
     public string Name { get; }
