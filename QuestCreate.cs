@@ -3,28 +3,27 @@ using System.Collections.Generic;
 
 public enum QuestType
 {
-    Fetch,  // 아이템 가져오기
-    Kill,   // 몬스터 처치
-    Explore // 지역 탐험
+    일반,  
+    반복,  
+    스토리 
 }
 
 public class Quest
 {
-    public QuestType Type { get; set; }  // 퀘스트 타입
-    public string Name { get; set; }     // 퀘스트 이름
-    public string Description { get; set; }  // 퀘스트 내용
+    public QuestType questype { get; set; }  // 퀘스트 타입
+    public string questname { get; set; }     // 퀘스트 이름
+    public string questDescription { get; set; }  // 퀘스트 내용
 
     public Quest(QuestType type, string name, string description)
     {
-        Type = type;
-        Name = name;
-        Description = description;
+        questype = type;
+        questname = name;
+        questDescription = description;
     }
 
     public void DisplayQuest()
     {
-        Console.WriteLine($"[퀘스트 이름] {Name}");
-        Console.WriteLine($"[퀘스트 타입]");
+        Console.WriteLine($"[{questype}] | {questname} | {questDescription} | 보상 : ");
     }
 }
 
@@ -41,14 +40,24 @@ public static class QuestDatabase
         Quests = new List<Quest>
         {
             new Quest(
-                QuestType.Fetch,
-                "Retrieve the Sword",
-                "Find and retrieve the legendary sword from the dungeon."
+                QuestType.일반,
+                "늑대 소굴",
+                "엘프의 숲에서 늑대 5마리를 처치해주세요."
             ),
             new Quest(
-                QuestType.Kill,
-                "Defeat the Goblin King",
-                "Defeat the Goblin King and bring peace to the village."
+                QuestType.일반,
+                "숲속의 소문",
+                "마을 소문에 의하면 숲속에 고블린이 나온다던데..."
+            ),
+            new Quest(
+                QuestType.반복,
+                "골렘 소탕",
+                "저주받은 마력으로 인해 골렘들이 증식한다. 처리하자"
+            ),
+            new Quest(
+                QuestType.스토리,
+                "악의 원천",
+                "함락한 성 탐험하기"
             )
         };
     }
@@ -56,6 +65,6 @@ public static class QuestDatabase
     // 퀘스트 이름으로 퀘스트 가져오기
     public static Quest GetQuestByName(string questName)
     {
-        return Quests.Find(q => q.Name == questName);
+        return Quests.Find(q => q.questname == questName);
     }
 }

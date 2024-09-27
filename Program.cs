@@ -340,11 +340,24 @@ class Program
         Console.WriteLine("<<퀘스트 게시판>>");
         Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
 
-        Console.WriteLine("[모든 퀘스트 목록]\n");
-        foreach (var quest in allQuests)
+        Console.WriteLine("[퀘스트 목록]\n");
+        for (int i = 0; i < allQuests.Count; i++)
         {
-            quest.DisplayQuest();
-            Console.WriteLine();
+            Console.WriteLine($"{i + 1}.[{allQuests[i].questype}] | { allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :"); // 퀘스트 이름만 출력
+        }
+        Console.WriteLine("");
+        Console.WriteLine("0.나가기");
+
+        int result = CheckInput(0, allQuests.Count);
+
+        switch (result)
+        {
+            case 1:
+                //퀘스트로직 수행
+                break;
+            case 0:
+                DisplayMainUI();
+                break;
         }
     }
 }

@@ -16,7 +16,7 @@
     // 이름으로 퀘스트 검색
     public Quest GetQuestByName(string questName)
     {
-        return quests.Find(q => q.Name == questName);
+        return quests.Find(q => q.questname == questName);
     }
 
     // 모든 퀘스트 출력
