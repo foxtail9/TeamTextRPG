@@ -59,7 +59,6 @@ class Program
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-
         int result = CheckInput(1, 6);
 
         switch (result)
@@ -67,17 +66,20 @@ class Program
             case 1:
                 DisplayStatUI();
                 break;
-
             case 2:
                 DisplayInventoryUI();
                 break;
-
             case 3:
                 DisplayShopUI();
                 break;
-
             case 4:
-                DisplayDungeonEntrance();
+                //여관으로 가는 UI
+                break;
+            case 5:
+                DisplayDungeonEntrance(); //던전 입장UI
+                break;
+            case 6:
+                DisplayQuestUI();//퀘스트 UI
                 break;
         }
     }
