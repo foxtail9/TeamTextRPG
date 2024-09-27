@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TeamTextRPG;
+﻿namespace TeamTextRPG;
 class Character
 {
     public int Level { get; }
@@ -96,8 +90,9 @@ class Character
 
     public void SellITem(Item item, int i)
     {
-        Gold += item.Value;
+        int targetItem = Inventory[i].Value;
         Inventory.RemoveAt(i);
+        Gold += targetItem;
     }
 
     public void DisplaySellInventory(bool showIdx)
@@ -105,12 +100,14 @@ class Character
         for (int i = 0; i < Inventory.Count; i++)
         {
             Item targetItem = Inventory[i];
-            
+
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}{targetItem.Value}");
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
         }
+        
     }
+
 
     public void Rest()
     {

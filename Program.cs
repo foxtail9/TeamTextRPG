@@ -27,7 +27,7 @@ class Program
     private static Character player;
     private static Item[] itemDb;
     private static Drop[] dropDB;
-    private static Character invertory;
+    private static Character[] invertory;
 
     static void Main(string[] args)
     {
@@ -296,7 +296,7 @@ class Program
     {
         Console.Clear();
         Console.WriteLine("상점 - 아이템 판매");
-        Console.WriteLine("필요한 아이템을 판매할 수 있는 상점입니다.");
+        Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
         Console.WriteLine($"{player.Gold} G");
@@ -310,6 +310,7 @@ class Program
 
         int result = CheckInput(0, player.InventoryCount);
 
+
         switch (result)
         {
             case 0:
@@ -319,7 +320,6 @@ class Program
                 int itemIdx = result - 1;
                 Item targetItem = itemDb[itemIdx];
                 player.SellITem(targetItem, itemIdx);
-                
                 DisplaySellUI();
                 break;
         }
