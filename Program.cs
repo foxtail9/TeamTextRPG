@@ -1,4 +1,5 @@
 ﻿using TeamTextRPG.Byungchul;
+using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
 
@@ -33,9 +34,56 @@ class Program
         SetData();
         DisplayMainUI();
     }
+
+    static void SetPlayerName()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("원하시는 이름을 설정해주세요.");
+            Console.WriteLine();
+            string player_name = Console.ReadLine();
+            Console.WriteLine();
+            Console.WriteLine($"입력하신 이름은{player_name}입니다.");
+            Console.WriteLine();
+            Console.WriteLine("1. 저장");
+            Console.WriteLine("2. 취소");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            int input = CheckInput(1, 2);
+            if (input == 1)
+            {
+                SetPlayerJob(player_name);
+                break;
+            }
+        }
+    }
+
+    // 플레이어 직업 입력(김찬우)
+    static void SetPlayerJob(string player_name)
+    {
+        Console.Clear();
+        Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+        Console.WriteLine("원하시는 직업을 설정해주세요.");
+        Console.WriteLine();
+        Console.WriteLine("1. 전사");
+        Console.WriteLine("2. 궁수");
+        Console.WriteLine("3. 마법사");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        int input = CheckInput(1, 3);
+        switch (input)
+        {
+            case 1: player = new Warrior(1, player_name, 1500); break;
+            case 2: player = new Archer(1, player_name, 1500); break;
+            case 3: player = new Mage(1, player_name, 1500); break;
+        }
+    }
+
     static void SetData()
     {
-        player = new Character(1, "Chad", "전사", 10, 5, 100, 10000);
+        SetPlayerName();
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),

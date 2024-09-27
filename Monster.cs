@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeamTextRPG
 {
-    class Monster
+    public class Monster
     {
         public int Tier { get; protected set; }
         public string Name { get; protected set; }
