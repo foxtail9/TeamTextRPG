@@ -12,7 +12,7 @@ class Character
     public string Job { get; }
     public int Atk { get; }
     public int Def { get; }
-    public int Hp { get; }
+    public int Hp { get; private set; }
     public int Gold { get; private set; }
 
     public int ExtraAtk { get; private set; }
@@ -68,17 +68,17 @@ class Character
         {
             EquipList.Remove(item);
             if (item.Type == 0)
-                ExtraAtk -= item.Value;
+                ExtraAtk -= item.Akp;
             else
-                ExtraDef -= item.Value;
+                ExtraDef -= item.Akp;
         }
         else
         {
             EquipList.Add(item);
             if (item.Type == 0)
-                ExtraAtk += item.Value;
+                ExtraAtk += item.Akp;
             else
-                ExtraDef += item.Value;
+                ExtraDef += item.Akp;
         }
     }
 
@@ -89,8 +89,33 @@ class Character
 
     public void BuyItem(Item item)
     {
-        Gold -= item.Price;
+        Gold -= item.Value;
         Inventory.Add(item);
+    }
+
+
+    public void SellITem(Item item, int i)
+    {
+        Gold += item.Value;
+        Inventory.RemoveAt(i);
+    }
+
+    public void DisplaySellInventory(bool showIdx)
+    {
+        for (int i = 0; i < Inventory.Count; i++)
+        {
+            Item targetItem = Inventory[i];
+            
+            string displayIdx = showIdx ? $"{i + 1} " : "";
+            string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}{targetItem.Value}");
+        }
+    }
+
+    public void Rest()
+    {
+        Gold -= 500;
+        Hp = 100;
     }
 
     public bool HasItem(Item item)

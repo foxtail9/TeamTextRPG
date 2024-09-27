@@ -1,4 +1,7 @@
-﻿namespace TeamTextRPG;
+﻿using System.Numerics;
+using TeamTextRPG.Byungchul;
+
+namespace TeamTextRPG;
 
 class Program
 {
@@ -23,6 +26,8 @@ class Program
 
     private static Character player;
     private static Item[] itemDb;
+    private static Drop[] dropDB;
+    private static Character invertory;
 
     static void Main(string[] args)
     {
@@ -35,12 +40,23 @@ class Program
         player = new Character(1, "Chad", "전사", 10, 5, 100, 10000);
         itemDb = new Item[]
         {
-            new Item("수련자의 갑옷", 1, 5,"수련에 도움을 주는 갑옷입니다. ",1000),
-            new Item("무쇠갑옷", 1, 9,"무쇠로 만들어져 튼튼한 갑옷입니다. ",2000),
-            new Item("스파르타의 갑옷", 1, 15,"스파르타의 전사들이 사용했다는 전설의 갑옷입니다. ",3500),
-            new Item("낣은 검", 0, 2,"쉽게 볼 수 있는 낡은 검 입니다. ",600),
-            new Item("청동 도끼", 0, 5,"어디선가 사용됐던거 같은 도끼입니다. ",1500),
-            new Item("스파르타의 창", 0, 7,"스파르타의 전사들이 사용했다는 전설의 창입니다. ",2500)
+            new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
+            new Item("커먼","철검", 0, 6, "평범한 철검이다.", 800),
+            new Item("언커먼","카타나", 0, 8, "날카로운 카타나다.", 1200),
+            new Item("언커먼","재련된 강철검", 0, 12, "강철 검이라고 해서 다 같은 강철 검은 아니다", 1500),
+            new Item("레어","초진동검", 0, 15, "첨단 기술이 적용된 검이다.", 2000),
+            new Item("레어","카타나", 0, 17, "작열하는 불의 기운을 담고 있는 도.", 2500),
+            new Item("커먼","면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500),
+            new Item("언커먼","가죽 조끼", 1, 5, "가죽으로 만든 셔츠다. 낮은 방어력을 제공한다.", 800),
+            new Item("언커먼","가죽 스커트", 1, 5, "가죽으로 만든 치마다. 남자도 입을 수 있다.", 800),
+            new Item("레어","체인메일", 1, 9, "철사 따위로 만든 고리를 엮은 사슬 형태로 된 갑옷이다.", 1500),
+            new Item("레어","플레이트 아머", 1, 12, "고딕 양식 판금 갑옷이다.", 2000),
+        };
+        dropDB = new Drop[]
+        {
+            new Drop("HP 포션",0,"HP를 30회복 시킨다", 500),
+            new Drop("MP 포션",1,"MP를 30회복 시킨다", 500),
+            new Drop("사파이어", 2,"푸른색의 보석이다.",500)
         };
     }
 
@@ -53,11 +69,12 @@ class Program
         Console.WriteLine("1. 상태 보기");
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 상점");
+        Console.WriteLine("4. 휴식");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
 
-        int result = CheckInput(1, 3);
+        int result = CheckInput(1, 4);
 
         switch (result)
         {
@@ -71,6 +88,9 @@ class Program
 
             case 3:
                 DisplayShopUI();
+                break;
+            case 4:
+                DisplayRestUI();
                 break;
         }
     }
@@ -89,8 +109,6 @@ class Program
         Console.WriteLine("원하시는 행동을 입력해주세요.");
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
-        Console.WriteLine();
-        Console.WriteLine("원하시는 행동을 입력해주세요.");
 
         int result = CheckInput(0, 0);
 
@@ -156,7 +174,6 @@ class Program
                 break;
 
             default:
-
                 int itemIdx = result - 1;
                 Item targetItem = itemDb[itemIdx];
                 player.EquipItem(targetItem);
@@ -181,17 +198,18 @@ class Program
         {
             Item curItem = itemDb[i];
 
-            string displayPrice = (player.HasItem(curItem) ? "구매완료" : $"{curItem.Price} G");
+            string displayPrice = (player.HasItem(curItem) ? "구매완료" : $"{curItem.Value} G");
             Console.WriteLine($"- {curItem.ItemInfoText()}  |  {displayPrice}");
         }
 
         Console.WriteLine();
         Console.WriteLine("1. 아이템 구매");
+        Console.WriteLine("2. 아이템 판매");
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        int result = CheckInput(0, 1);
+        int result = CheckInput(0, 2);
 
         switch (result)
         {
@@ -201,6 +219,9 @@ class Program
 
             case 1:
                 DisplayBuyUI();
+                break;
+            case 2:
+                DisplaySellUI();
                 break;
         }
     }
@@ -220,7 +241,7 @@ class Program
         {
             Item curItem = itemDb[i];
 
-            string displayPrice = (player.HasItem(curItem) ? "구매완료" : $"{curItem.Price} G");
+            string displayPrice = (player.HasItem(curItem) ? "구매완료" : $"{curItem.Value} G");
             Console.WriteLine($"- {i + 1} {curItem.ItemInfoText()}  |  {displayPrice}");
         }
 
@@ -251,7 +272,7 @@ class Program
                 else // 구매가 가능할떄
                 {
                     //   소지금이 충분하다
-                    if (player.Gold >= targetItem.Price)
+                    if (player.Gold >= targetItem.Value)
                     {
                         Console.WriteLine("구매를 완료했습니다.");
                         player.BuyItem(targetItem);
@@ -267,6 +288,81 @@ class Program
                 }
 
                 DisplayBuyUI();
+                break;
+        }
+    }
+
+    static void DisplaySellUI()
+    {
+        Console.Clear();
+        Console.WriteLine("상점 - 아이템 판매");
+        Console.WriteLine("필요한 아이템을 판매할 수 있는 상점입니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        Console.WriteLine($"{player.Gold} G");
+        Console.WriteLine();
+        Console.WriteLine("[아이템 목록]");
+        player.DisplaySellInventory(true);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, player.InventoryCount);
+
+        switch (result)
+        {
+            case 0:
+                DisplayShopUI();
+                break;
+            default:
+                int itemIdx = result - 1;
+                Item targetItem = itemDb[itemIdx];
+                player.SellITem(targetItem, itemIdx);
+                
+                DisplaySellUI();
+                break;
+        }
+
+
+    }
+
+    static void DisplayRestUI()
+    {
+        Console.Clear();
+        Console.WriteLine("휴식하기");
+        Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G");
+        Console.WriteLine();
+        Console.WriteLine("1. 휴식하기");
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, 1);
+
+        switch (result)
+        {
+            case 0:
+                DisplayMainUI();
+                break;
+
+            case 1:
+                if (player.Gold >= 500)
+                {
+                    player.Rest();
+                    Console.WriteLine();
+                    Console.WriteLine("휴식을 완료 했습니다");
+                    Console.WriteLine("Enter 를 눌러주세요.");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("골드가 부족합니다.");
+                    Console.WriteLine("Enter 를 눌러주세요.");
+                    Console.ReadLine();
+                }
+                DisplayMainUI();
                 break;
         }
     }
