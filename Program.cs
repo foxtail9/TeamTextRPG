@@ -299,8 +299,6 @@ class Program
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
         player.DisplaySellInventory(true);
-
-
     }
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
@@ -320,8 +318,6 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-        int result = CheckInput(0, player.InventoryCount);
 
         int result = CheckInput(0, 3);
 
