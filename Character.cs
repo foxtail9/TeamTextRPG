@@ -1,5 +1,5 @@
-﻿namespace TeamTextRPG;
-class Character
+namespace TeamTextRPG;
+public class Character
 {
     public int Level { get; }
     public string Name { get; }
@@ -107,7 +107,7 @@ class Character
             string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
         }
-        
+
     }
 
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-public enum QuestType
+﻿public enum QuestType
 {
-    일반,  
-    반복,  
-    스토리 
+    일반,
+    반복,
+    스토리
 }
 
 public class Quest
