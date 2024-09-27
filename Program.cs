@@ -33,7 +33,6 @@ class Program
         SetData();
         DisplayMainUI();
     }
-
     static void SetData()
     {
         player = new Character(1, "Chad", "전사", 10, 5, 100, 10000);
@@ -58,7 +57,6 @@ class Program
             new Drop("사파이어", 2,"푸른색의 보석이다.",500)
         };
     }
-
     static void DisplayMainUI()
     {
         Console.Clear();
@@ -88,17 +86,16 @@ class Program
                 DisplayShopUI();
                 break;
             case 4:
-                DisplayRestUI();
+                //여관으로 가는 UI
                 break;
             case 5:
-               // DisplayDungeonEntrance(); //던전 입장UI
+                DisplayDungeonEntrance(); //던전 입장UI
                 break;
             case 6:
-                //DisplayQuestUI();//퀘스트 UI
+                DisplayQuestUI();//퀘스트 UI
                 break;
         }
     }
-
     static void DisplayStatUI()
     {
         Console.Clear();
@@ -123,7 +120,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayInventoryUI()
     {
         Console.Clear();
@@ -153,7 +149,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayEquipUI()
     {
         Console.Clear();
@@ -186,7 +181,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayShopUI()
     {
         Console.Clear();
@@ -229,7 +223,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayBuyUI()
     {
         Console.Clear();
@@ -295,7 +288,6 @@ class Program
                 break;
         }
     }
-
     static void DisplaySellUI()
     {
         Console.Clear();
@@ -307,115 +299,48 @@ class Program
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
         player.DisplaySellInventory(true);
-
-        /// <summary>
-        /// 던전을 선택할 때 보여지는 함수입니다.
-        /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
-        /// 작성자 : 김동현
-        /// </summary>
-        static void DisplayDungeonEntrance()
-        {
-            Console.Clear();
-            Console.WriteLine("<<던전 입구에 도착했습니다>>");
-            Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
-            Console.WriteLine("1.엘프의 숲 -난이도 : 쉬움");
-            Console.WriteLine("2.저주받은 땅 -난이도 : 보통");
-            Console.WriteLine("3.함락한 성 -난이도 : 어려움");
-
-            Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-            int result = CheckInput(0, player.InventoryCount);
-
-            //int result = CheckInput(0, 3);
-
-            switch (result)
-            {
-                case 0:
-                    DisplayShopUI();
-                    break;
-                default:
-                    int itemIdx = result - 1;
-                    Item targetItem = itemDb[itemIdx];
-                    player.SellITem(targetItem, itemIdx);
-                    DisplaySellUI();
-                    break;
-            }
-            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
-            // default로 설정하였습니다.
-            /// default:
-            //     Dungeon dungeon = new Dungeon(result);
-            //     dungeon.DungeonSystem(player);
-            //     break;
-        }
-
-        static int CheckInput(int min, int max)
-        {
-            int result;
-            while (true)
-            {
-                string input = Console.ReadLine();
-                bool isNumber = int.TryParse(input, out result);
-                if (isNumber)
-                {
-                    if (result >= min && result <= max)
-                        return result;
-                }
-                Console.WriteLine("잘못된 입력입니다!!!!");
-            }
-        }
-
-        static void DisplayQuestUI()
-        {
-            List<Quest> allQuests = QuestDatabase.Quests;
-            Console.Clear();
-            Console.WriteLine("<<퀘스트 게시판>>");
-            Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
-
-            Console.WriteLine("[퀘스트 목록]\n");
-            for (int i = 0; i < allQuests.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}.[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :"); // 퀘스트 이름만 출력
-            }
-            Console.WriteLine("");
-            Console.WriteLine("0.나가기");
-
-            int result = CheckInput(0, allQuests.Count);
-
-            switch (result)
-            {
-                case 1:
-                    //퀘스트로직 수행
-                    break;
-                case 0:
-                    DisplayMainUI();
-                    break;
-            }
-        }
-
     }
-    static int CheckInput(int min, int max)
+    /// <summary>
+    /// 던전을 선택할 때 보여지는 함수입니다.
+    /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
+    /// 작성자 : 김동현
+    /// </summary>
+    static void DisplayDungeonEntrance()
     {
-        int result;
-        while (true)
+        Console.Clear();
+        Console.WriteLine("<<던전 입구에 도착했습니다>>");
+        Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
+        Console.WriteLine("1.엘프의 숲 -난이도 : 쉬움");
+        Console.WriteLine("2.저주받은 땅 -난이도 : 보통");
+        Console.WriteLine("3.함락한 성 -난이도 : 어려움");
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, 3);
+
+        switch (result)
         {
-            string input = Console.ReadLine();
-            bool isNumber = int.TryParse(input, out result);
-            if (isNumber)
-            {
-                if (result >= min && result <= max)
-                    return result;
-            }
-            Console.WriteLine("잘못된 입력입니다!!!!");
+            case 0:
+                DisplayShopUI();
+                break;
+            default:
+                int itemIdx = result - 1;
+                Item targetItem = itemDb[itemIdx];
+                player.SellITem(targetItem, itemIdx);
+                DisplaySellUI();
+                break;
         }
+
+
     }
     static void DisplayRestUI()
     {
         Console.Clear();
         Console.WriteLine("휴식하기");
-        Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G)");
+        Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G");
         Console.WriteLine();
         Console.WriteLine("1. 휴식하기");
         Console.WriteLine("0. 나가기");
@@ -449,6 +374,59 @@ class Program
                 DisplayMainUI();
                 DisplayMainUI();
                 break;
+
+            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
+            // default로 설정하였습니다.
+            default:
+                //Dungeon dungeon = new Dungeon(result);
+                //dungeon.DungeonSystem(player);
+
+                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result], player);
+                DM.DungeonSystem();
+                break;
+        }
+    }
+
+    static void DisplayQuestUI()
+    {
+        List<Quest> allQuests = QuestDatabase.Quests;
+        Console.Clear();
+        Console.WriteLine("<<퀘스트 게시판>>");
+        Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
+
+        Console.WriteLine("[퀘스트 목록]\n");
+        for (int i = 0; i < allQuests.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}.[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :"); // 퀘스트 이름만 출력
+        }
+        Console.WriteLine("");
+        Console.WriteLine("0.나가기");
+
+        int result = CheckInput(0, allQuests.Count);
+
+        switch (result)
+        {
+            case 1:
+                //퀘스트로직 수행
+                break;
+            case 0:
+                DisplayMainUI();
+                break;
+        }
+    }
+    static int CheckInput(int min, int max)
+    {
+        int result;
+        while (true)
+        {
+            string input = Console.ReadLine();
+            bool isNumber = int.TryParse(input, out result);
+            if (isNumber)
+            {
+                if (result >= min && result <= max)
+                    return result;
+            }
+            Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
 }
