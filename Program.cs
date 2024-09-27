@@ -53,15 +53,14 @@ class Program
         Console.WriteLine("1. 상태 보기");
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 상점");
-
-        // 작성자 : 김동현
-        Console.WriteLine("4. 던전 입장");
-
+        Console.WriteLine("4. 여관");
+        Console.WriteLine("5. 던전");
+        Console.WriteLine("6. 퀘스트 게시판");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
 
-        int result = CheckInput(1, 3);
+        int result = CheckInput(1, 6);
 
         switch (result)
         {
@@ -329,6 +328,21 @@ class Program
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");
+        }
+    }
+
+    static void DisplayQuestUI()
+    {
+        List<Quest> allQuests = QuestDatabase.Quests;
+        Console.Clear();
+        Console.WriteLine("<<퀘스트 게시판>>");
+        Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
+
+        Console.WriteLine("[모든 퀘스트 목록]\n");
+        foreach (var quest in allQuests)
+        {
+            quest.DisplayQuest();
+            Console.WriteLine();
         }
     }
 }
