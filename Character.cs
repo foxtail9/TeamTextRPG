@@ -6,13 +6,14 @@ public class Character
     public string Job { get; protected set; }
     public int Atk { get; protected set; }
     public int Def { get; protected set; }
-    public int Hp { get; set; }
+    public int Hp { get; protected set; }
     public int Mp { get; protected set; }
     public int Gold { get; protected set; }
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
 
     public bool IsInvincible { get; set; } = false;
+    public bool IsHawkeye { get; set; } = false;
     public bool OnPassive { get; set; } = false;
 
     public int ExtraAtk { get; private set; }
@@ -143,14 +144,14 @@ public class Character
             // 치명타
             Console.WriteLine("치명타가 발동되었습니다.");
             player_damage = (int)Math.Round(RandomDamage() * 0.1f);
-            monster.MonsterDefense(player_damage);
+            monster.MonsterDefense(player_damage, IsHawkeye);
         }
         else
         {
             // 평타
             Console.WriteLine("치명타가 발동되지 않았습니다.");
             player_damage = RandomDamage();
-            monster.MonsterDefense(player_damage);
+            monster.MonsterDefense(player_damage, IsHawkeye);
         }
         Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
     }

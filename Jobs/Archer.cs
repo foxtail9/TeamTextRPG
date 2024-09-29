@@ -9,8 +9,6 @@ namespace TeamTextRPG.Jobs
 {
     class Archer : Character
     {
-        public bool IsHawkeye { get; set; } = false;
-
         // Job "궁수", Atk 40, Def 60, Hp 150, Mp 100, Gold 1500
         public Archer(int level, string name, int gold)
         {
@@ -40,7 +38,7 @@ namespace TeamTextRPG.Jobs
             // 공격력의 200% 피해 마나소모 10
             int double_shot_damage = RandomDamage() * 2;
             Mp -= 10;
-            monster.MonsterDefense(double_shot_damage);
+            monster.MonsterDefense(double_shot_damage, IsHawkeye);
         }
 
         public void Hawkeye()

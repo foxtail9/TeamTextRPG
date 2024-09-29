@@ -65,30 +65,30 @@ namespace TeamTextRPG
             if (critical_prob <= Critical)
             {
                 monster_damage = (int)Math.Round(RandomDamage() * 1.6f);
-                player.Hp -= monster_damage;
+                player.PlayerDefense(monster_damage);
                 Console.WriteLine("치명타가 발동되었습니다.");
             }
             else
             {
                 monster_damage = RandomDamage();
-                player.Hp -= monster_damage;
+                player.PlayerDefense(monster_damage);
                 Console.WriteLine("치명타가 발동되지 않았습니다.");
             }
 
             Console.WriteLine($"{player.Name}에게 {monster_damage}의 피해를 입혀 Hp가 {player.Hp}가 되었습니다.");
         }
 
-        public void MonsterDefense(int player_damage)
+        public void MonsterDefense(int player_damage, bool is_hawkeye)
         {
             Random random = new Random();
             int avoid_prob = random.Next(1, 101);
 
             // 회피 성공
-            if (avoid_prob <= Avoid)
+            if (avoid_prob <= Avoid && !is_hawkeye)
             {
                 Console.WriteLine("회피했습니다.");
             }
-            else
+            else if (avoid_prob > Avoid || is_hawkeye)
             {
                 Hp -= player_damage;
                 Console.WriteLine("회피에 실패하였습니다.");

@@ -45,15 +45,15 @@ namespace TeamTextRPG.Jobs
             // 공격력 200% 피해, 마나소모 5
             int fire_ball_damage = RandomDamage() * 2;
             Mp -= 5;
-            monster.MonsterDefense(fire_ball_damage);
+            monster.MonsterDefense(fire_ball_damage, IsHawkeye);
         }
 
         public void WaterBomb(Monster monster1, Monster monster2)
         {
             // 몬스터 2마리 공격
             // 공격력 100% 피해, 마나 소모 5
-            monster1.MonsterDefense(Atk);
-            monster2.MonsterDefense(Atk);
+            monster1.MonsterDefense(Atk, IsHawkeye);
+            monster2.MonsterDefense(Atk, IsHawkeye);
         }
 
         public void RegenerateMp()
