@@ -8,16 +8,16 @@ namespace TeamTextRPG
 {
     public class Monster
     {
-        public int Tier { get; protected set; }
-        public string Name { get; protected set; }
-        public int Atk { get; protected set; }
-        public int Def { get; protected set; }
-        public int Hp { get; protected set; }
-        //public int Mp { get; protected set; }
-        public int Critical { get; private set; } = 15;
-        public int Avoid { get; protected set; } = 10;
-        public int Exp { get; protected set; }
-        public Item[] DropItem { get; protected set; }
+        public int Tier { get; }
+        public string Name { get; }
+        public int Atk { get;  }
+        public int Def { get; }
+        public int Hp { get;  }
+        //public int Mp { get;  }
+        public int Critical { get; } = 15;
+        public int Avoid { get; } = 10;
+        public int Exp { get; }
+        public Item[] DropItem { get; }
 
         //      티어 공격력 방어력 hp  exp
         // 늑대	3	20	15	40	1
@@ -82,6 +82,7 @@ namespace TeamTextRPG
         {
             Random random = new Random();
             int avoid_prob = random.Next(1, 101);
+            int new_player_damage = player_damage - Def;
 
             // 회피 성공
             if (avoid_prob <= Avoid && !is_hawkeye)
@@ -90,9 +91,9 @@ namespace TeamTextRPG
             }
             else if (avoid_prob > Avoid || is_hawkeye)
             {
-                Hp -= player_damage;
+                Hp -= new_player_damage;
                 Console.WriteLine("회피에 실패하였습니다.");
-                Console.WriteLine($"{Name}이 {player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
+                Console.WriteLine($"{Name}이 {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
             }
         }
     }

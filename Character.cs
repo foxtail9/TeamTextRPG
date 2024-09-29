@@ -12,9 +12,9 @@ public class Character
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
 
-    public bool IsInvincible { get; set; } = false;
-    public bool IsHawkeye { get; set; } = false;
-    public bool OnPassive { get; set; } = false;
+    public bool IsInvincible { get; protected set; } = false;
+    public bool IsHawkeye { get; protected set; } = false;
+    public bool OnPassive { get; protected set; } = false;
 
     public int ExtraAtk { get; private set; }
     public int ExtraDef { get; private set; }
@@ -161,6 +161,13 @@ public class Character
         // 회피 확률
         Random random = new Random();
         int avoid_prob = random.Next(1, 101);
+        int new_monster_damage = monster_damage - Def;
+
+        if (IsInvincible)
+        {
+            Console.WriteLine($"{Name}이 Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+            return;
+        }
 
         if (avoid_prob <= Avoid)
         {
@@ -170,9 +177,9 @@ public class Character
         else
         {
             // 회피 실패
-            Hp -= monster_damage;
+            Hp -= new_monster_damage;
             Console.WriteLine("회피에 실패하였습니다.");
-            Console.WriteLine($"{Name}이 {monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+            Console.WriteLine($"{Name}이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
         }
     }
 
