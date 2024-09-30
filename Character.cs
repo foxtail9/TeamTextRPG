@@ -162,6 +162,7 @@ public class Character
         Random random = new Random();
         int avoid_prob = random.Next(1, 101);
         int new_monster_damage = monster_damage - Def;
+        new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
         if (IsInvincible)
         {
