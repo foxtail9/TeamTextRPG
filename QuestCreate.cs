@@ -15,7 +15,7 @@ public class Quest
     public string RequiredMonsterType { get; set; } // 필요 몬스터 종류
     public int GoldReward { get; set; } // 골드 보상
     public int ExpReward { get; set; } // 경험치 보상
-    public string RewardItem { get; set; } // 보상 아이템
+    public Item RewardItem { get; set; }  // 보상 아이템
     public int CurrentMonsterCount { get; private set; } // 현재 처치한 몬스터 수
 
     public Quest(QuestType type, string name, string description, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, string rewardItem)
@@ -58,6 +58,7 @@ public class Quest
 public static class QuestDatabase
 {
     public static List<Quest> Quests { get; private set; }
+    var sword = new Item("희귀", "철검", 0, 10, "강력한 철로 만든 검입니다.", 150);
 
     // 스태틱 생성자: 프로그램 시작 시 자동으로 실행되어 퀘스트들을 한꺼번에 초기화
     static QuestDatabase()
@@ -72,37 +73,37 @@ public static class QuestDatabase
                 "Wolf", // 필요 몬스터 종류
                 100, // 보상: 골드
                 50, // 보상: 경험치
-                "늑대의 송곳니" // 보상: 아이템
+                sword // 보상: 아이템
             ),
             new Quest(
                 QuestType.일반,
                 "숲속의 소문",
                 "마을 소문에 의하면 숲속에 고블린이 나온다던데...",
-                0,
+                1, // 필요 몬스터 수
                 "Goblin", // 예시로 고블린 추가
                 50, // 보상: 골드
-                25, // 보상: 경험치
-                "" // 몬스터 없음
+                225, // 보상: 경험치
+                "가죽 조끼" // 보상: 아이템
             ),
             new Quest(
                 QuestType.반복,
                 "골렘 소탕",
                 "저주받은 마력으로 인해 골렘들이 증식한다. 처리하자",
-                10,
+                10, // 필요 몬스터 수
                 "Golem", // 예시로 골렘 추가
                 200, // 보상: 골드
                 100, // 보상: 경험치
-                "골렘의 심장" // 보상: 아이템
+                "" // 보상: 아이템
             ),
             new Quest(
                 QuestType.스토리,
                 "악의 원천",
                 "함락한 성 탐험하기",
-                0,
+                0, // 필요 몬스터 수
                 "", // 몬스터 없음
                 300, // 보상: 골드
                 150, // 보상: 경험치
-                "고대의 유물" // 보상: 아이템
+                "HP 포션" // 보상: 아이템
             )
         };
     }
