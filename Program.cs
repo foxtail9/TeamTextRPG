@@ -86,7 +86,7 @@ class Program
                 DisplayShopUI();
                 break;
             case 4:
-                //여관으로 가는 UI
+                DisplayRestUI();
                 break;
             case 5:
                 DisplayDungeonEntrance(); //던전 입장UI

@@ -16,6 +16,7 @@ public class Quest
     public int GoldReward { get; set; } // 골드 보상
     public int ExpReward { get; set; } // 경험치 보상
     public string RewardItem { get; set; } // 보상 아이템
+    public int CurrentMonsterCount { get; private set; } // 현재 처치한 몬스터 수
 
     public Quest(QuestType type, string name, string description, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, string rewardItem)
     {
@@ -28,43 +29,31 @@ public class Quest
         ExpReward = expReward;
         RewardItem = rewardItem;
         IsInProgress = false;
+        CurrentMonsterCount = 0;
     }
 
     public void DisplayQuest()
     {
         Console.WriteLine($"[{questype}] | {questname} | {questDescription} | 보상: {GoldReward} 골드, {ExpReward} 경험치, 아이템: {RewardItem}");
     }
-    public void RemoveMonster(string monsterType, Player player)
+
+    public void DefeatMonster(string monsterType)
     {
         if (monsterType == RequiredMonsterType)
         {
             CurrentMonsterCount++;
-            Console.WriteLine($"{monsterType}가 제거되었습니다. 현재 제거한 수: {CurrentMonsterCount}");
+            Console.WriteLine($"{monsterType} 처치! 현재 처치한 몬스터 수: {CurrentMonsterCount}/{RequiredMonsterCount}");
 
+            // 퀘스트 완료 체크
             if (CurrentMonsterCount >= RequiredMonsterCount)
             {
-                Console.WriteLine($"{questname} 퀘스트가 완료되었습니다!");
-
-                // 보상 추가
-                player.AddGold(GoldReward); // 보상: 골드 추가
-                player.AddExp(ExpReward); // 보상: 경험치 추가
-                if (!string.IsNullOrEmpty(RewardItem))
-                {
-                    player.AddInventory(RewardItem); // 보상: 아이템 추가
-                }
-
-                IsInProgress = false; // 퀘스트 종료
+                IsInProgress = false;
+                Console.WriteLine($"퀘스트 '{questname}' 완료!");
             }
-        }
-        else
-        {
-            Console.WriteLine($"{monsterType}는 이 퀘스트의 요구 몬스터가 아닙니다.");
         }
     }
 
 }
-
-
 
 public static class QuestDatabase
 {
@@ -124,4 +113,3 @@ public static class QuestDatabase
         return Quests.Find(q => q.questname == questName);
     }
 }
-
