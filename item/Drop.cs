@@ -3,7 +3,7 @@
     class Drop
     {
         public string Name { get; }
-        public int Typ { get; }  //0 = HP 포션 1 = MP포션 3 = 판매 아이템
+        public int Typ { get; }  //0 = HP 포션 1 = MP포션 2 = 판매 아이템
         public string Desc { get; }
         public int Value { get; }
 

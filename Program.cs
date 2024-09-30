@@ -105,8 +105,7 @@ class Program
         player.DisplayCharacterInfo();
 
         Console.WriteLine();
-        Console.WriteLine("0. 나가기");
-        Console.WriteLine();
+
         Console.WriteLine("원하시는 행동을 입력해주세요.");
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
@@ -175,7 +174,7 @@ class Program
             default:
                 int itemIdx = result - 1;
                 Item targetItem = itemDb[itemIdx];
-                player.EquipItem(targetItem);
+                player.EquipItem(targetItem, itemIdx);
 
                 DisplayEquipUI();
                 break;
@@ -299,6 +298,24 @@ class Program
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
         player.DisplaySellInventory(true);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, player.InventoryCount);
+        switch (result)
+        {
+            case 0:
+                DisplayShopUI();
+                break;
+            default:
+                int itemIdx = result - 1;
+                Item targetItem = itemDb[itemIdx];
+                player.SellITem(targetItem, itemIdx);
+                DisplaySellUI();
+                break;
+        }
     }
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
@@ -321,18 +338,7 @@ class Program
 
         int result = CheckInput(0, 3);
 
-        switch (result)
-        {
-            case 0:
-                DisplayShopUI();
-                break;
-            default:
-                int itemIdx = result - 1;
-                Item targetItem = itemDb[itemIdx];
-                player.SellITem(targetItem, itemIdx);
-                DisplaySellUI();
-                break;
-        }
+
 
 
     }
