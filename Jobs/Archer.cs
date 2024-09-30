@@ -41,7 +41,7 @@ namespace TeamTextRPG.Jobs
             // 공격력의 200% 피해 마나소모 10
             int double_shot_damage = RandomDamage() * 2;
             Mp -= 10;
-            monster.MonsterDefense(double_shot_damage, IsHawkeye);
+            monster.MonsterDefense(double_shot_damage);
         }
 
         public void Hawkeye()

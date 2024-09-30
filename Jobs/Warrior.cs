@@ -49,7 +49,7 @@ namespace TeamTextRPG.Jobs
             // 공격력 300% 피해, 마나소모 5
             int power_shot_damage = RandomDamage() * 3;
             Mp -= 5;
-            monster.MonsterDefense(power_shot_damage, IsHawkeye);
+            monster.MonsterDefense(power_shot_damage);
         }
 
         public void Guard()

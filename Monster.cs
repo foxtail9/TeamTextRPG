@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TeamTextRPG
@@ -11,7 +12,6 @@ namespace TeamTextRPG
         public int Tier { get; }
         public string Name { get; }
         public int Atk { get;  }
-        public int Def { get; }
         public int Hp { get; set; }
         //public int Mp { get;  }
         public int Critical { get; } = 15;
@@ -39,7 +39,6 @@ namespace TeamTextRPG
             Tier = tier;
             Name = name;
             Atk = atk;
-            Def = def;
             Hp = hp;
             Exp = 1;
             DropItem = dropItem;
@@ -63,54 +62,67 @@ namespace TeamTextRPG
             int critical_prob = random.Next(1, 101);
             int monster_damage;
 
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write(Name);
-            Console.ResetColor();
+            Console.Write($"Tier.{Tier} ");
+            DisplayMonsterColorString(Name, ConsoleColor.Green);
+            Console.WriteLine("의 공격!");
 
-            // 크리티컬 성공
+            if (player.CheckPlayerAvoid() == true || player.IsInvincible == true)
+            {
+                DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
+                if(player.IsInvincible == true) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+                else Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                return;
+            }
+
+            Console.Write($"{player.Name}을(를) 맞췄습니다.");
+
             if (critical_prob <= Critical)
             {
+                // 치명타
                 monster_damage = (int)Math.Round(RandomDamage() * 1.6f);
-                Console.WriteLine("의 치명타가 발동되었습니다.");
+                Console.WriteLine($"[데미지 : {monster_damage}] - 치명타 공격!!");
                 player.PlayerDefense(monster_damage);
             }
             else
             {
+                // 평타
                 monster_damage = RandomDamage();
-                Console.WriteLine("의 치명타가 발동되지 않았습니다.");
+                Console.WriteLine($"[데미지 : {monster_damage}]");
                 player.PlayerDefense(monster_damage);
             }
         }
 
-        public void MonsterDefense(int player_damage, bool is_hawkeye)
+        public void MonsterDefense(int player_damage)
         {
-            Random random = new Random();
-            int avoid_prob = random.Next(1, 101);
-            int new_player_damage = player_damage - Def;
-            new_player_damage = new_player_damage > 0 ? new_player_damage : 0;
+            Console.Write($"Tier.{Tier} ");
+            DisplayMonsterColorString(Name, ConsoleColor.Green, true);
 
-            DisplayMonsterName();
-
-            // 회피 성공
-            if (avoid_prob <= Avoid && is_hawkeye == false)
+            Console.Write("HP ");
+            DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red);
+            Hp -= player_damage;
+            if (Hp <= 0)
             {
-                Console.WriteLine("(이/가) 회피했습니다.");
+                IsDie = true;
+                Console.WriteLine($" -> Dead");
             }
-            else if (avoid_prob > Avoid || is_hawkeye == true)
-            {
-                Hp -= new_player_damage;
-                Console.WriteLine("(이/가) 회피에 실패하였습니다.");
-                DisplayMonsterName();
-                Console.WriteLine($"(이/가) {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
-            }
-
-            if (Hp <= 0) IsDie = true;
+            else Console.WriteLine($" -> {Hp}");
         }
 
-        public void DisplayMonsterName()
+        public bool CheckMonsterAvoid(bool is_hawkeye)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(Name);
+            if (is_hawkeye == true) return false;
+            Random random = new Random();
+            int avoid_prob = random.Next(1, 101);
+
+            if (avoid_prob <= Avoid) return true;
+            else return false;
+        }
+
+        public void DisplayMonsterColorString(string str, ConsoleColor color, bool newLine=false)
+        {
+            Console.ForegroundColor = color;
+            if(newLine == true) Console.WriteLine(str);
+            else Console.Write(str);
             Console.ResetColor();
         }
     }

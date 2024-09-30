@@ -22,7 +22,7 @@ public class Character
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
-    public bool IsDie { get; private set; } = false;
+    public bool IsDie { get; protected set; } = false;
 
     public int ExtraAtk { get; private set; }
     public int ExtraDef { get; private set; }
@@ -244,55 +244,61 @@ public class Character
         int critical_prob = random.Next(1, 101);
         int player_damage;
 
-        DisplayPlayerName();
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+        Console.WriteLine("의 공격!");
+
+        if (monster.CheckMonsterAvoid(IsHawkeye) == true)
+        {
+            Console.Write($"Tier.{monster.Tier}");
+            DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+            Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+            return;
+        }
+
+        Console.Write($"Tier.{monster.Tier} {monster.Name}을(를) 맞췄습니다.");
 
         if (critical_prob <= Critical)
         {
             // 치명타
-            Console.WriteLine("의 치명타가 발동되었습니다.");
             player_damage = (int)Math.Round(RandomDamage() * 1.6f);
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            Console.WriteLine($"[데미지 : {player_damage}] - 치명타 공격!!");
+            monster.MonsterDefense(player_damage);
         }
         else
         {
             // 평타
-            Console.WriteLine("의 치명타가 발동되지 않았습니다.");
             player_damage = RandomDamage();
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            Console.WriteLine($"[데미지 : {player_damage}]"); 
+            monster.MonsterDefense(player_damage);
         }
     }
 
     public void PlayerDefense(int monster_damage)
     {
-        // 회피 확률
-        Random random = new Random();
-        int avoid_prob = random.Next(1, 101);
         int new_monster_damage = monster_damage - Def;
         new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
-        DisplayPlayerName();
+        Console.Write($"Lv.{Level} ");
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
 
-        if (IsInvincible == true)
+        Console.Write("HP ");
+        DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red);
+        Hp -= new_monster_damage;
+        if (Hp <= 0)
         {
-            Console.WriteLine($"(이/가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
-            return;
+            IsDie = true;
+            Console.WriteLine($" -> Dead");
         }
+        else Console.WriteLine($" -> {Hp}");
+    }
 
-        if (avoid_prob <= Avoid)
-        {
-            // 회피 성공
-            Console.WriteLine("(이/가) 회피했습니다.");
-        }
-        else
-        {
-            // 회피 실패
-            Hp -= new_monster_damage;
-            Console.WriteLine("(이/가) 회피에 실패하였습니다.");
-            DisplayPlayerName();
-            Console.WriteLine($"이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
-        }
+    public bool CheckPlayerAvoid()
+    {
+        Random random = new Random();
+        int avoid_prob = random.Next(1, 101);
 
-        if(Hp <= 0) { IsDie = true; }
+        if (avoid_prob <= Avoid) return true;
+        else return false;
     }
 
     public virtual void ActiveSkill(Monster monster)
@@ -333,10 +339,11 @@ public class Character
         }
     }
 
-    public void DisplayPlayerName()
+    public void DisplayPlayerColorString(string str, ConsoleColor color, bool newLine = false)
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.Write(Name);
+        Console.ForegroundColor = color;
+        if(newLine == true) Console.WriteLine(str);
+        else Console.Write(str);
         Console.ResetColor();
     }
 
@@ -352,7 +359,7 @@ public class Character
         {
             Level++;
             Console.Write($"레벨업하여 ");
-            DisplayPlayerName();
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan);
             Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
             Exp -= Level * 10;
         }
