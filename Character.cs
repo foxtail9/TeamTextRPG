@@ -324,4 +324,17 @@ public class Character
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
     }
+
+    public void ClearQuestAddItem(Item item,Quest quest)
+    {
+        Item rewardItem = quest.RewardItem;
+
+        // 보상으로 아이템 추가
+        if (rewardItem != null)
+        {
+            // 아이템 추가 로직 (예: 인벤토리에 추가)
+            AddDropItem(quest.rewardItem); // 인벤토리에 아이템 추가 메소드 호출
+            Console.WriteLine($"{rewardItem.Name}를(을) 인벤토리에 추가했습니다.");
+        }
+    }
 }
