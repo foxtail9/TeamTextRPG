@@ -56,5 +56,16 @@ namespace TeamTextRPG.Jobs
             Avoid += 20;
             Console.WriteLine($"몬스터의 공격을 회피할 확률이 {Avoid}가 되었습니다.");
         }
+
+        public override void CalcPlayerLevelUp()
+        {
+            base.CalcPlayerLevelUp();
+            MaxHp += 5;
+            Hp = MaxHp;
+            MaxMp += 5;
+            Mp = MaxMp;
+            Atk += 15;
+            Def += 5;
+        }
     }
 }

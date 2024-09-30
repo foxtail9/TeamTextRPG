@@ -64,5 +64,16 @@ namespace TeamTextRPG.Jobs
             // 마나 재생 (전투 당 1회)
             Mp = MAGE_MAX_MP;
         }
+
+        public override void CalcPlayerLevelUp()
+        {
+            base.CalcPlayerLevelUp();
+            MaxHp += 5;
+            Hp = MaxHp;
+            MaxMp += 15;
+            Mp = MaxMp;
+            Atk += 5;
+            Def += 5;
+        }
     }
 }

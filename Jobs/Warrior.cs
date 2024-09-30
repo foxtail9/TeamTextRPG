@@ -69,5 +69,16 @@ namespace TeamTextRPG.Jobs
                 }
             }
         }
+
+        public override void CalcPlayerLevelUp()
+        {
+            base.CalcPlayerLevelUp();
+            MaxHp += 10;
+            Hp = MaxHp;
+            MaxMp += 5;
+            Mp = MaxMp;
+            Atk += 5;
+            Def += 10;
+        }
     }
 }

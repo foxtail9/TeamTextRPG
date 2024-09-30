@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG;
@@ -13,6 +14,7 @@ public class Character
     public int Gold { get; protected set; }
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
+    public int Exp { get; protected set; } = 0;
 
     public int MaxHp { get; protected set; }
     public int MaxMp { get; protected set; }
@@ -20,6 +22,7 @@ public class Character
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
+    public bool IsDie { get; private set; } = false;
 
     public int ExtraAtk { get; private set; }
     public int ExtraDef { get; private set; }
@@ -288,6 +291,8 @@ public class Character
             DisplayPlayerName();
             Console.WriteLine($"이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
         }
+
+        if(Hp <= 0) { IsDie = true; }
     }
 
     public virtual void ActiveSkill(Monster monster)
@@ -315,7 +320,6 @@ public class Character
         return DropInventory.Contains(drop);
     }
 
-
     public void AddQuest(Quest quest)
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
@@ -334,5 +338,23 @@ public class Character
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.Write(Name);
         Console.ResetColor();
+    }
+
+    public void UpdatePlayerExp(Monster monster)
+    {
+        if (monster.IsDie) Exp += monster.Exp;
+        CalcPlayerLevelUp();
+    }
+
+    public virtual void CalcPlayerLevelUp()
+    {
+        if ((Level * 10) < Exp)
+        {
+            Level++;
+            Console.Write($"레벨업하여 ");
+            DisplayPlayerName();
+            Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
+            Exp -= Level * 10;
+        }
     }
 }

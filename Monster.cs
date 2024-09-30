@@ -17,6 +17,8 @@ namespace TeamTextRPG
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
         public int Exp { get; }
+        
+        public bool IsDie { get; private set; }
         public Item[] DropItem { get; }
 
         //      티어 공격력 방어력 hp  exp
@@ -101,6 +103,8 @@ namespace TeamTextRPG
                 DisplayMonsterName();
                 Console.WriteLine($"(이/가) {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
             }
+
+            if (Hp <= 0) IsDie = true;
         }
 
         public void DisplayMonsterName()
