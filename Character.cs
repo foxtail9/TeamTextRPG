@@ -30,6 +30,7 @@ public class Character
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
     public List<Quest> PlayerQuestList = new List<Quest>();
+    public List<Quest> PlayerCompletedQuests = new List<Quest>();   
 
     public int InventoryCount
     {
@@ -325,16 +326,26 @@ public class Character
         }
     }
 
-    public void ClearQuestAddItem(Item item,Quest quest)
+    public void ClearQuestAddItem(Quest completedQuest)
     {
-        Item rewardItem = quest.RewardItem;
+        // 2. 보상 처리 - 경험치, 골드
+        //this.Experience += completedQuest.ExpReward; 경험치 획득 추가요망
+        this.Gold += completedQuest.GoldReward;
 
-        // 보상으로 아이템 추가
-        if (rewardItem != null)
+        Console.WriteLine($"퀘스트 '{completedQuest.questname}'를 완료하여 {completedQuest.ExpReward} 경험치와 {completedQuest.GoldReward} 골드를 획득했습니다!");
+
+        // 3. 아이템 보상 처리 로직
+        if (completedQuest.RewardItem != null)
         {
-            // 아이템 추가 로직 (예: 인벤토리에 추가)
-            AddDropItem(quest.rewardItem); // 인벤토리에 아이템 추가 메소드 호출
-            Console.WriteLine($"{rewardItem.Name}를(을) 인벤토리에 추가했습니다.");
+            Console.WriteLine($"{completedQuest.RewardItem.Name}을(를) 인벤토리에 추가했습니다.");
         }
+
+        // 4. 퀘스트 완료 상태 업데이트 및 추가 처리 (예: 퀘스트 목록에서 제거 등)
+        this.PlayerCompletedQuests.Add(completedQuest);
+        this.PlayerQuestList.Remove(completedQuest);
+
+        Console.WriteLine($"'{completedQuest.questname}' 퀘스트를 완료했습니다.");
     }
+
+
 }
