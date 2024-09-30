@@ -35,7 +35,7 @@ class Program
     }
     static void SetData()
     {
-        player = new Character(1, "Chad", "전사", 10, 5, 100, 100, 10, 10, 10000);
+        SetPlayerName();
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
@@ -392,7 +392,9 @@ class Program
         Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("[장비 아이템 목록]");
         player.DisplaySellInventory(true);
