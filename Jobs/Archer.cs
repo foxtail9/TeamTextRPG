@@ -17,10 +17,13 @@ namespace TeamTextRPG.Jobs
             Job = "궁수";
             Atk = 40;
             Def = 60;
+            MaxHp = 150;
             Hp = 150;
+            MaxMp = 100;
             Mp = 100;
             Gold = gold;
             FastMovement();
+            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)
