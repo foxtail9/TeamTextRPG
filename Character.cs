@@ -13,7 +13,6 @@ public class Character
     public int Gold { get; protected set; }
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
-
     public int MaxHp { get; protected set; }
     public int MaxMp { get; protected set; }
 
@@ -30,7 +29,8 @@ public class Character
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
     public List<Quest> PlayerQuestList = new List<Quest>();
-    public List<Quest> PlayerCompletedQuests = new List<Quest>();   
+    public List<Quest> PlayerCompletedQuests = new List<Quest>();
+    public List<string> RequiredMonsterNames { get; private set; } = new List<string>();
 
     public int InventoryCount
     {
@@ -39,7 +39,7 @@ public class Character
             return Inventory.Count;
         }
     }
-
+   
     public int DropInventoryCount()
     {
         return DropInventory.Count;
@@ -256,7 +256,7 @@ public class Character
             player_damage = RandomDamage();
             monster.MonsterDefense(player_damage, IsHawkeye);
         }
-        Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+        Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. \n");
     }
 
     public void PlayerDefense(int monster_damage)
@@ -312,7 +312,6 @@ public class Character
         return DropInventory.Contains(drop);
     }
 
-
     public void AddQuest(Quest quest)
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
@@ -325,7 +324,20 @@ public class Character
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
     }
+    public List<string> InitializeRequiredMonsterNames()
+    {
+        RequiredMonsterNames.Clear(); 
 
+        foreach (var quest in PlayerQuestList)
+        {
+            if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
+            {
+                RequiredMonsterNames.Add(quest.RequiredMonsterType);
+            }
+        }
+
+        return new List<string>(RequiredMonsterNames);
+    }
     public void ClearQuestAddItem(Quest completedQuest)
     {
         // 2. 보상 처리 - 경험치, 골드
@@ -337,10 +349,10 @@ public class Character
         // 3. 아이템 보상 처리 로직
         if (completedQuest.RewardItem != null)
         {
+            Inventory.Add(completedQuest.RewardItem);
             Console.WriteLine($"{completedQuest.RewardItem.Name}을(를) 인벤토리에 추가했습니다.");
         }
 
-        // 4. 퀘스트 완료 상태 업데이트 및 추가 처리 (예: 퀘스트 목록에서 제거 등)
         this.PlayerCompletedQuests.Add(completedQuest);
         this.PlayerQuestList.Remove(completedQuest);
 

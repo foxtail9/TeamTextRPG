@@ -16,7 +16,6 @@ public class Quest
     public int GoldReward { get; set; } // 골드 보상
     public int ExpReward { get; set; } // 경험치 보상
     public Item RewardItem { get; set; }  // 보상 아이템
-    public int CurrentMonsterCount { get; private set; } // 현재 처치한 몬스터 수
 
     public Quest(QuestType type, string name, string description, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, Item rewardItem)
     {
@@ -29,7 +28,6 @@ public class Quest
         ExpReward = expReward;
         RewardItem = rewardItem;
         IsInProgress = false;
-        CurrentMonsterCount = 0;
     }
 
     public void DisplayQuest()
@@ -39,18 +37,7 @@ public class Quest
 
     public void DefeatMonster(string monsterType)
     {
-        if (monsterType == RequiredMonsterType)
-        {
-            CurrentMonsterCount++;
-            Console.WriteLine($"{monsterType} 처치! 현재 처치한 몬스터 수: {CurrentMonsterCount}/{RequiredMonsterCount}");
-
-            // 퀘스트 완료 체크
-            if (CurrentMonsterCount >= RequiredMonsterCount)
-            {
-                IsInProgress = false;
-                Console.WriteLine($"퀘스트 '{questname}' 완료!");
-            }
-        }
+        
     }
 
 }
@@ -72,7 +59,7 @@ public static class QuestDatabase
                 "늑대 소굴",
                 "엘프의 숲에서 늑대 5마리를 처치해주세요.",
                 5, // 필요 몬스터 수
-                "Wolf", // 필요 몬스터 종류
+                "늑대", // 필요 몬스터 종류
                 100, // 보상: 골드
                 50, // 보상: 경험치
                 sword // 보상: 아이템
@@ -82,7 +69,7 @@ public static class QuestDatabase
                 "숲속의 소문",
                 "마을 소문에 의하면 숲속에 고블린이 나온다던데...",
                 1, // 필요 몬스터 수
-                "Goblin", // 예시로 고블린 추가
+                "고블린", // 예시로 고블린 추가
                 50, // 보상: 골드
                 225, // 보상: 경험치
                 teeshirt // 보상: 아이템
@@ -92,7 +79,7 @@ public static class QuestDatabase
                 "골렘 소탕",
                 "저주받은 마력으로 인해 골렘들이 증식한다. 처리하자",
                 10, // 필요 몬스터 수
-                "Golem", // 예시로 골렘 추가
+                "골렘", // 예시로 골렘 추가
                 200, // 보상: 골드
                 100, // 보상: 경험치
                 null // 보상: 아이템
