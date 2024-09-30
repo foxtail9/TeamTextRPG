@@ -354,7 +354,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayDrpoUI()
     {
         Console.Clear();
@@ -400,8 +399,6 @@ class Program
                 break;
         }
     }
-
-
     static void DisplaySellUI()
     {
         Console.Clear();
@@ -527,9 +524,20 @@ class Program
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
         int result = CheckInput(0, 3);
+        switch (result)
+        {
+            case 0:
+                DisplayMainUI();
+                break;
 
-
-
+            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
+            // default로 설정하였습니다.
+            default:
+                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result - 1], player);
+                DM.DungeonSystem();
+                DisplayMainUI();
+                break;
+        }
 
     }
     static void DisplayRestUI()
@@ -572,16 +580,6 @@ class Program
                 }
                 DisplayMainUI();
                 DisplayMainUI();
-                break;
-
-            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
-            // default로 설정하였습니다.
-            default:
-                //Dungeon dungeon = new Dungeon(result);
-                //dungeon.DungeonSystem(player);
-
-                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result], player);
-                DM.DungeonSystem();
                 break;
         }
     }
