@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace TeamTextRPG;
 public class Character
 {
@@ -49,7 +51,9 @@ public class Character
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
+            if (displayEquipped.Equals("[E]")) Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
+            Console.ResetColor();
         }
     }
 
