@@ -77,10 +77,10 @@ public class DungeonManager
                 DisplayInSelectAttack();
                 break;
             case 2:
-
+                // ~
                 break;
             case 3:
-
+                // ~
                 break;
             case 4:
                 IsDungeonOver = true;
@@ -112,6 +112,8 @@ public class DungeonManager
         switch (result)
         {
             case 0:
+                break;
+            default:
                 DisplayBattleSystem();
                 break;
         }
@@ -129,19 +131,25 @@ public class DungeonManager
         for(int i = 0; i < rouletteNum; i++) AttackSequence[i] = i;
         AttackSequence = Shffle(AttackSequence);
 
+        // 공격 과정 표시
         for (int i = 0; i < AttackSequence.Length; i++)
         {
             // 플레이어의 공격
             if (AttackSequence[i] == 0)
             {
-                //~~
+                DisplayPlayerAttackResult();
             }
             // 몬스터의 공격
             else
             {
-                //~~
+
             }
         }
+
+    }
+
+    private void DisplayPlayerAttackResult()
+    {
 
     }
 
@@ -158,6 +166,22 @@ public class DungeonManager
             Console.ResetColor();
         }
 
+    }
+
+    private int CheckAttackInput(int min, int max)
+    {
+        int result;
+        while (true)
+        {
+            string input = Console.ReadLine();
+            bool isNumber = int.TryParse(input, out result);
+            if (isNumber)
+            {
+                if (result >= min && result <= max && Monsters_spawn[result - 1].Hp > 0)
+                    return result;
+            }
+            Console.WriteLine("잘못된 입력입니다!!!!");
+        }
     }
 
     private static T[] Shffle<T>(T[] array)
@@ -193,21 +217,4 @@ public class DungeonManager
             Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
-
-    private int CheckAttackInput(int min, int max)
-    {
-        int result;
-        while (true)
-        {
-            string input = Console.ReadLine();
-            bool isNumber = int.TryParse(input, out result);
-            if (isNumber)
-            {
-                if (result >= min && result <= max && Monsters_spawn[result - 1].Hp > 0)
-                    return result;
-            }
-            Console.WriteLine("잘못된 입력입니다!!!!");
-        }
-    }
-
 }
