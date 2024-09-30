@@ -516,6 +516,7 @@ class Program
         Console.Write("2.저주받은 땅 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("보통");
+        Console.ResetColor();
         Console.Write("3.함락한 성 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("어려움");

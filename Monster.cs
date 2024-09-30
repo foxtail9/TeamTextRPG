@@ -61,21 +61,23 @@ namespace TeamTextRPG
             int critical_prob = random.Next(1, 101);
             int monster_damage;
 
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write(Name);
+            Console.ResetColor();
+
             // 크리티컬 성공
             if (critical_prob <= Critical)
             {
                 monster_damage = (int)Math.Round(RandomDamage() * 1.6f);
+                Console.WriteLine("의 치명타가 발동되었습니다.");
                 player.PlayerDefense(monster_damage);
-                Console.WriteLine("치명타가 발동되었습니다.");
             }
             else
             {
                 monster_damage = RandomDamage();
+                Console.WriteLine("의 치명타가 발동되지 않았습니다.");
                 player.PlayerDefense(monster_damage);
-                Console.WriteLine("치명타가 발동되지 않았습니다.");
             }
-
-            Console.WriteLine($"{player.Name}에게 {monster_damage}의 피해를 입혀 Hp가 {player.Hp}가 되었습니다.");
         }
 
         public void MonsterDefense(int player_damage, bool is_hawkeye)
@@ -85,17 +87,27 @@ namespace TeamTextRPG
             int new_player_damage = player_damage - Def;
             new_player_damage = new_player_damage > 0 ? new_player_damage : 0;
 
+            DisplayMonsterName();
+
             // 회피 성공
-            if (avoid_prob <= Avoid && !is_hawkeye)
+            if (avoid_prob <= Avoid && is_hawkeye == false)
             {
-                Console.WriteLine("회피했습니다.");
+                Console.WriteLine("(이/가) 회피했습니다.");
             }
-            else if (avoid_prob > Avoid || is_hawkeye)
+            else if (avoid_prob > Avoid || is_hawkeye == true)
             {
                 Hp -= new_player_damage;
-                Console.WriteLine("회피에 실패하였습니다.");
-                Console.WriteLine($"{Name}이 {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
+                Console.WriteLine("(이/가) 회피에 실패하였습니다.");
+                DisplayMonsterName();
+                Console.WriteLine($"(이/가) {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
             }
+        }
+
+        public void DisplayMonsterName()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(Name);
+            Console.ResetColor();
         }
     }
 }

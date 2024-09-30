@@ -241,21 +241,22 @@ public class Character
         int critical_prob = random.Next(1, 101);
         int player_damage;
 
+        DisplayPlayerName();
+
         if (critical_prob <= Critical)
         {
             // 치명타
-            Console.WriteLine("치명타가 발동되었습니다.");
-            player_damage = (int)Math.Round(RandomDamage() * 0.1f);
+            Console.WriteLine("의 치명타가 발동되었습니다.");
+            player_damage = (int)Math.Round(RandomDamage() * 1.6f);
             monster.MonsterDefense(player_damage, IsHawkeye);
         }
         else
         {
             // 평타
-            Console.WriteLine("치명타가 발동되지 않았습니다.");
+            Console.WriteLine("의 치명타가 발동되지 않았습니다.");
             player_damage = RandomDamage();
             monster.MonsterDefense(player_damage, IsHawkeye);
         }
-        Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
     }
 
     public void PlayerDefense(int monster_damage)
@@ -266,23 +267,26 @@ public class Character
         int new_monster_damage = monster_damage - Def;
         new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
-        if (IsInvincible)
+        DisplayPlayerName();
+
+        if (IsInvincible == true)
         {
-            Console.WriteLine($"{Name}이 Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+            Console.WriteLine($"(이/가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
             return;
         }
 
         if (avoid_prob <= Avoid)
         {
             // 회피 성공
-            Console.WriteLine("회피했습니다.");
+            Console.WriteLine("(이/가) 회피했습니다.");
         }
         else
         {
             // 회피 실패
             Hp -= new_monster_damage;
-            Console.WriteLine("회피에 실패하였습니다.");
-            Console.WriteLine($"{Name}이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+            Console.WriteLine("(이/가) 회피에 실패하였습니다.");
+            DisplayPlayerName();
+            Console.WriteLine($"이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
         }
     }
 
@@ -323,5 +327,12 @@ public class Character
         {
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
+    }
+
+    public void DisplayPlayerName()
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.Write(Name);
+        Console.ResetColor();
     }
 }
