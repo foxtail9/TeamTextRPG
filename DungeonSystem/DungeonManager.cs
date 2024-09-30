@@ -134,22 +134,76 @@ public class DungeonManager
         // 공격 과정 표시
         for (int i = 0; i < AttackSequence.Length; i++)
         {
+            int randomIdx = AttackSequence[i];
+
             // 플레이어의 공격
-            if (AttackSequence[i] == 0)
+            if (randomIdx == 0)
             {
-                DisplayPlayerAttackResult();
+                DisplayPlayerAttackResult(Monsters_spawn[randomIdx]);
             }
             // 몬스터의 공격
             else
             {
-
+                DisplayMonsterAttackResult(Monsters_spawn[randomIdx]);
             }
+
+            Console.WriteLine("");
         }
 
+        // 결과 검사 
+        // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
+        // 2. 플레이어의 Hp가 0인가?
+
+        KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
+        if (battleResult.Key)
+        {
+            DisplayBattleResult(battleResult.Value);
+        }
     }
 
-    private void DisplayPlayerAttackResult()
+    private void DisplayPlayerAttackResult(Monster monster)
     {
+        Player_in.BasicAttack(monster);
+    }
+
+    private void DisplayMonsterAttackResult(Monster monster)
+    {
+        monster.MonsterAttack(Player_in);
+    }
+
+    private void DisplayBattleResult(bool isWin)
+    {
+        Console.Clear();
+        Console.WriteLine("Battle!! - Result");
+        Console.WriteLine();
+
+        if(isWin)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Victory!!");
+            Console.ResetColor();
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You Lose...");
+            Console.ResetColor();
+        }
+
+        // 플레이어 체력 / 경험치 등을 출력.
+
+        // 행동 선택
+        Console.WriteLine();
+        Console.WriteLine("0. 다음");
+        Console.WriteLine();
+
+        int result = CheckInput(0, 0);
+        switch (result)
+        {
+            case 0:
+                IsDungeonOver = true;
+                break;
+        }
 
     }
 
@@ -166,6 +220,22 @@ public class DungeonManager
             Console.ResetColor();
         }
 
+    }
+
+    // KeyValuePair<bool, bool>()
+    // - Key 현재 게임이 끝났는가?
+    // - Value 플레이어가 이겼는가?
+    private KeyValuePair<bool, bool> CheckBattleEnd()
+    {
+        // 플레이어의 체력검사
+        if (Player_in.Hp <= 0) return new KeyValuePair<bool, bool>(true, false);
+
+        // 방에 존재하는 몬스터의 체력검사
+        foreach (var curMonster in Monsters_spawn)
+        {
+            if (curMonster.Hp > 0) return new KeyValuePair<bool, bool>(false, true);
+        }
+        return new KeyValuePair<bool, bool>(true, true);
     }
 
     private int CheckAttackInput(int min, int max)

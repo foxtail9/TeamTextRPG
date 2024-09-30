@@ -303,7 +303,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayDrpoUI()
     {
         Console.Clear();
@@ -349,8 +348,6 @@ class Program
                 break;
         }
     }
-
-
     static void DisplaySellUI()
     {
         Console.Clear();
