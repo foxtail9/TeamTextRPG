@@ -1,4 +1,5 @@
 ﻿using TeamTextRPG.Byungchul;
+using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
 
@@ -64,6 +65,52 @@ class Program
             player.AddDropItem(dropDB[2]);
         }
     }
+
+    static void SetPlayerName()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("원하시는 이름을 설정해주세요.");
+            Console.WriteLine();
+            string player_name = Console.ReadLine();
+            Console.WriteLine();
+            Console.WriteLine($"입력하신 이름은{player_name}입니다.");
+            Console.WriteLine();
+            Console.WriteLine("1. 저장");
+            Console.WriteLine("2. 취소");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            int input = CheckInput(1, 2);
+            if (input == 1)
+            {
+                SetPlayerJob(player_name);
+                break;
+            }
+        }
+    }
+
+    static void SetPlayerJob(string player_name)
+    {
+        Console.Clear();
+        Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+        Console.WriteLine("원하시는 직업을 설정해주세요.");
+        Console.WriteLine();
+        Console.WriteLine("1. 전사");
+        Console.WriteLine("2. 궁수");
+        Console.WriteLine("3. 마법사");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        int input = CheckInput(1, 3);
+        switch (input)
+        {
+            case 1: player = new Warrior(1, player_name, 1500); break;
+            case 2: player = new Archer(1, player_name, 1500); break;
+            case 3: player = new Mage(1, player_name, 1500); break;
+        }
+    }
+
     static void DisplayMainUI()
     {
         Console.Clear();
@@ -203,7 +250,9 @@ class Program
         Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 
@@ -245,7 +294,9 @@ class Program
         Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 
@@ -335,7 +386,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount);
+        int result = CheckInput(0, player.DropInventoryCount());
 
         switch (result)
         {
@@ -358,7 +409,9 @@ class Program
         Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("[장비 아이템 목록]");
         player.DisplayInventory(false);
@@ -422,7 +475,9 @@ class Program
         Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("[드랍 아이템 목록]");
         player.DisplayDropInventory(true);
@@ -430,7 +485,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount);
+        int result = CheckInput(0, player.DropInventoryCount());
         switch (result)
         {
             case 0:
@@ -444,9 +499,6 @@ class Program
         }
     }
 
-
-
-
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
     /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
@@ -457,9 +509,17 @@ class Program
         Console.Clear();
         Console.WriteLine("<<던전 입구에 도착했습니다>>");
         Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
-        Console.WriteLine("1.엘프의 숲 -난이도 : 쉬움");
-        Console.WriteLine("2.저주받은 땅 -난이도 : 보통");
-        Console.WriteLine("3.함락한 성 -난이도 : 어려움");
+        Console.Write("1.엘프의 숲 -난이도 : ");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("쉬움");
+        Console.ResetColor();
+        Console.Write("2.저주받은 땅 -난이도 : ");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine("보통");
+        Console.Write("3.함락한 성 -난이도 : ");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("어려움");
+        Console.ResetColor();
 
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
@@ -476,7 +536,10 @@ class Program
     {
         Console.Clear();
         Console.WriteLine("휴식하기");
-        Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : {player.Gold} G");
+        Console.Write($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : ");
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine($"{player.Gold} G");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine("1. 휴식하기");
         Console.WriteLine("0. 나가기");

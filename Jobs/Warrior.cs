@@ -21,9 +21,12 @@ namespace TeamTextRPG.Jobs
             Job = "전사";
             Atk = 40;
             Def = 60;
+            MaxHp = 200;
             Hp = 200;
+            MaxMp = 50;
             Mp = 50;
             Gold = gold;
+            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)

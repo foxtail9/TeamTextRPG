@@ -14,8 +14,8 @@ public class Character
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
 
-    public int MaxHp { get; protected set; } = 100;
-    public int MaxMp { get; protected set; } = 10;
+    public int MaxHp { get; protected set; }
+    public int MaxMp { get; protected set; }
 
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
@@ -47,21 +47,6 @@ public class Character
         }
     }
 
-    public Character(int level, string name, string job, int atk, int def, int maxhp, int hp, int maxmp, int mp, int gold)
-    {
-        Level = level;
-        Name = name;
-        Job = job;
-        Atk = atk;
-        Def = def;
-        MaxHp = maxhp;
-        Hp = hp;
-        MaxMp = maxmp;
-        Mp = mp;
-        Gold = gold;
-        PlayerQuestList = new List<Quest>();
-    }
-   
     public void DisplayCharacterInfo()
     {
         Console.WriteLine($"Lv. {Level:D2}");
