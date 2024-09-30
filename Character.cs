@@ -14,6 +14,9 @@ public class Character
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
 
+    public int MaxHp { get; protected set; } = 100;
+    public int MaxMp { get; protected set; } = 10;
+
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
@@ -36,13 +39,9 @@ public class Character
         }
     }
 
-    public int DropInventoryCount
-    public Character(int level, string name, string job, int atk, int def, int hp, int gold)
+    public int DropInventoryCount()
     {
-        get
-        {
-            return DropInventory.Count;
-        }
+        return DropInventory.Count;
     }
 
     public Character(int level, string name, string job, int atk, int def, int maxhp, int hp, int maxmp, int mp, int gold)
