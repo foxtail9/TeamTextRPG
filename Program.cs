@@ -36,6 +36,7 @@ class Program
     }
     static void SetData()
     {
+        player = new Character();
         //SetPlayerName();
         itemDb = new Item[]
         {
@@ -62,7 +63,6 @@ class Program
         {
             player.AddDropItem(dropDB[0]);
             player.AddDropItem(dropDB[1]);
-            player.AddDropItem(dropDB[2]);
         }
     }
 
@@ -386,7 +386,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount());
+        int result = CheckInput(0, player.DropInventoryCount);
 
         switch (result)
         {
@@ -485,7 +485,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount());
+        int result = CheckInput(0, player.DropInventoryCount);
         switch (result)
         {
             case 0:
