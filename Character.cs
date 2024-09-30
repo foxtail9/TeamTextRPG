@@ -238,7 +238,6 @@ public class Character
 
     public void BasicAttack(Monster monster)
     {
-
         // 치명타 확률
         Random random = new Random();
         int critical_prob = random.Next(1, 101);
@@ -255,22 +254,27 @@ public class Character
             return;
         }
 
-        Console.Write($"Tier.{monster.Tier} {monster.Name}을(를) 맞췄습니다.");
+        Console.Write($"Tier.{monster.Tier} ");
+        DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+        Console.Write("을(를) 맞췄습니다.");
 
         if (critical_prob <= Critical)
         {
             // 치명타
             player_damage = (int)Math.Round(RandomDamage() * 1.6f);
-            Console.WriteLine($"[데미지 : {player_damage}] - 치명타 공격!!");
-            monster.MonsterDefense(player_damage);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("] - 치명타 공격!!");
         }
         else
         {
             // 평타
             player_damage = RandomDamage();
-            Console.WriteLine($"[데미지 : {player_damage}]"); 
-            monster.MonsterDefense(player_damage);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("]"); 
         }
+        monster.MonsterDefense(player_damage);
     }
 
     public void PlayerDefense(int monster_damage)
@@ -284,13 +288,15 @@ public class Character
         Console.Write("HP ");
         DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red);
         Hp -= new_monster_damage;
+        Console.Write($" -> ");
+
         if (Hp <= 0)
         {
             Hp = 0;
             IsDie = true;
-            Console.WriteLine($" -> Dead");
+            DisplayPlayerColorString("Dead", ConsoleColor.DarkGray, true);
         }
-        else Console.WriteLine($" -> {Hp}");
+        else DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red, true);
     }
 
     public bool CheckPlayerAvoid()

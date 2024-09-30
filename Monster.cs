@@ -74,22 +74,26 @@ namespace TeamTextRPG
                 return;
             }
 
-            Console.Write($"{player.Name}을(를) 맞췄습니다.");
+            DisplayMonsterColorString(player.Name.ToString(), ConsoleColor.Cyan);
+            Console.Write("을(를) 맞췄습니다.");
 
             if (critical_prob <= Critical)
             {
                 // 치명타
                 monster_damage = (int)Math.Round(RandomDamage() * 1.6f);
-                Console.WriteLine($"[데미지 : {monster_damage}] - 치명타 공격!!");
-                player.PlayerDefense(monster_damage);
+                Console.Write($"[데미지 : ");
+                DisplayMonsterColorString(monster_damage.ToString(), ConsoleColor.Red);
+                Console.WriteLine("] - 치명타 공격!!");
             }
             else
             {
                 // 평타
                 monster_damage = RandomDamage();
-                Console.WriteLine($"[데미지 : {monster_damage}]");
-                player.PlayerDefense(monster_damage);
+                Console.Write($"[데미지 : ");
+                DisplayMonsterColorString(monster_damage.ToString(), ConsoleColor.Red);
+                Console.WriteLine("]");
             }
+            player.PlayerDefense(monster_damage);
         }
 
         public void MonsterDefense(int player_damage)
@@ -100,13 +104,15 @@ namespace TeamTextRPG
             Console.Write("HP ");
             DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red);
             Hp -= player_damage;
+            Console.Write($" -> ");
+
             if (Hp <= 0)
             {
                 Hp = 0;
                 IsDie = true;
-                Console.WriteLine($" -> Dead");
+                DisplayMonsterColorString("Dead", ConsoleColor.DarkGray, true);
             }
-            else Console.WriteLine($" -> {Hp}");
+            else DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
         }
 
         public bool CheckMonsterAvoid(bool is_hawkeye)
