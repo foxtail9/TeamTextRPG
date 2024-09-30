@@ -37,6 +37,7 @@ public class Character
     }
 
     public int DropInventoryCount
+    public Character(int level, string name, string job, int atk, int def, int hp, int gold)
     {
         get
         {
@@ -236,6 +237,7 @@ public class Character
         return Inventory.Contains(item);
     }
 
+<<<<<<<<< Temporary merge branch 1
     public int RandomDamage()
     {
         // 오차 범위 계산
