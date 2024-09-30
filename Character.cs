@@ -237,7 +237,6 @@ public class Character
         return Inventory.Contains(item);
     }
 
-<<<<<<<<< Temporary merge branch 1
     public int RandomDamage()
     {
         // 오차 범위 계산
