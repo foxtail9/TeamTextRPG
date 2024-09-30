@@ -15,7 +15,7 @@ public class Quest
     public string RequiredMonsterType { get; set; } // 필요 몬스터 종류
     public int GoldReward { get; set; } // 골드 보상
     public int ExpReward { get; set; } // 경험치 보상
-    public Item RewardItem { get; set; }  // 보상 아이템
+    public string RewardItem { get; set; }  // 보상 아이템
     public int CurrentMonsterCount { get; private set; } // 현재 처치한 몬스터 수
 
     public Quest(QuestType type, string name, string description, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, string rewardItem)
@@ -58,7 +58,6 @@ public class Quest
 public static class QuestDatabase
 {
     public static List<Quest> Quests { get; private set; }
-    var sword = new Item("희귀", "철검", 0, 10, "강력한 철로 만든 검입니다.", 150);
 
     // 스태틱 생성자: 프로그램 시작 시 자동으로 실행되어 퀘스트들을 한꺼번에 초기화
     static QuestDatabase()
@@ -73,7 +72,7 @@ public static class QuestDatabase
                 "Wolf", // 필요 몬스터 종류
                 100, // 보상: 골드
                 50, // 보상: 경험치
-                sword // 보상: 아이템
+                "철검" // 보상: 아이템
             ),
             new Quest(
                 QuestType.일반,
