@@ -14,6 +14,8 @@ public class Character
 
     private List<Item> Inventory = new List<Item>();
     private List<Item> EquipList = new List<Item>();
+    public Item EquipWeapon { get; set; }
+    public Item EquipArmor { get; set; }
 
     public int InventoryCount
     {
@@ -51,29 +53,53 @@ public class Character
             Item targetItem = Inventory[i];
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
-            string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
+            string displayEquipped =  "";
+            if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                displayEquipped = "[E]";
+            }
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 
-    public void EquipItem(Item item)
+    public void EquipItem(Item item, int i)
     {
+        int targetItemType = Inventory[i].Type;
+        Item targetItem = Inventory[i];
 
-        if (IsEquipped(item))
+        if (EquipArmor == targetItem || EquipWeapon == targetItem)
         {
-            EquipList.Remove(item);
-            if (item.Type == 0)
-                ExtraAtk -= item.Akp;
+            if (targetItemType == 0)
+            {
+                ExtraAtk -= EquipWeapon.Akp;
+                EquipWeapon = null;
+            }
+               
             else
-                ExtraDef -= item.Akp;
+            {
+                ExtraDef -= EquipArmor.Akp;
+                EquipArmor = null;
+            }
+               
+                
         }
         else
         {
-            EquipList.Add(item);
-            if (item.Type == 0)
-                ExtraAtk += item.Akp;
+            if (targetItemType == 0)
+            {
+                EquipList.Remove(EquipWeapon);
+                EquipWeapon = Inventory[i];
+                ExtraAtk = EquipWeapon.Akp;
+            }
+               
             else
-                ExtraDef += item.Akp;
+            {
+                EquipList.Remove(EquipArmor);
+                EquipArmor = Inventory[i];
+                ExtraDef = EquipArmor.Akp;
+            }
         }
     }
 
@@ -92,9 +118,19 @@ public class Character
 
     public void SellITem(Item item, int i)
     {
-        int targetItem = Inventory[i].Value;
-        Inventory.RemoveAt(i);
-        Gold += targetItem;
+        int targetItemValue = Inventory[i].Value;
+        Item targetItem = Inventory[i];
+        if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
+        {
+            Console.WriteLine("착용중인 아이템입니다");
+            Console.WriteLine("Enter 를 눌러주세요.");
+            Console.ReadLine();
+        }
+        else
+        {
+            Inventory.RemoveAt(i);
+            Gold += targetItemValue;
+        } 
     }
 
     public void DisplaySellInventory(bool showIdx)
@@ -104,8 +140,14 @@ public class Character
             Item targetItem = Inventory[i];
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
-            string displayEquipped = IsEquipped(targetItem) ? "[E]" : "";
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
+            string displayEquipped = "";
+            if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                displayEquipped = "[E]";
+            }
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}G");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
     }
