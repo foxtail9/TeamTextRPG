@@ -12,7 +12,7 @@ namespace TeamTextRPG
         public string Name { get; }
         public int Atk { get;  }
         public int Def { get; }
-        public int Hp { get;  }
+        public int Hp { get; set; }
         //public int Mp { get;  }
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
@@ -83,6 +83,7 @@ namespace TeamTextRPG
             Random random = new Random();
             int avoid_prob = random.Next(1, 101);
             int new_player_damage = player_damage - Def;
+            new_player_damage = new_player_damage > 0 ? new_player_damage : 0;
 
             // 회피 성공
             if (avoid_prob <= Avoid && !is_hawkeye)
