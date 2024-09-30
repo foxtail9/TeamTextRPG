@@ -102,6 +102,7 @@ namespace TeamTextRPG
             Hp -= player_damage;
             if (Hp <= 0)
             {
+                Hp = 0;
                 IsDie = true;
                 Console.WriteLine($" -> Dead");
             }
