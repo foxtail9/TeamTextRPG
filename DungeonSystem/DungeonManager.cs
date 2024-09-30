@@ -24,7 +24,6 @@ public class DungeonManager
     {
         Player_in = player;
         Dungeon_in = cur_dungeon;
-        Monsters_spawn = new List<Monster>();
 
         SpawnDungeonMonster();
     }
@@ -39,6 +38,9 @@ public class DungeonManager
 
     private void SpawnDungeonMonster()
     {
+        // 스폰 몬스터 배열 초기화 진행
+        Monsters_spawn = new List<Monster>();
+
         Random rand = new Random();
         int spawn_num = rand.Next(1, 4);
 
@@ -47,9 +49,9 @@ public class DungeonManager
             // 해당 던전에서 출현 가능한 몬스터 List에서 
             // spawn_num의 수만큼 현재 전투에 참여한 몬스터 List에 추가합니다. 
 
-            int random_monster = rand.Next(1, Dungeon_in.Monsters_can_appear.Count);
+            int random_monster = rand.Next(0, Dungeon_in.Monsters_can_appear.Count);
 
-            Monsters_spawn.Add(Dungeon_in.Monsters_can_appear[random_monster]);
+            Monsters_spawn.Add(new Monster(Dungeon_in.Monsters_can_appear[random_monster]));
         }
     }
 
@@ -121,24 +123,37 @@ public class DungeonManager
                 DisplayInDungeonBattle();
                 break;
             default:
-                DisplayBattleSystem();
+                DisplayBattleSystem(result);
+
+                // 결과 검사 
+                // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
+                // 2. 플레이어의 Hp가 0인가?
+
+                KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
+                if (battleResult.Key)
+                {
+                    DisplayBattleResult(battleResult.Value);
+                    return;
+                }
+
                 break;
         }
     }
 
-    private void DisplayBattleSystem()
+    private void DisplayBattleSystem(int targetIdx)
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
 
         // 공격 순서 랜덤 배치
-        int rouletteNum = Monsters_spawn.Count;
+        int rouletteNum = Monsters_spawn.Count + 1; // 플레이어도 공격 순서에 껴있으니 포함시킨다.
         int[] AttackSequence = new int[rouletteNum];
         for(int i = 0; i < rouletteNum; i++) AttackSequence[i] = i;
         AttackSequence = Shffle(AttackSequence);
 
         // 공격 과정 표시
+        int turnIdx = 1;
         for (int i = 0; i < AttackSequence.Length; i++)
         {
             int randomIdx = AttackSequence[i];
@@ -146,30 +161,23 @@ public class DungeonManager
             // 플레이어의 공격
             if (randomIdx == 0)
             {
-                Console.WriteLine($"{Player_in.Name} 의 공격!!!");
-                DisplayPlayerAttackResult(Monsters_spawn[randomIdx]);
+                Console.WriteLine($"TURN [{turnIdx}] {Player_in.Name}의 공격!!");
+                DisplayPlayerAttackResult(Monsters_spawn[targetIdx - 1]);
+                turnIdx++;
                 Console.WriteLine();
             }
             // 몬스터의 공격
-            else
+            else if(randomIdx != 0)
             {
-                Console.WriteLine($"{Monsters_spawn[randomIdx]} 의 공격!!!");
-                DisplayMonsterAttackResult(Monsters_spawn[randomIdx]);
+                if(Monsters_spawn[randomIdx - 1].Hp <= 0)
+                {
+                    continue;
+                }
+                Console.WriteLine($"TURN [{turnIdx}] {Monsters_spawn[randomIdx - 1].Name}[{randomIdx}]의 공격!!");
+                DisplayMonsterAttackResult(Monsters_spawn[randomIdx - 1]);
+                turnIdx++;
                 Console.WriteLine();
             }
-
-            Console.WriteLine();
-        }
-
-        // 결과 검사 
-        // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
-        // 2. 플레이어의 Hp가 0인가?
-
-        KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
-        if (battleResult.Key)
-        {
-            DisplayBattleResult(battleResult.Value);
-            return;
         }
 
         // 행동 선택
@@ -183,7 +191,7 @@ public class DungeonManager
             case 0:
                 break;
             default:
-                DisplayBattleSystem();
+                DisplayBattleSystem(result);
                 break;
         }
     }
@@ -216,11 +224,15 @@ public class DungeonManager
             Console.WriteLine("You Lose...");
             Console.ResetColor();
         }
-
-        // 플레이어 체력 / 경험치 등을 출력.
-        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} {Player_in.Hp}");
         Console.WriteLine();
 
+        // 플레이어 체력 / 경험치 등을 출력.
+        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} HP {Player_in.Hp}");
+        Console.WriteLine();
+
+        ///
+        /// 여기에 처치한 몬스터의 종류 등을 기록하겠습니다!
+        ///
 
 
         // 행동 선택
@@ -253,7 +265,7 @@ public class DungeonManager
     private void DisplayPlayerInfo()
     {
         Console.WriteLine("[내정보]");
-        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} ({Player_in.Job}) {Player_in.Hp} / {Player_in.MaxHp}");
+        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} ({Player_in.Job}) HP {Player_in.Hp} / {Player_in.MaxHp}");
     }
 
     // KeyValuePair<bool, bool>()
