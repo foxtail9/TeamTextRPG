@@ -35,7 +35,7 @@ class Program
     }
     static void SetData()
     {
-        player = new Character(1, "Chad", "전사", 10, 5, 100, 10000);
+        player = new Character(1, "Chad", "전사", 10, 5, 100, 100, 10, 10, 10000);
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
@@ -52,10 +52,17 @@ class Program
         };
         dropDB = new Drop[]
         {
-            new Drop("HP 포션",0,"HP를 30회복 시킨다", 500),
-            new Drop("MP 포션",1,"MP를 30회복 시킨다", 500),
-            new Drop("사파이어", 2,"푸른색의 보석이다.",500)
+            new Drop("HP 포션",0,"체력을 30회복 시킨다", 500),
+            new Drop("MP 포션",1,"마나를 30회복 시킨다", 500),
+            new Drop("루비", 2,"붉은색의 보석이다. 체력를 10 올려준다",1000),
+            new Drop("사파이어", 3,"푸른색의 보석이다. 마나를 10 올려준다",1000)
         };
+        for (int i = 0; i < 3; i++)
+        {
+            player.AddDropItem(dropDB[0]);
+            player.AddDropItem(dropDB[1]);
+            player.AddDropItem(dropDB[2]);
+        }
     }
     static void DisplayMainUI()
     {
@@ -118,6 +125,7 @@ class Program
                 DisplayMainUI();
                 break;
         }
+
     }
     static void DisplayInventoryUI()
     {
@@ -125,17 +133,22 @@ class Program
         Console.WriteLine("인벤토리");
         Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
         Console.WriteLine();
-        Console.WriteLine("[아이템 목록]");
+        Console.WriteLine("[장비 아이템 목록]");
 
         player.DisplayInventory(false);
 
+        Console.WriteLine("[드랍 아이템 목록]");
+
+        player.DisplayDropInventory(false);
+
         Console.WriteLine();
         Console.WriteLine("1. 장착 관리");
+        Console.WriteLine("2. 드랍 아이템 관리");
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        int result = CheckInput(0, 1);
+        int result = CheckInput(0, 2);
 
         switch (result)
         {
@@ -145,6 +158,9 @@ class Program
 
             case 1:
                 DisplayEquipUI();
+                break;
+            case 2:
+                DisplayUsePotionUI();
                 break;
         }
     }
@@ -287,6 +303,54 @@ class Program
                 break;
         }
     }
+
+    static void DisplayDrpoUI()
+    {
+        Console.Clear();
+        Console.WriteLine("[아이템 목록]");
+        player.DisplayDropInventory(false);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine("1. 포션사용");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        int result = CheckInput(0, 1);
+
+        switch (result)
+        {
+            case 0:
+                DisplayInventoryUI();
+                break;
+            case 1:
+                DisplayUsePotionUI();
+                break;
+        }
+    }
+    static void DisplayUsePotionUI()
+    {
+        Console.Clear();
+        Console.WriteLine("[아이템 목록]");
+        player.DisplayDropInventory(true);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        int result = CheckInput(0, player.DropInventoryCount);
+
+        switch (result)
+        {
+            case 0:
+                DisplayInventoryUI();
+                break;
+            default :
+                int itemIdx = result - 1;
+                player.UsePotion(itemIdx);
+                DisplayUsePotionUI();
+                break;
+        }
+    }
+
+
     static void DisplaySellUI()
     {
         Console.Clear();
@@ -296,13 +360,46 @@ class Program
         Console.WriteLine("[보유 골드]");
         Console.WriteLine($"{player.Gold} G");
         Console.WriteLine();
-        Console.WriteLine("[아이템 목록]");
+        Console.WriteLine("[장비 아이템 목록]");
+        player.DisplayInventory(false);
+        Console.WriteLine("[드랍 아이템 목록]");
+        player.DisplayDropInventory(false);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine("1. 장비 아이템 판매");
+        Console.WriteLine("2. 드랍아이템 판매");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, 2);
+        switch (result)
+        {
+            case 0:
+                DisplayShopUI();
+                break;
+            case 1:
+                DisplaySeIlItemUI();
+                break;
+            case 2:
+                DisplaySeIlDrpoItemUI();
+                break;
+        }
+    }
+    static void DisplaySeIlItemUI()
+    {
+        Console.Clear();
+        Console.WriteLine("상점 - 아이템 판매");
+        Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        Console.WriteLine($"{player.Gold} G");
+        Console.WriteLine();
+        Console.WriteLine("[장비 아이템 목록]");
         player.DisplaySellInventory(true);
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-
         int result = CheckInput(0, player.InventoryCount);
         switch (result)
         {
@@ -311,12 +408,43 @@ class Program
                 break;
             default:
                 int itemIdx = result - 1;
-                Item targetItem = itemDb[itemIdx];
-                player.SellITem(targetItem, itemIdx);
-                DisplaySellUI();
+                player.SellITem(itemIdx);
+                DisplaySeIlItemUI();
                 break;
         }
     }
+    static void DisplaySeIlDrpoItemUI()
+    {
+        Console.Clear();
+        Console.WriteLine("상점 - 아이템 판매");
+        Console.WriteLine("불필요한 아이템을 판매할 수 있는 상점입니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        Console.WriteLine($"{player.Gold} G");
+        Console.WriteLine();
+        Console.WriteLine("[드랍 아이템 목록]");
+        player.DisplayDropInventory(true);
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        int result = CheckInput(0, player.DropInventoryCount);
+        switch (result)
+        {
+            case 0:
+                DisplayShopUI();
+                break;
+            default:
+                int itemIdx = result - 1;
+                player.SellDropItem(itemIdx);
+                DisplaySeIlDrpoItemUI();
+                break;
+        }
+    }
+
+
+
+
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
     /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
