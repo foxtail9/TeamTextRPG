@@ -39,9 +39,12 @@ public class Character
         }
     }
 
-    public int DropInventoryCount()
+    public int DropInventoryCount
     {
-        return DropInventory.Count;
+        get
+        {
+            return DropInventory.Count;
+        }
     }
 
     public Character(int level, string name, string job, int atk, int def, int maxhp, int hp, int maxmp, int mp, int gold)
