@@ -10,6 +10,7 @@ public class Quest
     public QuestType questype { get; set; }  // 퀘스트 타입
     public string questname { get; set; }     // 퀘스트 이름
     public string questDescription { get; set; }  // 퀘스트 내용
+    public bool IsInProgress { get; set; } = false; // 퀘스트 진행 상태
 
     public Quest(QuestType type, string name, string description)
     {

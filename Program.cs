@@ -395,15 +395,17 @@ class Program
 
     static void DisplayQuestUI()
     {
-        List<Quest> allQuests = QuestDatabase.Quests;
         Console.Clear();
+        List<Quest> allQuests = QuestDatabase.Quests;
         Console.WriteLine("<<퀘스트 게시판>>");
         Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
 
         Console.WriteLine("[퀘스트 목록]\n");
         for (int i = 0; i < allQuests.Count; i++)
         {
-            Console.WriteLine($"{i + 1}.[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :"); // 퀘스트 이름만 출력
+            // 퀘스트의 진행 상태에 따라 표시 형식을 변경
+            string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
+            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");
@@ -412,14 +414,22 @@ class Program
 
         switch (result)
         {
-            case 1:
-                //퀘스트로직 수행
-                break;
             case 0:
                 DisplayMainUI();
                 break;
+            default:
+                int questIndex = result - 1;
+                Quest selectedQuest = allQuests[questIndex];
+                player.AddQuest(selectedQuest); // 퀘스트 추가
+                Console.WriteLine("계속하려면 Enter 키를 누르세요...");
+                Console.ReadLine();
+                DisplayQuestUI(); // 퀘스트 UI 다시 표시
+                break;
         }
     }
+
+
+
     static int CheckInput(int min, int max)
     {
         int result;

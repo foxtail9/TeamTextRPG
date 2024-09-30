@@ -16,6 +16,7 @@ public class Character
     private List<Item> EquipList = new List<Item>();
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
+    public List<Quest> PlayerQuestList = new List<Quest>();
 
     public int InventoryCount
     {
@@ -34,8 +35,9 @@ public class Character
         Def = def;
         Hp = hp;
         Gold = gold;
+        PlayerQuestList = new List<Quest>();
     }
-
+   
     public void DisplayCharacterInfo()
     {
         Console.WriteLine($"Lv. {Level:D2}");
@@ -110,11 +112,9 @@ public class Character
 
     public void BuyItem(Item item)
     {
-
         Gold -= item.Value;
         Inventory.Add(item);
     }
-
 
     public void SellITem(Item item, int i)
     {
@@ -152,7 +152,6 @@ public class Character
 
     }
 
-
     public void Rest()
     {
         Gold -= 500;
@@ -162,5 +161,18 @@ public class Character
     public bool HasItem(Item item)
     {
         return Inventory.Contains(item);
+    }
+
+    public void AddQuest(Quest quest)
+    {
+        if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
+        {
+            PlayerQuestList.Add(quest);
+            Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+        }
+        else
+        {
+            Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
+        }
     }
 }
