@@ -514,6 +514,7 @@ class Program
         Console.Write("2.저주받은 땅 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("보통");
+        Console.ResetColor();
         Console.Write("3.함락한 성 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("어려움");
@@ -550,6 +551,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
         Console.ResetColor();
+        Console.WriteLine(")");
         Console.WriteLine();
         Console.WriteLine("1. 휴식하기");
         Console.WriteLine("0. 나가기");

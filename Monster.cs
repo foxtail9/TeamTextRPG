@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,12 +15,13 @@ namespace TeamTextRPG
         public int Tier { get; }
         public string Name { get; }
         public int Atk { get;  }
-        public int Def { get; }
         public int Hp { get; set; }
         //public int Mp { get;  }
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
         public int Exp { get; }
+        
+        public bool IsDie { get; private set; }
         public Item[] DropItem { get; }
 
         //      티어 공격력 방어력 hp  exp
@@ -41,7 +43,6 @@ namespace TeamTextRPG
             Tier = original.Tier;
             Name = original.Name;
             Atk = original.Atk;
-            Def = original.Def;
             Hp = original.Hp;
             Exp = original.Exp;
             DropItem = original.DropItem;
@@ -53,7 +54,6 @@ namespace TeamTextRPG
             Tier = tier;
             Name = name;
             Atk = atk;
-            Def = def;
             Hp = hp;
             Exp = 1;
             DropItem = dropItem;
@@ -77,41 +77,75 @@ namespace TeamTextRPG
             int critical_prob = random.Next(1, 101);
             int monster_damage;
 
-            // 크리티컬 성공
+            Console.Write($"Tier.{Tier} ");
+            DisplayMonsterColorString(Name, ConsoleColor.Green);
+            Console.WriteLine("의 공격!");
+
+            if (player.CheckPlayerAvoid() || player.IsInvincible)
+            {
+                DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
+                if(player.IsInvincible == true) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+                else Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                return;
+            }
+
+            DisplayMonsterColorString(player.Name.ToString(), ConsoleColor.Cyan);
+            Console.Write("을(를) 맞췄습니다. ");
+
             if (critical_prob <= Critical)
             {
+                // 치명타
                 monster_damage = (int)Math.Round(RandomDamage() * 1.6f);
-                player.PlayerDefense(monster_damage);
-                Console.WriteLine("치명타가 발동되었습니다.");
+                Console.Write($"[데미지 : ");
+                DisplayMonsterColorString(monster_damage.ToString(), ConsoleColor.Red);
+                Console.WriteLine("] - 치명타 공격!!");
             }
             else
             {
+                // 평타
                 monster_damage = RandomDamage();
-                player.PlayerDefense(monster_damage);
-                Console.WriteLine("치명타가 발동되지 않았습니다.");
+                Console.Write($"[데미지 : ");
+                DisplayMonsterColorString(monster_damage.ToString(), ConsoleColor.Red);
+                Console.WriteLine("]");
             }
-
-            Console.WriteLine($"{player.Name}에게 {monster_damage}의 피해를 입혀 Hp가 {player.Hp}가 되었습니다.");
+            player.PlayerDefense(monster_damage);
         }
 
-        public void MonsterDefense(int player_damage, bool is_hawkeye)
+        public void MonsterDefense(int player_damage)
         {
+            Console.Write($"Tier.{Tier} ");
+            DisplayMonsterColorString(Name, ConsoleColor.Green, true);
+
+            Console.Write("HP ");
+            DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red);
+            Hp -= player_damage;
+            Console.Write($" -> ");
+
+            if (Hp <= 0)
+            {
+                Hp = 0;
+                IsDie = true;
+                DisplayMonsterColorString("Dead", ConsoleColor.DarkGray, true);
+            }
+            else DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
+        }
+
+        public bool CheckMonsterAvoid(bool is_hawkeye)
+        {
+            if (is_hawkeye) return false;
             Random random = new Random();
             int avoid_prob = random.Next(1, 101);
-            int new_player_damage = player_damage - Def;
-            new_player_damage = new_player_damage > 0 ? new_player_damage : 0;
 
-            // 회피 성공
-            if (avoid_prob <= Avoid && !is_hawkeye)
-            {
-                Console.WriteLine("회피했습니다.");
-            }
-            else if (avoid_prob > Avoid || is_hawkeye)
-            {
-                Hp -= new_player_damage;
-                Console.WriteLine("회피에 실패하였습니다.");
-                Console.WriteLine($"{Name}이 {new_player_damage}만큼의 피해를 입어 HP가 {Hp}가 되었습니다.");
-            }
+            if (avoid_prob <= Avoid) return true;
+            else return false;
+        }
+
+        public void DisplayMonsterColorString(string str, ConsoleColor color, bool new_line=false)
+        {
+            Console.ForegroundColor = color;
+            if(new_line) Console.WriteLine(str);
+            else Console.Write(str);
+            Console.ResetColor();
         }
     }
 }

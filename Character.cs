@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG;
@@ -13,12 +14,16 @@ public class Character
     public int Gold { get; protected set; }
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
+    public int Exp { get; protected set; } = 0;
+
     public int MaxHp { get; protected set; }
     public int MaxMp { get; protected set; }
 
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
+    public bool IsRegenerateMp { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
+    public bool IsDie { get; protected set; } = false;
 
     public int ExtraAtk { get; private set; }
     public int ExtraDef { get; private set; }
@@ -128,8 +133,6 @@ public class Character
                 ExtraDef -= EquipArmor.Akp;
                 EquipArmor = null;
             }
-               
-                
         }
         else
         {
@@ -238,25 +241,41 @@ public class Character
 
     public void BasicAttack(Monster monster)
     {
-
         // 치명타 확률
         Random random = new Random();
         int critical_prob = random.Next(1, 101);
         int player_damage;
 
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+        Console.WriteLine("의 공격!");
+
+        if (monster.CheckMonsterAvoid(IsHawkeye))
+        {
+            Console.Write($"Tier.{monster.Tier}");
+            DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+            Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+            return;
+        }
+
+        Console.Write($"Tier.{monster.Tier} ");
+        DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+        Console.Write("을(를) 맞췄습니다. ");
+
         if (critical_prob <= Critical)
         {
             // 치명타
-            Console.WriteLine("치명타가 발동되었습니다.");
-            player_damage = (int)Math.Round(RandomDamage() * 0.1f);
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            player_damage = (int)Math.Round(RandomDamage() * 1.6f);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("] - 치명타 공격!!");
         }
         else
         {
             // 평타
-            Console.WriteLine("치명타가 발동되지 않았습니다.");
             player_damage = RandomDamage();
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("]"); 
         }
         Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. \n");
 
@@ -269,34 +288,49 @@ public class Character
                 UpdateQuestProgress(monster.Name);
             }
         }
+        monster.MonsterDefense(player_damage);
     }
 
     public void PlayerDefense(int monster_damage)
     {
-        // 회피 확률
-        Random random = new Random();
-        int avoid_prob = random.Next(1, 101);
         int new_monster_damage = monster_damage - Def;
         new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
-        if (IsInvincible)
-        {
-            Console.WriteLine($"{Name}이 Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
-            return;
-        }
+        Console.Write($"Lv.{Level} ");
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
 
-        if (avoid_prob <= Avoid)
+        Console.Write("HP ");
+        DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red);
+        Hp -= new_monster_damage;
+        Console.Write($" -> ");
+
+        if (Hp <= 0)
         {
-            // 회피 성공
-            Console.WriteLine("회피했습니다.");
+            Hp = 0;
+            IsDie = true;
+            DisplayPlayerColorString("Dead", ConsoleColor.DarkGray, true);
         }
-        else
+        else DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red, true);
+    }
+
+    public bool CheckPlayerAvoid()
+    {
+        Random random = new Random();
+        int avoid_prob = random.Next(1, 101);
+
+        if (avoid_prob <= Avoid) return true;
+        else return false;
+    }
+
+    public bool CheckMana(int player_mana)
+    {
+        if (Mp < player_mana)
         {
-            // 회피 실패
-            Hp -= new_monster_damage;
-            Console.WriteLine("회피에 실패하였습니다.");
-            Console.WriteLine($"{Name}이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Console.WriteLine("가 부족합니다.");
+            return false;
         }
+        return true;
     }
 
     public virtual void ActiveSkill(Monster monster)
@@ -397,5 +431,31 @@ public class Character
     public void DefeatMonster(string monsterType)
     {
 
+    }
+
+    public void DisplayPlayerColorString(string str, ConsoleColor color, bool new_line = false)
+    {
+        Console.ForegroundColor = color;
+        if(new_line) Console.WriteLine(str);
+        else Console.Write(str);
+        Console.ResetColor();
+    }
+
+    public void UpdatePlayerExp(Monster monster)
+    {
+        if (monster.IsDie) Exp += monster.Exp;
+        CalcPlayerLevelUp();
+    }
+
+    public virtual void CalcPlayerLevelUp()
+    {
+        if ((Level * 10) < Exp)
+        {
+            Level++;
+            Console.Write($"레벨업하여 ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+            Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
+            Exp -= Level * 10;
+        }
     }
 }
