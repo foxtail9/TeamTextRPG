@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TeamTextRPG
 {
@@ -33,6 +36,19 @@ namespace TeamTextRPG
         // 좀비	2	40	20	30	2
         // 
         // 드래곤	1	70	70	100	3
+
+        // 복사 생성자
+        public Monster(Monster original)
+        {
+            Tier = original.Tier;
+            Name = original.Name;
+            Atk = original.Atk;
+            Def = original.Def;
+            Hp = original.Hp;
+            Exp = original.Exp;
+            DropItem = original.DropItem;
+        }
+
 
         public Monster(int tier, string name, int atk, int def, int hp, int exp, Item[] dropItem)
         {

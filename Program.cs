@@ -1,4 +1,5 @@
-﻿using TeamTextRPG.Byungchul;
+﻿using Microsoft.VisualBasic;
+using TeamTextRPG.Byungchul;
 using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
@@ -534,7 +535,8 @@ class Program
             // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
             // default로 설정하였습니다.
             default:
-                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result - 1], player);
+                Dungeon curDungeon = new Dungeon(DungeonDatabase.Dungeons[result - 1]);
+                DungeonManager DM = new DungeonManager(curDungeon, player);
                 DM.DungeonSystem();
                 DisplayMainUI();
                 break;
@@ -620,8 +622,6 @@ class Program
                 break;
         }
     }
-
-
 
     static int CheckInput(int min, int max)
     {
