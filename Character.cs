@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG;
@@ -13,13 +14,16 @@ public class Character
     public int Gold { get; protected set; }
     public int Critical { get; private set; } = 15;
     public int Avoid { get; protected set; } = 10;
+    public int Exp { get; protected set; } = 0;
 
     public int MaxHp { get; protected set; }
     public int MaxMp { get; protected set; }
 
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
+    public bool IsRegenerateMp { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
+    public bool IsDie { get; protected set; } = false;
 
     public int ExtraAtk { get; private set; }
     public int ExtraDef { get; private set; }
@@ -29,8 +33,9 @@ public class Character
     private List<Item> EquipList = new List<Item>();
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
-    public List<Quest> PlayerQuestList = new List<Quest>();
-
+    public Dictionary<string, int> RequiredMonsterNames { get; set; } = new Dictionary<string, int>();
+    public List<Quest> PlayerQuestList { get; set; } = new List<Quest>();
+    public List<Quest> PlayerCompletedQuests = new List<Quest>();
     public int InventoryCount
     {
         get
@@ -93,8 +98,7 @@ public class Character
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
-
-
+    
     public void DisplayDropInventory(bool showIdx)
     {
         for (int i = 0; i < DropInventory.Count; i++)
@@ -128,8 +132,6 @@ public class Character
                 ExtraDef -= EquipArmor.Akp;
                 EquipArmor = null;
             }
-               
-                
         }
         else
         {
@@ -238,55 +240,88 @@ public class Character
 
     public void BasicAttack(Monster monster)
     {
-
         // 치명타 확률
         Random random = new Random();
         int critical_prob = random.Next(1, 101);
         int player_damage;
 
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+        Console.WriteLine("의 공격!");
+
+        if (monster.CheckMonsterAvoid(IsHawkeye))
+        {
+            Console.Write($"Tier.{monster.Tier}");
+            DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+            Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+            return;
+        }
+
+        Console.Write($"Tier.{monster.Tier} ");
+        DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+        Console.Write("을(를) 맞췄습니다. ");
+
         if (critical_prob <= Critical)
         {
             // 치명타
-            Console.WriteLine("치명타가 발동되었습니다.");
-            player_damage = (int)Math.Round(RandomDamage() * 0.1f);
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            player_damage = (int)Math.Round(RandomDamage() * 1.6f);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("] - 치명타 공격!!");
         }
         else
         {
             // 평타
-            Console.WriteLine("치명타가 발동되지 않았습니다.");
             player_damage = RandomDamage();
-            monster.MonsterDefense(player_damage, IsHawkeye);
+            Console.Write($"[데미지 : ");
+            DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
+            Console.WriteLine("]"); 
         }
-        Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp}이 되었습니다. \n");
+
+        
+        monster.MonsterDefense(player_damage);
     }
 
     public void PlayerDefense(int monster_damage)
     {
-        // 회피 확률
-        Random random = new Random();
-        int avoid_prob = random.Next(1, 101);
         int new_monster_damage = monster_damage - Def;
         new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
-        if (IsInvincible)
-        {
-            Console.WriteLine($"{Name}이 Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
-            return;
-        }
+        Console.Write($"Lv.{Level} ");
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
 
-        if (avoid_prob <= Avoid)
+        Console.Write("HP ");
+        DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red);
+        Hp -= new_monster_damage;
+        Console.Write($" -> ");
+
+        if (Hp <= 0)
         {
-            // 회피 성공
-            Console.WriteLine("회피했습니다.");
+            Hp = 0;
+            IsDie = true;
+            DisplayPlayerColorString("Dead", ConsoleColor.DarkGray, true);
         }
-        else
+        else DisplayPlayerColorString(Hp.ToString(), ConsoleColor.Red, true);
+    }
+
+    public bool CheckPlayerAvoid()
+    {
+        Random random = new Random();
+        int avoid_prob = random.Next(1, 101);
+
+        if (avoid_prob <= Avoid) return true;
+        else return false;
+    }
+
+    public bool CheckMana(int player_mana)
+    {
+        if (Mp < player_mana)
         {
-            // 회피 실패
-            Hp -= new_monster_damage;
-            Console.WriteLine("회피에 실패하였습니다.");
-            Console.WriteLine($"{Name}이 {new_monster_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Console.WriteLine("가 부족합니다.");
+            return false;
         }
+        return true;
     }
 
     public virtual void ActiveSkill(Monster monster)
@@ -313,18 +348,97 @@ public class Character
     {
         return DropInventory.Contains(drop);
     }
-
-
     public void AddQuest(Quest quest)
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
         {
-            PlayerQuestList.Add(quest);
-            Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+            if(this.Level >= quest.RequiredLevel)
+            {
+                PlayerQuestList.Add(quest);
+                Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+                // 잡아야 할 몬스터 리스트에 추가
+                if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
+                {
+                    if (!RequiredMonsterNames.ContainsKey(quest.RequiredMonsterType))
+                    {
+                        RequiredMonsterNames.Add(quest.RequiredMonsterType, quest.RequiredMonsterCount);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"요구 레벨이 부족합니다!");
+            }
         }
         else
         {
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
+        }
+    }
+    public void UpdateQuestProgress(string monsterName)
+    {
+        Console.WriteLine("퀘스트 확인 시퀀스 시작");
+        //// 완료된 퀘스트를 저장할 리스트
+        List<Quest> completedQuests = new List<Quest>();
+
+        foreach (var quest in PlayerQuestList)
+        {
+            // 해당 퀘스트의 타겟 몬스터가 맞는지 확인
+            if (quest.RequiredMonsterType == monsterName)
+            {
+                quest.RequiredMonsterCount--; // 현재 잡은 몬스터 수 감소
+                Console.WriteLine($"{quest.questname} 퀘스트: {monsterName}을(를) 잡았습니다. 남은 몬스터 수: {quest.RequiredMonsterCount}");
+
+                // 퀘스트 목표 달성 여부 확인
+                if (quest.RequiredMonsterCount <= 0)
+                {
+                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+
+                    this.Gold += quest.GoldReward; //골드보상
+                    //this.Exp += quest.GoldReward; 경험치 보상
+                    Inventory.Add(quest.RewardItem);
+
+                    // 완료된 퀘스트 리스트에 추가
+                    completedQuests.Add(quest);
+                }
+            }
+        }
+
+        // 완료된 퀘스트 삭제
+        foreach (var completedQuest in completedQuests)
+        {
+            // PlayerQuestList에서 완료된 퀘스트 삭제
+            PlayerQuestList.Remove(completedQuest);
+            PlayerCompletedQuests.Add(completedQuest); // 완료된 퀘스트는 따로 보관 가능
+
+            // RequiredMonsterNames에서 해당 몬스터 삭제
+            if (RequiredMonsterNames.ContainsKey(completedQuest.RequiredMonsterType))
+            {
+                RequiredMonsterNames.Remove(completedQuest.RequiredMonsterType);
+            }
+        }
+    }
+    public void DisplayPlayerColorString(string str, ConsoleColor color, bool new_line = false)
+    {
+        Console.ForegroundColor = color;
+        if(new_line) Console.WriteLine(str);
+        else Console.Write(str);
+        Console.ResetColor();
+    }
+    public void UpdatePlayerExp(Monster monster)
+    {
+        if (monster.IsDie) Exp += monster.Exp;
+        CalcPlayerLevelUp();
+    }
+    public virtual void CalcPlayerLevelUp()
+    {
+        if ((Level * 10) < Exp)
+        {
+            Level++;
+            Console.Write($"레벨업하여 ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+            Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
+            Exp -= Level * 10;
         }
     }
 }

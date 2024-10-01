@@ -1,4 +1,5 @@
-﻿using TeamTextRPG.Byungchul;
+﻿using Microsoft.VisualBasic;
+using TeamTextRPG.Byungchul;
 using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
@@ -24,7 +25,7 @@ class Program
 
     // =====================
 
-    private static Character player;
+    public static Character player;
     private static Item[] itemDb;
     private static Drop[] dropDB;
     private static Character[] invertory;
@@ -36,7 +37,7 @@ class Program
     static void SetData()
     {
         player = new Character();
-        //SetPlayerName();
+        SetPlayerName();
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
@@ -89,7 +90,6 @@ class Program
             }
         }
     }
-
     static void SetPlayerJob(string player_name)
     {
         Console.Clear();
@@ -109,7 +109,6 @@ class Program
             case 3: player = new Mage(1, player_name, 1500); break;
         }
     }
-
     static void DisplayMainUI()
     {
         Console.Clear();
@@ -353,7 +352,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayDrpoUI()
     {
         Console.Clear();
@@ -399,8 +397,6 @@ class Program
                 break;
         }
     }
-
-
     static void DisplaySellUI()
     {
         Console.Clear();
@@ -497,7 +493,6 @@ class Program
                 break;
         }
     }
-
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
     /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
@@ -515,6 +510,7 @@ class Program
         Console.Write("2.저주받은 땅 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("보통");
+        Console.ResetColor();
         Console.Write("3.함락한 성 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("어려움");
@@ -526,9 +522,21 @@ class Program
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
         int result = CheckInput(0, 3);
+        switch (result)
+        {
+            case 0:
+                DisplayMainUI();
+                break;
 
-
-
+            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
+            // default로 설정하였습니다.
+            default:
+                Dungeon curDungeon = new Dungeon(DungeonDatabase.Dungeons[result - 1]);
+                DungeonManager DM = new DungeonManager(curDungeon, player);
+                DM.DungeonSystem();
+                DisplayMainUI();
+                break;
+        }
 
     }
     static void DisplayRestUI()
@@ -539,6 +547,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
         Console.ResetColor();
+        Console.WriteLine(")");
         Console.WriteLine();
         Console.WriteLine("1. 휴식하기");
         Console.WriteLine("0. 나가기");
@@ -572,19 +581,8 @@ class Program
                 DisplayMainUI();
                 DisplayMainUI();
                 break;
-
-            // 위 함수 CheckInput에서 올바르지 않은 입력(1~3 제외)은 걸려지므로,
-            // default로 설정하였습니다.
-            default:
-                //Dungeon dungeon = new Dungeon(result);
-                //dungeon.DungeonSystem(player);
-
-                DungeonManager DM = new DungeonManager(DungeonDatabase.Dungeons[result], player);
-                DM.DungeonSystem();
-                break;
         }
     }
-
     static void DisplayQuestUI()
     {
         Console.Clear();
@@ -597,7 +595,7 @@ class Program
         {
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
             string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
-            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :");
+            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {allQuests[i].RewardItem}");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");
@@ -619,9 +617,6 @@ class Program
                 break;
         }
     }
-
-
-
     static int CheckInput(int min, int max)
     {
         int result;
