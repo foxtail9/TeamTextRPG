@@ -33,8 +33,9 @@ public class Character
     private List<Item> EquipList = new List<Item>();
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
-    public List<Quest> PlayerQuestList = new List<Quest>();
-
+    public Dictionary<string, int> RequiredMonsterNames { get; set; } = new Dictionary<string, int>();
+    public List<Quest> PlayerQuestList { get; set; } = new List<Quest>();
+    public List<Quest> PlayerCompletedQuests = new List<Quest>();
     public int InventoryCount
     {
         get
@@ -43,9 +44,12 @@ public class Character
         }
     }
 
-    public int DropInventoryCount()
+    public int DropInventoryCount
     {
-        return DropInventory.Count;
+        get
+        {
+            return DropInventory.Count;
+        }
     }
 
     public void DisplayCharacterInfo()
@@ -94,8 +98,7 @@ public class Character
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
-
-
+    
     public void DisplayDropInventory(bool showIdx)
     {
         for (int i = 0; i < DropInventory.Count; i++)
@@ -273,6 +276,9 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
+        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp}이 되었습니다. \n");
+
+        
         monster.MonsterDefense(player_damage);
     }
 
@@ -342,20 +348,76 @@ public class Character
     {
         return DropInventory.Contains(drop);
     }
-
     public void AddQuest(Quest quest)
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
         {
-            PlayerQuestList.Add(quest);
-            Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+            if(this.Level >= quest.RequiredLevel)
+            {
+                PlayerQuestList.Add(quest);
+                Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+                // 잡아야 할 몬스터 리스트에 추가
+                if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
+                {
+                    if (!RequiredMonsterNames.ContainsKey(quest.RequiredMonsterType))
+                    {
+                        RequiredMonsterNames.Add(quest.RequiredMonsterType, quest.RequiredMonsterCount);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"요구 레벨이 부족합니다!");
+            }
         }
         else
         {
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
     }
+    public void UpdateQuestProgress(string monsterName)
+    {
+        Console.WriteLine("퀘스트 확인 시퀀스 시작");
+        //// 완료된 퀘스트를 저장할 리스트
+        List<Quest> completedQuests = new List<Quest>();
 
+        foreach (var quest in PlayerQuestList)
+        {
+            // 해당 퀘스트의 타겟 몬스터가 맞는지 확인
+            if (quest.RequiredMonsterType == monsterName)
+            {
+                quest.RequiredMonsterCount--; // 현재 잡은 몬스터 수 감소
+                Console.WriteLine($"{quest.questname} 퀘스트: {monsterName}을(를) 잡았습니다. 남은 몬스터 수: {quest.RequiredMonsterCount}");
+
+                // 퀘스트 목표 달성 여부 확인
+                if (quest.RequiredMonsterCount <= 0)
+                {
+                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+
+                    this.Gold += quest.GoldReward; //골드보상
+                    this.Exp += quest.GoldReward; //경험치 보상
+                    Inventory.Add(quest.RewardItem); //아이템 보상
+
+                    // 완료된 퀘스트 리스트에 추가
+                    completedQuests.Add(quest);
+                }
+            }
+        }
+
+        // 완료된 퀘스트 삭제
+        foreach (var completedQuest in completedQuests)
+        {
+            // PlayerQuestList에서 완료된 퀘스트 삭제
+            PlayerQuestList.Remove(completedQuest);
+            PlayerCompletedQuests.Add(completedQuest); // 완료된 퀘스트는 따로 보관 가능
+
+            // RequiredMonsterNames에서 해당 몬스터 삭제
+            if (RequiredMonsterNames.ContainsKey(completedQuest.RequiredMonsterType))
+            {
+                RequiredMonsterNames.Remove(completedQuest.RequiredMonsterType);
+            }
+        }
+    }
     public void DisplayPlayerColorString(string str, ConsoleColor color, bool new_line = false)
     {
         Console.ForegroundColor = color;
@@ -363,13 +425,11 @@ public class Character
         else Console.Write(str);
         Console.ResetColor();
     }
-
     public void UpdatePlayerExp(Monster monster)
     {
         if (monster.IsDie) Exp += monster.Exp;
         CalcPlayerLevelUp();
     }
-
     public virtual void CalcPlayerLevelUp()
     {
         if ((Level * 10) < Exp)

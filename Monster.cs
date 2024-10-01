@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
@@ -17,12 +18,14 @@ namespace TeamTextRPG
         public int Atk { get;  }
         public int Hp { get; set; }
         //public int Mp { get;  }
+
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
         public int Exp { get; }
         
         public bool IsDie { get; private set; }
         public Item[] DropItem { get; }
+        public Character player;
 
         //      티어 공격력 방어력 hp  exp
         // 늑대	3	20	15	40	1
@@ -37,7 +40,6 @@ namespace TeamTextRPG
         // 
         // 드래곤	1	70	70	100	3
 
-        // 복사 생성자
         public Monster(Monster original)
         {
             Tier = original.Tier;
@@ -47,7 +49,6 @@ namespace TeamTextRPG
             Exp = original.Exp;
             DropItem = original.DropItem;
         }
-
 
         public Monster(int tier, string name, int atk, int def, int hp, int exp, Item[] dropItem)
         {
@@ -113,6 +114,7 @@ namespace TeamTextRPG
 
         public void MonsterDefense(int player_damage)
         {
+
             Console.Write($"Tier.{Tier} ");
             DisplayMonsterColorString(Name, ConsoleColor.Green, true);
 
@@ -126,8 +128,14 @@ namespace TeamTextRPG
                 Hp = 0;
                 IsDie = true;
                 DisplayMonsterColorString("Dead", ConsoleColor.DarkGray, true);
+
+                // 퀘스트 진행 감시하는 로직
+                Program.player.UpdateQuestProgress(Name);
             }
-            else DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
+            else
+            {
+                DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
+            }
         }
 
         public bool CheckMonsterAvoid(bool is_hawkeye)
