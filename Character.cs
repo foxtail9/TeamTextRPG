@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG;
 public class Character
@@ -86,6 +85,8 @@ public class Character
         for (int i = 0; i < Inventory.Count; i++)
         {
             Item targetItem = Inventory[i];
+            float targetItemValue = Inventory[i].Value * 0.8f;
+            int sellValue = int.Parse(targetItemValue.ToString("0"));
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = "";
@@ -94,7 +95,7 @@ public class Character
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
             }
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {sellValue}");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
@@ -166,9 +167,21 @@ public class Character
         DropInventory.Add(drop);
     }
 
+    public void AddItem(Item item)
+    {
+        Inventory.Add(item);
+    }
+
+    public void AddGold(int gold)
+    {
+        Gold += gold;
+    }
+
     public void SellITem(int i)
     {
-        int targetItemValue = Inventory[i].Value;
+
+        float targetItemValue = Inventory[i].Value * 0.8f;
+        int sellValue = int.Parse(targetItemValue.ToString("0"));
         if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
         {
             Console.WriteLine("착용중인 아이템입니다");
@@ -178,7 +191,7 @@ public class Character
         else
         {
             Inventory.RemoveAt(i);
-            Gold += targetItemValue;
+            Gold += sellValue;
         } 
     }
 
@@ -218,7 +231,8 @@ public class Character
     public void Rest()
     {
         Gold -= 500;
-        Hp = 100;
+        Hp = MaxHp;
+        Mp = MaxMp;
     }
 
     public bool HasItem(Item item)
@@ -332,6 +346,11 @@ public class Character
         return true;
     }
 
+    public virtual void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
+    {
+        Console.WriteLine("현재 주소 넘겨짐.");
+    }
+
     public virtual void ActiveSkill(Monster monster)
     {
 
@@ -390,7 +409,6 @@ public class Character
     }
     public void UpdateQuestProgress(string monsterName)
     {
-        Console.WriteLine("퀘스트 확인 시퀀스 시작");
         //// 완료된 퀘스트를 저장할 리스트
         List<Quest> completedQuests = new List<Quest>();
 
@@ -405,7 +423,8 @@ public class Character
                 // 퀘스트 목표 달성 여부 확인
                 if (quest.RequiredMonsterCount <= 0)
                 {
-                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+                    Console.WriteLine($"<<{quest.questname} 퀘스트 완료>>");
+                    Console.WriteLine($"퀘스트 보상획득 : {quest.GoldReward}경험치 상승 | {quest.GoldReward}골드 획득 | {quest.RewardItem.Name}획득");
 
                     this.Gold += quest.GoldReward; //골드보상
                     this.Exp += quest.GoldReward; //경험치 보상
@@ -457,5 +476,6 @@ public class Character
             Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
             Exp -= Level * 10;
         }
+        else return;
     }
 }

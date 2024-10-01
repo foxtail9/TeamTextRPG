@@ -23,8 +23,8 @@ namespace TeamTextRPG
         public int Avoid { get; } = 10;
         public int Exp { get; }
         public int Gold { get; }
-        
         public bool IsDie { get; private set; }
+        public Drop[] EdibleItem { get; }
         public Item[] DropItem { get; }
 
         public Character player;
@@ -51,9 +51,10 @@ namespace TeamTextRPG
             Exp = original.Exp;
             Gold = original.Gold;
             DropItem = original.DropItem;
+            EdibleItem = original.EdibleItem;
         }
 
-        public Monster(int tier, string name, int atk, int def, int hp, int exp, int gold, Item[] dropItem)
+        public Monster(int tier, string name, int atk, int def, int hp, int exp, int gold, Item[] dropItem, Drop[] edibleItem)
         {
             Tier = tier;
             Name = name;
@@ -62,6 +63,7 @@ namespace TeamTextRPG
             Exp = exp;
             Gold = gold;
             DropItem = dropItem;
+            EdibleItem = edibleItem;
         }
 
         public int RandomDamage()

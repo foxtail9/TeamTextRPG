@@ -17,7 +17,7 @@ public class Dungeon
     // 던전 설명
     public string Description { get; set; }
 
-    // DungeonDatabase의 생성된 던전을 참고하는 초기화 생성자
+    // DungeonDatabase의 기록된 던전 값을 복사해오는 초기화 생성자
     public Dungeon(Dungeon original)
     {
         DungeonDiffculty = original.DungeonDiffculty;

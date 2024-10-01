@@ -31,8 +31,7 @@ class Program
 
     static void Main(string[] args)
     {
-        SetData();
-        DisplayMainUI();
+        intro(300); //300 ~ 500 사이
     }
     static void SetData()
     {
@@ -182,13 +181,13 @@ class Program
 
         player.DisplayInventory(false);
 
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
 
         player.DisplayDropInventory(false);
 
         Console.WriteLine();
         Console.WriteLine("1. 장착 관리");
-        Console.WriteLine("2. 드랍 아이템 관리");
+        Console.WriteLine("2. 소모 아이템 관리");
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -410,12 +409,12 @@ class Program
         Console.WriteLine();
         Console.WriteLine("[장비 아이템 목록]");
         player.DisplayInventory(false);
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
         player.DisplayDropInventory(false);
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
         Console.WriteLine("1. 장비 아이템 판매");
-        Console.WriteLine("2. 드랍아이템 판매");
+        Console.WriteLine("2. 소모아이템 판매");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
@@ -474,7 +473,7 @@ class Program
         Console.WriteLine($"{player.Gold} G");
         Console.ResetColor();
         Console.WriteLine();
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
         player.DisplayDropInventory(true);
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
@@ -503,6 +502,7 @@ class Program
         Console.Clear();
         Console.WriteLine("<<던전 입구에 도착했습니다>>");
         Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
+        Console.WriteLine();
         Console.Write("1.엘프의 숲 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("쉬움");
@@ -633,4 +633,30 @@ class Program
             Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
+    static void intro(int time)
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        string[] asciiArtLines = {
+           @" __  __     ____        ____       _____       ____       ____      ",
+           @"/\ \/\ \   /\  _`\     /\  _`\    /\  __`\    /\  _`\    /\  _`\    ",
+           @"\ \ \ \ \  \ \,\L\_\   \ \ \/\_\  \ \ \/\ \   \ \ \/\ \  \ \ \L\_\  ",
+           @" \ \ \ \ \  \/_\__ \    \ \ \/_/_  \ \ \ \ \   \ \ \ \ \  \ \  _\L  ",
+           @"  \ \ \_/ \   /\ \L\ \   \ \ \L\ \  \ \ \_\ \   \ \ \_\ \  \ \ \L\ \",
+           @"   \ `\___/   \ `\____\   \ \____/   \ \_____\   \ \____/   \ \____/",
+           @"    `\/__/     \/_____/    \/___/     \/_____/    \/___/     \/___/ "
+        };
+
+        foreach (string line in asciiArtLines)
+        {
+            Console.WriteLine(line);
+            Thread.Sleep(time); 
+        }
+        Thread.Sleep(time * 3);
+        Console.ForegroundColor = ConsoleColor.White;
+        SetData();
+        
+        DisplayMainUI();
+    }
+
+
 }

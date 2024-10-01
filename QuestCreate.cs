@@ -42,7 +42,6 @@ public static class QuestDatabase
 {
     public static List<Quest> Quests { get; private set; }
 
-    // 스태틱 생성자: 프로그램 시작 시 자동으로 실행되어 퀘스트들을 한꺼번에 초기화
     static QuestDatabase()
     {
         var sword = new Item("커먼", "퀘스트로 받은 철검", 0, 10, "강력한 철로 만든 검입니다.", 150);
