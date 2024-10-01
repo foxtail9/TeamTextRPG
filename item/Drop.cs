@@ -1,4 +1,4 @@
-﻿namespace TeamTextRPG.Byungchul
+﻿namespace TeamTextRPG
 {
     public class Drop
     {
