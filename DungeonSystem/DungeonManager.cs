@@ -314,7 +314,7 @@ public class DungeonManager
                     break;
                 }
                     
-                Console.WriteLine($"TURN [{turnIdx}] -> {Player_in.Name}");
+                Console.WriteLine($"TURN [{turnIdx}]");
                 Console.WriteLine();
                 DisplayPlayerAttackResult(Monsters_spawn[targetIdx - 1]);
                 turnIdx++;
@@ -336,7 +336,7 @@ public class DungeonManager
                     break;
                 }
 
-                Console.WriteLine($"TURN [{turnIdx}] -> {Monsters_spawn[randomIdx - 1].Name}[{randomIdx}]");
+                Console.WriteLine($"TURN [{turnIdx}]");
                 Console.WriteLine();
                 DisplayMonsterAttackResult(Monsters_spawn[randomIdx - 1]);
                 turnIdx++;
