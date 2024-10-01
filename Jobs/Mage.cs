@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -27,14 +28,17 @@ namespace TeamTextRPG.Jobs
             Gold = gold;
         }
 
-        public override void ActiveSkill(Monster monster)
+        public override void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
         {
-            FireBall(monster);
-        }
-
-        public override void ActiveSkill(List<Monster> monster)
-        {
-            WaterBomb(monster);
+            // selectIdxs 1번 -> monsters 0번 인덱스
+            if (selectIdxs.Count == 1)
+            {
+                FireBall(monsters[selectIdxs[0] - 1]); 
+            }
+            else if (selectIdxs.Count == 2)
+            {
+                WaterBomb(new List<Monster> { monsters[selectIdxs[0] - 1], monsters[selectIdxs[1] - 1] });
+            }
         }
 
         public override void UtilitySkill()
@@ -49,44 +53,46 @@ namespace TeamTextRPG.Jobs
             
             Console.WriteLine("파이어볼을 사용했습니다.");
             int fire_ball_damage = RandomDamage() * 2;
+
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
-            monster.MonsterDefense(fire_ball_damage);
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
+
+            DiaplyerSkillDamage(fire_ball_damage);
+            monster.MonsterDefense(fire_ball_damage);
         }
 
-        public void WaterBomb(List<Monster> monster)
+        public void WaterBomb(List <Monster> monsters)
         {
             // 몬스터 2마리 공격
             // 공격력 100% 피해, 마나 소모 5
             if (CheckMana(5) == false) return;
 
-            List<int> monster_list = new List<int>();
-            for(int i = 0; i < monster_list.Count; i++)
-            {
-                monster_list.Add(i);
-            }
-            
-            Random rand = new Random();
-            int first_monster_index = rand.Next(0, monster_list.Count);
-            monster_list.Remove(first_monster_index);
-            int second_monster_index = rand.Next(0, monster_list.Count);
-
             Console.WriteLine("워터밤을 사용했습니다.");
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
-            monster[first_monster_index].MonsterDefense(Atk);
-            monster[second_monster_index].MonsterDefense(Atk);
+            Mp -= 5;
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
+
+            foreach(Monster monster in monsters)
+            {
+                DiaplyerSkillDamage(Atk);
+                monster.MonsterDefense(Atk);
+            }
         }
 
         public void RegenerateMp()
         {
             // 마나 재생 (전투 당 1회)
             Console.WriteLine("마나재생을 사용했습니다.");
+            Console.Write("MP ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Mp = MaxMp;
+            Console.Write($" -> ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
 
             if (IsRegenerateMp) Console.WriteLine("이번 전투에 마나재생을 사용했습니다.");
             else
@@ -102,13 +108,16 @@ namespace TeamTextRPG.Jobs
 
         public override void CalcPlayerLevelUp()
         {
-            base.CalcPlayerLevelUp();
-            MaxHp += 5;
-            Hp = MaxHp;
-            MaxMp += 15;
-            Mp = MaxMp;
-            Atk += 5;
-            Def += 5;
+            if ((Level * 10) < Exp)
+            {
+                base.CalcPlayerLevelUp();
+                MaxHp += 5;
+                Hp = MaxHp;
+                MaxMp += 15;
+                Mp = MaxMp;
+                Atk += 5;
+                Def += 5;
+            }
         }
     }
 }

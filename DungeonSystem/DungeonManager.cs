@@ -40,7 +40,6 @@ public class DungeonManager
         Player_In_Dungeon_Before_Information.Mp_before = Player_in.Mp;
         Player_In_Dungeon_Before_Information.Exp_before = Player_in.Exp;
 
-
         SpawnDungeonMonster();
     }
     private void SpawnDungeonMonster()
@@ -243,7 +242,7 @@ public class DungeonManager
     private void DisplayInSelectSkill()
     {
         Console.Clear();
-        Console.WriteLine("Battle!!");
+        Console.WriteLine("Battle!! - 스킬 선택");
         Console.WriteLine();
 
         // 현재 던전에 존재하는 몬스터 정보 출력
@@ -271,20 +270,20 @@ public class DungeonManager
                 case 0: DisplayInDungeonBattle(); break;
                 case 1:
                     // 강력한 한방
-                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 가드 - 일반 공격 시스템으로 진행
+                    int select_index = CheckAttackInput(0, Monsters_spawn.Count);
                     Player_in.UtilitySkill();
-                    DisplayBattleSystemWithNormal(0);
+                    DisplayBattleSystemWithNormal(select_index);
                     break;
                 case 3:
                     // 아드레날린[패시브]
                     Console.WriteLine("패시브 스킬은 선택할 수 없습니다.");
                     Console.ReadLine();
-                    DisplayInDungeonBattle();
+                    DisplayInSelectSkill();
                     break;
             }
         }
@@ -295,21 +294,20 @@ public class DungeonManager
                 case 0: DisplayInDungeonBattle(); break;
                 case 1:
                     // 더블샷
-                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 호크아이
-                    //Player_in.UtilitySkill(Monsters_spawn[spawn_num]);
-                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
-                    DisplayBattleSystemWithSkill(multiIndex);
+                    int select_index = CheckAttackInput(0, Monsters_spawn.Count);
+                    Player_in.UtilitySkill();
+                    DisplayBattleSystemWithNormal(select_index);
                     break;
                 case 3:
                     // 신속한 이동
                     Console.WriteLine("패시브 스킬은 선택할 수 없습니다.");
                     Console.ReadLine();
-                    DisplayInDungeonBattle();
+                    DisplayInSelectSkill();
                     break;
             }
         }
@@ -320,13 +318,12 @@ public class DungeonManager
                 case 0: DisplayInDungeonBattle(); break;
                 case 1:
                     // 파이어볼
-                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 워터밤
-                    //Player_in.UtilitySkill(Monsters_spawn[spawn_num], Monsters_spawn[two_spawn_num]);
+                    if(Monsters_spawn.Count < 2) Console.WriteLine("개체 수가 2 이상이 아니어서 사용할 수 없습니다.");
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 2);
                     DisplayBattleSystemWithSkill(multiIndex);
                     break;
@@ -334,7 +331,8 @@ public class DungeonManager
                     // 마나 재생
                     if(Player_in.IsRegenerateMp) Console.WriteLine("마나 재생은 이미 사용하셨습니다.");
                     Console.ReadLine();
-                    DisplayInDungeonBattle();
+                    Player_in.UtilitySkill();
+                    DisplayInSelectSkill();
                     break;
             }
         }
@@ -363,6 +361,8 @@ public class DungeonManager
         for (int i = 0; i < AttackSequence.Length; i++)
         {
             Console.Clear();
+
+            if (Player_in.Job.Equals("전사")) Player_in.PassiveSkill();
 
             int randomIdx = AttackSequence[i];
 
@@ -490,6 +490,14 @@ public class DungeonManager
                     break;
             }
         }
+
+        // 임시로 넣어놨습니다.
+        KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
+        if (battleResult.Key)
+        {
+            DisplayBattleResult(battleResult.Value);
+            return;
+        }
     }
 
     // 일반 공격 결과
@@ -504,7 +512,7 @@ public class DungeonManager
     {
         Player_in.ActiveSkill(selectIdxs, monsters);
 
-        for(int i = 0; i < Monsters_spawn.Count; i++)
+        for(int i = 0; i < monsters.Count; i++)
         {
             Player_in.UpdatePlayerExp(Monsters_spawn[i]);
         }

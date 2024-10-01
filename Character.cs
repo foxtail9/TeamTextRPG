@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Numerics;
 
 namespace TeamTextRPG;
 public class Character
@@ -348,25 +349,10 @@ public class Character
 
     public virtual void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
     {
-        Console.WriteLine("현재 주소 넘겨짐.");
-    }
-
-    public virtual void ActiveSkill(Monster monster)
-    {
-
-    }
-
-    public virtual void ActiveSkill(List<Monster> monster)
-    {
-
+        
     }
 
     public virtual void UtilitySkill()
-    {
-
-    }
-
-    public virtual void UtilitySkill(Monster monster)
     {
 
     }
@@ -468,14 +454,17 @@ public class Character
 
     public virtual void CalcPlayerLevelUp()
     {
-        if ((Level * 10) < Exp)
-        {
-            Level++;
-            Console.Write($"레벨업하여 ");
-            DisplayPlayerColorString(Name, ConsoleColor.Cyan);
-            Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
-            Exp -= Level * 10;
-        }
-        else return;
+        Level++;
+        Console.Write($"레벨업하여 ");
+        DisplayPlayerColorString(Name, ConsoleColor.Cyan);
+        Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
+        Exp -= Level * 10;
+    }
+
+    public void DiaplyerSkillDamage(int skill_damage)
+    {
+        Console.Write($"[데미지 : ");
+        DisplayPlayerColorString(skill_damage.ToString(), ConsoleColor.Red);
+        Console.WriteLine("]");
     }
 }

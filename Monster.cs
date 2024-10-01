@@ -100,9 +100,6 @@ namespace TeamTextRPG
                 return;
             }
 
-            DisplayMonsterColorString(player.Name.ToString(), ConsoleColor.Cyan);
-            Console.Write("을(를) 맞췄습니다. ");
-
             if (critical_prob <= Critical)
             {
                 // 치명타

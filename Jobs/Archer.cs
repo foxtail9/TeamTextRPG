@@ -26,14 +26,14 @@ namespace TeamTextRPG.Jobs
             FastMovement();
         }
 
-        public override void ActiveSkill(Monster monster)
+        public override void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
         {
-            DoubleShot(monster);
+            DoubleShot(monsters[selectIdxs[0] - 1]); // selectIdxs 1번 -> monsters 0번 인덱스
         }
 
-        public override void UtilitySkill(Monster monster)
+        public override void UtilitySkill()
         {
-            Hawkeye(monster);
+            Hawkeye();
         }
 
         public void DoubleShot(Monster monster)
@@ -44,24 +44,30 @@ namespace TeamTextRPG.Jobs
             Console.WriteLine("더블샷을 사용했습니다.");
             int double_shot_damage = RandomDamage() * 2;
 
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 10;
-            monster.MonsterDefense(double_shot_damage);
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
+
+            DiaplyerSkillDamage(double_shot_damage);
+            monster.MonsterDefense(double_shot_damage);
         }
 
-        public void Hawkeye(Monster monster)
+        public void Hawkeye()
         {
             // 몬스터의 미스 확률 무시 마나소모 5
+            if (CheckMana(5) == false) return;
             Console.WriteLine("호크아이를 발동했습니다.");
             IsHawkeye = true;
 
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
-            Mp -= 10;
-            monster.MonsterDefense(Atk);
+            Mp -= 5;
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
@@ -79,13 +85,16 @@ namespace TeamTextRPG.Jobs
 
         public override void CalcPlayerLevelUp()
         {
-            base.CalcPlayerLevelUp();
-            MaxHp += 5;
-            Hp = MaxHp;
-            MaxMp += 5;
-            Mp = MaxMp;
-            Atk += 15;
-            Def += 5;
+            if ((Level * 10) < Exp)
+            {
+                base.CalcPlayerLevelUp();
+                MaxHp += 5;
+                Hp = MaxHp;
+                MaxMp += 5;
+                Mp = MaxMp;
+                Atk += 15;
+                Def += 5;
+            }
         }
     }
 }

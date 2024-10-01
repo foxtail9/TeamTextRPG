@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -28,9 +29,9 @@ namespace TeamTextRPG.Jobs
             Gold = gold;
         }
 
-        public override void ActiveSkill(Monster monster)
+        public override void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
         {
-            PowerfulShot(monster);
+            PowerfulShot(monsters[selectIdxs[0] - 1]); // selectIdxs 1번 -> monsters 0번 인덱스
         }
 
         public override void UtilitySkill()
@@ -50,12 +51,16 @@ namespace TeamTextRPG.Jobs
 
             Console.WriteLine("강력한 한방을 사용했습니다.");
             int power_shot_damage = RandomDamage() * 3;
+
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
-            monster.MonsterDefense(power_shot_damage);
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
+            DiaplyerSkillDamage(power_shot_damage);
+            monster.MonsterDefense(power_shot_damage);
         }
 
         public void Guard()
@@ -63,6 +68,11 @@ namespace TeamTextRPG.Jobs
             // 다음 턴의 데미지 0 - 마나소모 10
             if (CheckMana(10) == false) return;
             Console.WriteLine("가드를 사용했습니다.");
+            Console.Write("MP ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Mp -= 10;
+            Console.Write($" -> ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
             IsInvincible = true;
         }
 
@@ -78,17 +88,28 @@ namespace TeamTextRPG.Jobs
                     OnPassive = true;
                 }
             }
+            else
+            {
+                if (Hp > (WARRIOR_MAX_HP / 2)){
+                    Console.WriteLine("아드레날린이 활성화 되었습니다.");
+                    Atk -= Atk / 2;
+                    OnPassive = false;
+                }
+            }
         }
 
         public override void CalcPlayerLevelUp()
         {
-            base.CalcPlayerLevelUp();
-            MaxHp += 10;
-            Hp = MaxHp;
-            MaxMp += 5;
-            Mp = MaxMp;
-            Atk += 5;
-            Def += 10;
+            if (Level * 10 < Exp)
+            {
+                base.CalcPlayerLevelUp();
+                MaxHp += 10;
+                Hp = MaxHp;
+                MaxMp += 5;
+                Mp = MaxMp;
+                Atk += 5;
+                Def += 10;
+            }
         }
     }
 }
