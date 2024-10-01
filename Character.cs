@@ -438,11 +438,15 @@ public class Character
         else Console.Write(str);
         Console.ResetColor();
     }
+
     public void UpdatePlayerExp(Monster monster)
     {
-        if (monster.IsDie) Exp += monster.Exp;
-        CalcPlayerLevelUp();
+        if (monster.IsDie) {
+            Exp += monster.Exp;
+            CalcPlayerLevelUp();
+        };
     }
+
     public virtual void CalcPlayerLevelUp()
     {
         if ((Level * 10) < Exp)

@@ -206,7 +206,7 @@ public class DungeonManager
                     break;
                 case 2:
                     // 호크아이
-                    //Player_in.UtilitySkill(Monsters_spawn[spawn_num]);
+                    // Player_in.UtilitySkill(Monsters_spawn[spawn_num]);
                     break;
                 case 3:
                     // 신속한 이동
