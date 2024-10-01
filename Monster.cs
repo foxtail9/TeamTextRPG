@@ -43,7 +43,6 @@ namespace TeamTextRPG
             Tier = original.Tier;
             Name = original.Name;
             Atk = original.Atk;
-            Def = original.Def;
             Hp = original.Hp;
             Exp = original.Exp;
             DropItem = original.DropItem;
