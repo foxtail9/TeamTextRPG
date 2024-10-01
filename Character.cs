@@ -85,6 +85,8 @@ public class Character
         for (int i = 0; i < Inventory.Count; i++)
         {
             Item targetItem = Inventory[i];
+            float targetItemValue = Inventory[i].Value * 0.8f;
+            int sellValue = int.Parse(targetItemValue.ToString("0"));
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = "";
@@ -93,7 +95,7 @@ public class Character
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
             }
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {sellValue}");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
@@ -177,7 +179,9 @@ public class Character
 
     public void SellITem(int i)
     {
-        int targetItemValue = Inventory[i].Value;
+
+        float targetItemValue = Inventory[i].Value * 0.8f;
+        int sellValue = int.Parse(targetItemValue.ToString("0"));
         if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
         {
             Console.WriteLine("착용중인 아이템입니다");
@@ -187,7 +191,7 @@ public class Character
         else
         {
             Inventory.RemoveAt(i);
-            Gold += targetItemValue;
+            Gold += sellValue;
         } 
     }
 
@@ -227,7 +231,8 @@ public class Character
     public void Rest()
     {
         Gold -= 500;
-        Hp = 100;
+        Hp = MaxHp;
+        Mp = MaxMp;
     }
 
     public bool HasItem(Item item)
@@ -238,7 +243,7 @@ public class Character
     public int RandomDamage()
     {
         // 오차 범위 계산
-        int damage_range = (int)Math.Round(Atk * 0.1f);
+        int damage_range = (int)Math.Ceiling(Atk * 0.1f);
         int start_damage = Atk - damage_range;
         int end_damage = Atk + damage_range;
 
@@ -285,10 +290,8 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
-        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp - player_damage}이 되었습니다. \n");
-
-        
         monster.MonsterDefense(player_damage);
+        IsHawkeye = false;
     }
 
     public void PlayerDefense(int monster_damage)
@@ -386,7 +389,6 @@ public class Character
     }
     public void UpdateQuestProgress(string monsterName)
     {
-        Console.WriteLine("퀘스트 확인 시퀀스 시작");
         //// 완료된 퀘스트를 저장할 리스트
         List<Quest> completedQuests = new List<Quest>();
 
@@ -401,7 +403,8 @@ public class Character
                 // 퀘스트 목표 달성 여부 확인
                 if (quest.RequiredMonsterCount <= 0)
                 {
-                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+                    Console.WriteLine($"<<{quest.questname} 퀘스트 완료>>");
+                    Console.WriteLine($"퀘스트 보상획득 : {quest.GoldReward}경험치 상승 | {quest.GoldReward}골드 획득 | {quest.RewardItem.Name}획득");
 
                     this.Gold += quest.GoldReward; //골드보상
                     this.Exp += quest.GoldReward; //경험치 보상
