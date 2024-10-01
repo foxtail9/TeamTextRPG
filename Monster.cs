@@ -63,7 +63,7 @@ namespace TeamTextRPG
         public int RandomDamage()
         {
             // 오차 범위 계산
-            int damage_range = (int)Math.Round(Atk * 0.1f);
+            int damage_range = (int)Math.Ceiling(Atk * 0.1f);
             int start_damage = Atk - damage_range;
             int end_damage = Atk + damage_range;
 
