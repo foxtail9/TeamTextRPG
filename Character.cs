@@ -276,9 +276,6 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
-        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp}이 되었습니다. \n");
-
-        
         monster.MonsterDefense(player_damage);
     }
 
