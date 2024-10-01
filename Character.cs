@@ -38,10 +38,13 @@ public class Character
             return Inventory.Count;
         }
     }
-   
-    public int DropInventoryCount()
+
+    public int DropInventoryCount
     {
-        return DropInventory.Count;
+        get
+        {
+            return DropInventory.Count;
+        }
     }
 
     public void DisplayCharacterInfo()
