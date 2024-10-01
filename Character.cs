@@ -362,7 +362,7 @@ public class Character
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
         {
-            if(this.Level > quest.RequiredLevel)
+            if(this.Level >= quest.RequiredLevel)
             {
                 PlayerQuestList.Add(quest);
                 Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
