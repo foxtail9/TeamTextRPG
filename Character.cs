@@ -243,7 +243,7 @@ public class Character
     public int RandomDamage()
     {
         // 오차 범위 계산
-        int damage_range = (int)Math.Round(Atk * 0.1f);
+        int damage_range = (int)Math.Ceiling(Atk * 0.1f);
         int start_damage = Atk - damage_range;
         int end_damage = Atk + damage_range;
 
@@ -290,10 +290,8 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
-        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp - player_damage}이 되었습니다. \n");
-
-        
         monster.MonsterDefense(player_damage);
+        IsHawkeye = false;
     }
 
     public void PlayerDefense(int monster_damage)

@@ -545,7 +545,7 @@ class Program
         Console.WriteLine("휴식하기");
         Console.Write($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : ");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine($"{player.Gold} G");
+        Console.Write($"{player.Gold} G");
         Console.ResetColor();
         Console.WriteLine(")");
         Console.WriteLine();

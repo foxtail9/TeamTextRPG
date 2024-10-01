@@ -68,7 +68,7 @@ namespace TeamTextRPG
         public int RandomDamage()
         {
             // 오차 범위 계산
-            int damage_range = (int)Math.Round(Atk * 0.1f);
+            int damage_range = (int)Math.Ceiling(Atk * 0.1f);
             int start_damage = Atk - damage_range;
             int end_damage = Atk + damage_range;
 
@@ -90,7 +90,7 @@ namespace TeamTextRPG
             if (player.CheckPlayerAvoid() || player.IsInvincible)
             {
                 DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
-                if(player.IsInvincible == true) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+                if(player.IsInvincible) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
                 else Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
                 return;
             }
