@@ -19,7 +19,7 @@ namespace TeamTextRPG.Jobs
             Level = level;
             Name = name;
             Job = "전사";
-            Atk = 40;
+            Atk = 540;
             Def = 60;
             MaxHp = 200;
             Hp = 200;

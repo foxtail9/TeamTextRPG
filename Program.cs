@@ -25,7 +25,7 @@ class Program
 
     // =====================
 
-    private static Character player;
+    public static Character player;
     private static Item[] itemDb;
     private static Drop[] dropDB;
     private static Character[] invertory;
@@ -91,7 +91,6 @@ class Program
             }
         }
     }
-
     static void SetPlayerJob(string player_name)
     {
         Console.Clear();
@@ -111,7 +110,6 @@ class Program
             case 3: player = new Mage(1, player_name, 1500); break;
         }
     }
-
     static void DisplayMainUI()
     {
         Console.Clear();
@@ -496,7 +494,6 @@ class Program
                 break;
         }
     }
-
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
     /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
@@ -587,7 +584,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayQuestUI()
     {
         Console.Clear();
@@ -622,7 +618,6 @@ class Program
                 break;
         }
     }
-
     static int CheckInput(int min, int max)
     {
         int result;
