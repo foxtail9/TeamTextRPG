@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG;
 public class Character
@@ -166,6 +165,16 @@ public class Character
         DropInventory.Add(drop);
     }
 
+    public void AddItem(Item item)
+    {
+        Inventory.Add(item);
+    }
+
+    public void AddGold(int gold)
+    {
+        Gold += gold;
+    }
+
     public void SellITem(int i)
     {
         int targetItemValue = Inventory[i].Value;
@@ -276,7 +285,7 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
-        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp}이 되었습니다. \n");
+        Console.WriteLine($"{monster.Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {monster.Hp - player_damage}이 되었습니다. \n");
 
         
         monster.MonsterDefense(player_damage);
@@ -440,10 +449,6 @@ public class Character
             Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
             Exp -= Level * 10;
         }
-        // 김동현 - 몬스터 처치시 레벨업이 지속되어 예외를 만들었습니다.
-        else
-        {
-            return;
-        }
+        else return;
     }
 }

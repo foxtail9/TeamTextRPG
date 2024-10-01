@@ -11,7 +11,6 @@ public struct Player_in_before
     public int Exp_before;
 }
 
-
 public class DungeonManager
 {
     // 현재 위치한 던전 정보
@@ -43,15 +42,6 @@ public class DungeonManager
 
         SpawnDungeonMonster();
     }
-
-    public void DungeonSystem()
-    {
-        while (!IsDungeonOver)
-        {
-            DisplayInDungeonBattle();
-        }
-    }
-
     private void SpawnDungeonMonster()
     {
         // 스폰 몬스터 배열 초기화 진행
@@ -67,6 +57,14 @@ public class DungeonManager
             int random_monster = rand.Next(0, Dungeon_in.Monsters_can_appear.Count);
 
             Monsters_spawn.Add(new Monster(Dungeon_in.Monsters_can_appear[random_monster]));
+        }
+    }
+
+    public void DungeonSystem()
+    {
+        while (!IsDungeonOver)
+        {
+            DisplayInDungeonBattle();
         }
     }
 
@@ -265,7 +263,6 @@ public class DungeonManager
                 // 플레이어의 체력이 0 인 경우 즉시 전투 시스템을 중단한다.
                 if (Player_in.IsDie)
                 {
-                    // 즉시 전투 시스템을 중단한다.
                     break;
                 }
 
@@ -322,10 +319,6 @@ public class DungeonManager
         }
         Console.WriteLine();
 
-        // 전투 보상 계산
-        // 드롭 아이템, 처지 몬스터 종류 계산
-        CalculateBattleCompensation();
-
         // 던전 몬스터 처치 결과 출력
         Console.WriteLine($"던전에서 몬스터 {Monsters_spawn.Count.ToString()}마리를 잡았습니다.");
         DisplayMonstersInfo(false);
@@ -336,7 +329,8 @@ public class DungeonManager
         Console.WriteLine();
 
         // 획득 아이템 출력
-        // ~~~~~
+        Console.WriteLine();
+        DisplayGetItem();
         Console.WriteLine();
 
         // 행동 선택
@@ -437,6 +431,12 @@ public class DungeonManager
         WriteColorString(Player_in.Exp.ToString(), ConsoleColor.Yellow);
     }
 
+    private void DisplayGetItem()
+    {
+        // 전투 보상 계산 및 콘솔 출력
+        CalculateBattleCompensation();
+    }
+
     // KeyValuePair<bool, bool>()
     // - Key 현재 게임이 끝났는가?
     // - Value 플레이어가 이겼는가?
@@ -455,9 +455,94 @@ public class DungeonManager
 
     private void CalculateBattleCompensation()
     {
-        // 획득 물품 계산
+        // 각 몬스터 별로 드랍할 수 있는 장착 / 사용 아이템 / 골드를 획득한다.
+        // 이 때, 확률은 다음과 같다. 
+        // Gold - 확정 드롭.
+        // 장착 아이템 - 10% 확률로 드랍. 드랍할 수 있는 아이템 중 하나가 드롭됨.
+        // 섭취 아이템 - 20% 확률로 드랍. 드랍할 수 있는 아이템 중 하나가 드롭됨.
 
-        
+        int getTotalGold = 0;
+        int DropProbability = 0;
+        Random random = new Random();
+
+        Dictionary<Item, int> dropItem = new Dictionary<Item, int>();
+        Dictionary<Drop, int> dropEdibleItem = new Dictionary<Drop, int>();
+
+        for (int i = 0; i < Monsters_spawn.Count; i++)
+        {
+            // Gold 계산
+            getTotalGold += Monsters_spawn[i].Gold;
+
+            // 장착 아이템 확률 계산
+            DropProbability = random.Next(0, 100);
+            if(DropProbability < 10)
+            {
+                int dropIdx = random.Next(0, Monsters_spawn[i].DropItem.Count());
+                Item curDropItem = Monsters_spawn[i].DropItem[dropIdx]; // ...?
+                
+                if(dropItem.Count > 1)
+                {
+                    foreach(var inItem in dropItem)
+                    {
+                        if(inItem.Key.Name == curDropItem.Name)
+                        {
+                            dropItem[inItem.Key]++;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dropItem.Add(curDropItem, 1);
+                }
+
+                Player_in.AddItem(curDropItem);
+            }
+
+            // 섭취 아이템 확률 계산
+            DropProbability = random.Next(0, 100);
+            if (DropProbability < 20)
+            {
+                int dropIdx = random.Next(0, Monsters_spawn[i].EdibleItem.Count());
+                Drop curEdibleItem = Monsters_spawn[i].EdibleItem[dropIdx]; // ...?
+
+                if (dropEdibleItem.Count > 1)
+                {
+                    foreach (var inItem in dropEdibleItem)
+                    {
+                        if (inItem.Key.Name == curEdibleItem.Name)
+                        {
+                            dropEdibleItem[inItem.Key]++;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dropEdibleItem.Add(curEdibleItem, 1);
+                }
+
+                Player_in.AddDropItem(curEdibleItem);
+            }
+        }
+        Player_in.AddGold(getTotalGold);
+
+        // 콘솔 출력
+        Console.WriteLine("[획득 아이템]");
+        WriteColorString(getTotalGold.ToString(), ConsoleColor.Yellow);
+        Console.Write(" Gold");
+        Console.WriteLine();
+
+        foreach (var inItem in dropItem)
+        {
+            Console.WriteLine($"{inItem.Key.Name} - {inItem.Value}");
+        }
+
+        foreach (var inItem in dropEdibleItem)
+        {
+            Console.WriteLine($"{inItem.Key.Name} - {inItem.Value}");
+        }
+        Console.WriteLine();
     }
 
     private int CheckAttackInput(int min, int max)

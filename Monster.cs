@@ -22,9 +22,12 @@ namespace TeamTextRPG
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
         public int Exp { get; }
-        
+        public int Gold { get; } = 100;
         public bool IsDie { get; private set; }
         public Item[] DropItem { get; }
+
+        public Drop[] EdibleItem { get; }
+
         public Character player;
 
         //      티어 공격력 방어력 hp  exp
@@ -48,16 +51,18 @@ namespace TeamTextRPG
             Hp = original.Hp;
             Exp = original.Exp;
             DropItem = original.DropItem;
+            EdibleItem = original.EdibleItem;
         }
 
-        public Monster(int tier, string name, int atk, int def, int hp, int exp, Item[] dropItem)
+        public Monster(int tier, string name, int atk, int def, int hp, int exp, Item[] dropItem, Drop[] edibleItem)
         {
             Tier = tier;
             Name = name;
             Atk = atk;
             Hp = hp;
-            Exp = 1;
+            Exp = exp;
             DropItem = dropItem;
+            EdibleItem = edibleItem;
         }
 
         public int RandomDamage()
