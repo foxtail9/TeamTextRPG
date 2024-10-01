@@ -311,6 +311,16 @@ public class Character
         else return false;
     }
 
+    public void ResetIsInvincible()
+    {
+        if (IsInvincible) IsInvincible = false;
+    }
+
+    public void ResetIsRegenerateMp()
+    {
+        if(IsRegenerateMp) IsRegenerateMp = false;
+    }
+
     public bool CheckMana(int player_mana)
     {
         if (Mp < player_mana)
@@ -333,6 +343,11 @@ public class Character
     }
 
     public virtual void UtilitySkill()
+    {
+
+    }
+
+    public virtual void UtilitySkill(Monster monster)
     {
 
     }
