@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TeamTextRPG.Byungchul;
 
 namespace TeamTextRPG
 {
@@ -17,12 +19,16 @@ namespace TeamTextRPG
         public int Atk { get;  }
         public int Hp { get; set; }
         //public int Mp { get;  }
+
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
         public int Exp { get; }
+        public int Gold { get; }
         
         public bool IsDie { get; private set; }
         public Item[] DropItem { get; }
+
+        public Character player;
 
         //      티어 공격력 방어력 hp  exp
         // 늑대	3	20	15	40	1
@@ -37,7 +43,6 @@ namespace TeamTextRPG
         // 
         // 드래곤	1	70	70	100	3
 
-        // 복사 생성자
         public Monster(Monster original)
         {
             Tier = original.Tier;
@@ -45,24 +50,25 @@ namespace TeamTextRPG
             Atk = original.Atk;
             Hp = original.Hp;
             Exp = original.Exp;
+            Gold = original.Gold;
             DropItem = original.DropItem;
         }
 
-
-        public Monster(int tier, string name, int atk, int def, int hp, int exp, Item[] dropItem)
+        public Monster(int tier, string name, int atk, int def, int hp, int exp, int gold, Item[] dropItem)
         {
             Tier = tier;
             Name = name;
             Atk = atk;
             Hp = hp;
-            Exp = 1;
+            Exp = exp;
+            Gold = gold;
             DropItem = dropItem;
         }
 
         public int RandomDamage()
         {
             // 오차 범위 계산
-            int damage_range = (int)Math.Round(Atk * 0.1f);
+            int damage_range = (int)Math.Ceiling(Atk * 0.1f);
             int start_damage = Atk - damage_range;
             int end_damage = Atk + damage_range;
 
@@ -84,7 +90,11 @@ namespace TeamTextRPG
             if (player.CheckPlayerAvoid() || player.IsInvincible)
             {
                 DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
-                if(player.IsInvincible == true) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+                if (player.IsInvincible)
+                {
+                    Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
+                    player.ResetIsInvincible(); // IsInvincible을 false로 변경
+                }
                 else Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
                 return;
             }
@@ -113,6 +123,7 @@ namespace TeamTextRPG
 
         public void MonsterDefense(int player_damage)
         {
+
             Console.Write($"Tier.{Tier} ");
             DisplayMonsterColorString(Name, ConsoleColor.Green, true);
 
@@ -126,8 +137,14 @@ namespace TeamTextRPG
                 Hp = 0;
                 IsDie = true;
                 DisplayMonsterColorString("Dead", ConsoleColor.DarkGray, true);
+
+                // 퀘스트 진행 감시하는 로직
+                Program.player.UpdateQuestProgress(Name);
             }
-            else DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
+            else
+            {
+                DisplayMonsterColorString(Hp.ToString(), ConsoleColor.Red, true);
+            }
         }
 
         public bool CheckMonsterAvoid(bool is_hawkeye)

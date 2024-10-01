@@ -25,7 +25,6 @@ namespace TeamTextRPG.Jobs
             MaxMp = 150;
             Mp = 150;
             Gold = gold;
-            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)

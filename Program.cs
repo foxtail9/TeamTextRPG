@@ -25,7 +25,7 @@ class Program
 
     // =====================
 
-    private static Character player;
+    public static Character player;
     private static Item[] itemDb;
     private static Drop[] dropDB;
     private static Character[] invertory;
@@ -37,6 +37,7 @@ class Program
     }
     static void SetData()
     {
+        player = new Character();
         SetPlayerName();
         itemDb = new Item[]
         {
@@ -63,7 +64,6 @@ class Program
         {
             player.AddDropItem(dropDB[0]);
             player.AddDropItem(dropDB[1]);
-            player.AddDropItem(dropDB[2]);
         }
     }
 
@@ -91,7 +91,6 @@ class Program
             }
         }
     }
-
     static void SetPlayerJob(string player_name)
     {
         Console.Clear();
@@ -111,7 +110,6 @@ class Program
             case 3: player = new Mage(1, player_name, 1500); break;
         }
     }
-
     static void DisplayMainUI()
     {
         Console.Clear();
@@ -386,7 +384,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount());
+        int result = CheckInput(0, player.DropInventoryCount);
 
         switch (result)
         {
@@ -483,7 +481,7 @@ class Program
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        int result = CheckInput(0, player.DropInventoryCount());
+        int result = CheckInput(0, player.DropInventoryCount);
         switch (result)
         {
             case 0:
@@ -496,7 +494,6 @@ class Program
                 break;
         }
     }
-
     /// <summary>
     /// 던전을 선택할 때 보여지는 함수입니다.
     /// 선택에 따라 Dungeon class 생성자에 들어가는 인자가 달라집니다.
@@ -549,7 +546,7 @@ class Program
         Console.WriteLine("휴식하기");
         Console.Write($"500 G 를 내면 체력을 회복할 수 있습니다.(보유 골드 : ");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine($"{player.Gold} G");
+        Console.Write($"{player.Gold} G");
         Console.ResetColor();
         Console.WriteLine(")");
         Console.WriteLine();
@@ -587,7 +584,6 @@ class Program
                 break;
         }
     }
-
     static void DisplayQuestUI()
     {
         Console.Clear();
@@ -599,8 +595,9 @@ class Program
         for (int i = 0; i < allQuests.Count; i++)
         {
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
+            string rewardItemName = allQuests[i].RewardItem != null ? allQuests[i].RewardItem.Name : "???"; // RewardItem이 null일 경우 공백 처리
             string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
-            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 :");
+            Console.WriteLine($"{status}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {rewardItemName}");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");
@@ -622,7 +619,6 @@ class Program
                 break;
         }
     }
-
     static int CheckInput(int min, int max)
     {
         int result;

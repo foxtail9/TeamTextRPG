@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -23,7 +24,6 @@ namespace TeamTextRPG.Jobs
             Mp = 100;
             Gold = gold;
             FastMovement();
-            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)
@@ -31,9 +31,9 @@ namespace TeamTextRPG.Jobs
             DoubleShot(monster);
         }
 
-        public override void UtilitySkill()
+        public override void UtilitySkill(Monster monster)
         {
-            Hawkeye();
+            Hawkeye(monster);
         }
 
         public void DoubleShot(Monster monster)
@@ -52,19 +52,29 @@ namespace TeamTextRPG.Jobs
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
 
-        public void Hawkeye()
+        public void Hawkeye(Monster monster)
         {
-            // 몬스터의 미스 확률 무시
+            // 몬스터의 미스 확률 무시 마나소모 5
             Console.WriteLine("호크아이를 발동했습니다.");
             IsHawkeye = true;
+
+            Console.Write("MP ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Mp -= 10;
+            monster.MonsterDefense(Atk);
+            Console.Write($" -> ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
 
         public void FastMovement()
         {
             // 몬스터 공격 회피 확률 증가 [패시브]
-            Console.WriteLine("신속한 이동을 사용했습니다.");
+            Console.WriteLine();
+            Console.WriteLine("신속한 이동이 발동됩니다.");
             Avoid += 20;
-            Console.WriteLine($"몬스터의 공격을 회피할 확률이 {Avoid}가 되었습니다.");
+            Console.WriteLine($"몬스터의 공격을 회피할 확률이 {Avoid}이 되었습니다.");
+            Console.WriteLine("Enter 를 눌러주세요.");
+            Console.ReadLine();
         }
 
         public override void CalcPlayerLevelUp()

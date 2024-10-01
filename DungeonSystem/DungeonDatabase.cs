@@ -19,16 +19,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        3, "늑대", 20, 15, 40, 1, 
-                        new Item[] 
-                        {
-                            new Item("희귀", "???", 1, 1, "1", 1)
-                        }
-                    ),
-                    
-                    new Monster
-                    (
-                        3, "여우", 5, 10, 20, 1,
+                        3, "늑대", 20, 15, 40, 1, 100,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -37,7 +28,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        3, "멧돼지", 15, 20, 50, 1,
+                        3, "여우", 5, 10, 20, 1, 50,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -46,7 +37,16 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        3, "고블린", 10, 10, 30, 1,
+                        3, "멧돼지", 15, 20, 50, 1, 100,
+                        new Item[]
+                        {
+                            new Item("희귀", "???", 1, 1, "1", 1)
+                        }
+                    ),
+
+                    new Monster
+                    (
+                        3, "고블린", 10, 10, 30, 1, 80,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -66,7 +66,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        2, "골렘", 30, 30, 40, 2,
+                        2, "골렘", 30, 30, 40, 2, 200,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -75,7 +75,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "오크", 30, 25, 50, 2,
+                        2, "오크", 30, 25, 50, 2, 180,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -84,7 +84,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "고스트", 50, 20, 20, 2,
+                        2, "고스트", 50, 20, 20, 2, 150,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -93,7 +93,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "좀비", 40, 20, 30, 2,
+                        2, "좀비", 40, 20, 30, 2, 130,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
@@ -113,7 +113,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        1, "드래곤", 70, 70, 100, 3,
+                        1, "드래곤", 70, 70, 100, 3, 300,
                         new Item[]
                         {
                             new Item("희귀", "???", 1, 1, "1", 1)
