@@ -86,6 +86,8 @@ public class Character
         for (int i = 0; i < Inventory.Count; i++)
         {
             Item targetItem = Inventory[i];
+            float targetItemValue = Inventory[i].Value * 0.8f;
+            int sellValue = int.Parse(targetItemValue.ToString("0"));
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = "";
@@ -94,7 +96,7 @@ public class Character
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
             }
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {targetItem.Value}");
+            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}  |  {sellValue}");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
@@ -168,7 +170,9 @@ public class Character
 
     public void SellITem(int i)
     {
-        int targetItemValue = Inventory[i].Value;
+
+        float targetItemValue = Inventory[i].Value * 0.8f;
+        int sellValue = int.Parse(targetItemValue.ToString("0"));
         if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
         {
             Console.WriteLine("착용중인 아이템입니다");
@@ -178,7 +182,7 @@ public class Character
         else
         {
             Inventory.RemoveAt(i);
-            Gold += targetItemValue;
+            Gold += sellValue;
         } 
     }
 
@@ -218,7 +222,8 @@ public class Character
     public void Rest()
     {
         Gold -= 500;
-        Hp = 100;
+        Hp = MaxHp;
+        Mp = MaxMp;
     }
 
     public bool HasItem(Item item)

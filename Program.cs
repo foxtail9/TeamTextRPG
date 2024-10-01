@@ -32,7 +32,7 @@ class Program
 
     static void Main(string[] args)
     {
-        intro();
+        intro(300); //300 ~ 500 사이
     }
     static void SetData()
     {
@@ -182,13 +182,13 @@ class Program
 
         player.DisplayInventory(false);
 
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
 
         player.DisplayDropInventory(false);
 
         Console.WriteLine();
         Console.WriteLine("1. 장착 관리");
-        Console.WriteLine("2. 드랍 아이템 관리");
+        Console.WriteLine("2. 소모 아이템 관리");
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -410,12 +410,12 @@ class Program
         Console.WriteLine();
         Console.WriteLine("[장비 아이템 목록]");
         player.DisplayInventory(false);
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
         player.DisplayDropInventory(false);
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
         Console.WriteLine("1. 장비 아이템 판매");
-        Console.WriteLine("2. 드랍아이템 판매");
+        Console.WriteLine("2. 소모아이템 판매");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
@@ -474,7 +474,7 @@ class Program
         Console.WriteLine($"{player.Gold} G");
         Console.ResetColor();
         Console.WriteLine();
-        Console.WriteLine("[드랍 아이템 목록]");
+        Console.WriteLine("[소모 아이템 목록]");
         player.DisplayDropInventory(true);
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
@@ -632,7 +632,7 @@ class Program
             Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
-    static void intro()
+    static void intro(int time)
     {
         Console.ForegroundColor = ConsoleColor.Blue;
         string[] asciiArtLines = {
@@ -648,9 +648,9 @@ class Program
         foreach (string line in asciiArtLines)
         {
             Console.WriteLine(line);
-            Thread.Sleep(500); 
+            Thread.Sleep(time); 
         }
-        Thread.Sleep(1000);
+        Thread.Sleep(time * 3);
         Console.ForegroundColor = ConsoleColor.White;
         SetData();
         
