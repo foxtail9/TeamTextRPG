@@ -32,8 +32,7 @@ class Program
 
     static void Main(string[] args)
     {
-        SetData();
-        DisplayMainUI();
+        intro();
     }
     static void SetData()
     {
@@ -634,4 +633,30 @@ class Program
             Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
+    static void intro()
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        string[] asciiArtLines = {
+           @" __  __     ____        ____       _____       ____       ____      ",
+           @"/\ \/\ \   /\  _`\     /\  _`\    /\  __`\    /\  _`\    /\  _`\    ",
+           @"\ \ \ \ \  \ \,\L\_\   \ \ \/\_\  \ \ \/\ \   \ \ \/\ \  \ \ \L\_\  ",
+           @" \ \ \ \ \  \/_\__ \    \ \ \/_/_  \ \ \ \ \   \ \ \ \ \  \ \  _\L  ",
+           @"  \ \ \_/ \   /\ \L\ \   \ \ \L\ \  \ \ \_\ \   \ \ \_\ \  \ \ \L\ \",
+           @"   \ `\___/   \ `\____\   \ \____/   \ \_____\   \ \____/   \ \____/",
+           @"    `\/__/     \/_____/    \/___/     \/_____/    \/___/     \/___/ "
+        };
+
+        foreach (string line in asciiArtLines)
+        {
+            Console.WriteLine(line);
+            Thread.Sleep(500); 
+        }
+        Thread.Sleep(1000);
+        Console.ForegroundColor = ConsoleColor.White;
+        SetData();
+        
+        DisplayMainUI();
+    }
+
+
 }
