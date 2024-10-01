@@ -337,7 +337,7 @@ public class Character
 
     }
 
-    public virtual void ActiveSkill(Monster monster1, Monster monster2)
+    public virtual void ActiveSkill(List<Monster> monster)
     {
 
     }

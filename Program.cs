@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualBasic;
-using TeamTextRPG.Byungchul;
 using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;

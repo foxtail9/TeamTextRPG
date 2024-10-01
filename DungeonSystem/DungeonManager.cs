@@ -461,10 +461,10 @@ public class DungeonManager
                 Console.WriteLine("체력이 50% 미만일 때 공격력이 1.5배 향상됩니다.");
                 break;
             case "마법사":
-                Console.Write("1. 파이어볼 - MP 5");
+                Console.Write("1. 파이어볼 - MP ");
                 player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
                 Console.WriteLine("공격력 * 2으로 하나의 적을 공격합니다.");
-                Console.Write("2. 워터밤 - MP 5");
+                Console.Write("2. 워터밤 - MP ");
                 player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
                 Console.WriteLine("공격력 * 1으로 둘의 적을 공격합니다.");
                 Console.WriteLine("3. 마나재생");

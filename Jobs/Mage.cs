@@ -32,9 +32,9 @@ namespace TeamTextRPG.Jobs
             FireBall(monster);
         }
 
-        public override void ActiveSkill(Monster monster1, Monster monster2)
+        public override void ActiveSkill(List<Monster> monster)
         {
-            WaterBomb(monster1, monster2);
+            WaterBomb(monster);
         }
 
         public override void UtilitySkill()
@@ -57,17 +57,28 @@ namespace TeamTextRPG.Jobs
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
 
-        public void WaterBomb(Monster monster1, Monster monster2)
+        public void WaterBomb(List<Monster> monster)
         {
             // 몬스터 2마리 공격
             // 공격력 100% 피해, 마나 소모 5
             if (CheckMana(5) == false) return;
 
+            List<int> monster_list = new List<int>();
+            for(int i = 0; i < monster_list.Count; i++)
+            {
+                monster_list.Add(i);
+            }
+            
+            Random rand = new Random();
+            int first_monster_index = rand.Next(0, monster_list.Count);
+            monster_list.Remove(first_monster_index);
+            int second_monster_index = rand.Next(0, monster_list.Count);
+
             Console.WriteLine("워터밤을 사용했습니다.");
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
-            monster1.MonsterDefense(Atk);
-            monster2.MonsterDefense(Atk);
+            monster[first_monster_index].MonsterDefense(Atk);
+            monster[second_monster_index].MonsterDefense(Atk);
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
