@@ -23,7 +23,6 @@ namespace TeamTextRPG.Jobs
             Mp = 100;
             Gold = gold;
             FastMovement();
-            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)

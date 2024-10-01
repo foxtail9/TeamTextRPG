@@ -28,10 +28,9 @@ public class Character
     private List<Item> EquipList = new List<Item>();
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
-    public List<Quest> PlayerQuestList = new List<Quest>();
+    public Dictionary<string, int> RequiredMonsterNames { get; private set; } = new Dictionary<string, int>();
+    public List<Quest> PlayerQuestList { get; private set; } = new List<Quest>();
     public List<Quest> PlayerCompletedQuests = new List<Quest>();
-    public List<string> RequiredMonsterNames { get; private set; } = new List<string>();
-
     public int InventoryCount
     {
         get
@@ -257,6 +256,16 @@ public class Character
             monster.MonsterDefense(player_damage, IsHawkeye);
         }
         Console.WriteLine($"{Name}이 {player_damage} 만큼의 피해를 입어 Hp가 {Hp}이 되었습니다. \n");
+
+        //퀘스트 진행 감시하는 로직
+        if(monster.Hp < 0)
+        {
+            if (RequiredMonsterNames.ContainsKey(monster.Name))
+            {
+                // 퀘스트 진척도 업데이트 메소드 호출
+                UpdateQuestProgress(monster.Name);
+            }
+        }
     }
 
     public void PlayerDefense(int monster_damage)
@@ -316,48 +325,74 @@ public class Character
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
         {
-            PlayerQuestList.Add(quest);
-            Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+            if(this.Level > quest.RequiredLevel)
+            {
+                PlayerQuestList.Add(quest);
+                Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+                // 잡아야 할 몬스터 리스트에 추가
+                if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
+                {
+                    if (!RequiredMonsterNames.ContainsKey(quest.RequiredMonsterType))
+                    {
+                        RequiredMonsterNames.Add(quest.RequiredMonsterType, quest.RequiredMonsterCount);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"요구 레벨이 부족합니다!");
+            }
         }
         else
         {
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
     }
-    public List<string> InitializeRequiredMonsterNames()
+    private void UpdateQuestProgress(string monsterName)
     {
-        RequiredMonsterNames.Clear(); 
+        // 완료된 퀘스트를 저장할 리스트
+        List<Quest> completedQuests = new List<Quest>();
 
         foreach (var quest in PlayerQuestList)
         {
-            if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
+            // 해당 퀘스트의 타겟 몬스터가 맞는지 확인
+            if (quest.RequiredMonsterType == monsterName)
             {
-                RequiredMonsterNames.Add(quest.RequiredMonsterType);
+                quest.RequiredMonsterCount--; // 현재 잡은 몬스터 수 감소
+                Console.WriteLine($"{quest.questname} 퀘스트: {monsterName}을(를) 잡았습니다. 남은 몬스터 수: {quest.RequiredMonsterCount}");
+
+                // 퀘스트 목표 달성 여부 확인
+                if (quest.RequiredMonsterCount <= 0)
+                {
+                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+
+                    this.Gold += quest.GoldReward; //골드보상
+                    //this.Exp += quest.GoldReward; 경험치 보상
+                    Inventory.Add(quest.RewardItem);
+
+                    // 완료된 퀘스트 리스트에 추가
+                    completedQuests.Add(quest);
+                }
             }
         }
 
-        return new List<string>(RequiredMonsterNames);
-    }
-    public void ClearQuestAddItem(Quest completedQuest)
-    {
-        // 2. 보상 처리 - 경험치, 골드
-        //this.Experience += completedQuest.ExpReward; 경험치 획득 추가요망
-        this.Gold += completedQuest.GoldReward;
-
-        Console.WriteLine($"퀘스트 '{completedQuest.questname}'를 완료하여 {completedQuest.ExpReward} 경험치와 {completedQuest.GoldReward} 골드를 획득했습니다!");
-
-        // 3. 아이템 보상 처리 로직
-        if (completedQuest.RewardItem != null)
+        // 완료된 퀘스트 삭제
+        foreach (var completedQuest in completedQuests)
         {
-            Inventory.Add(completedQuest.RewardItem);
-            Console.WriteLine($"{completedQuest.RewardItem.Name}을(를) 인벤토리에 추가했습니다.");
+            // PlayerQuestList에서 완료된 퀘스트 삭제
+            PlayerQuestList.Remove(completedQuest);
+            PlayerCompletedQuests.Add(completedQuest); // 완료된 퀘스트는 따로 보관 가능
+
+            // RequiredMonsterNames에서 해당 몬스터 삭제
+            if (RequiredMonsterNames.ContainsKey(completedQuest.RequiredMonsterType))
+            {
+                RequiredMonsterNames.Remove(completedQuest.RequiredMonsterType);
+            }
         }
-
-        this.PlayerCompletedQuests.Add(completedQuest);
-        this.PlayerQuestList.Remove(completedQuest);
-
-        Console.WriteLine($"'{completedQuest.questname}' 퀘스트를 완료했습니다.");
     }
 
+    public void DefeatMonster(string monsterType)
+    {
 
+    }
 }

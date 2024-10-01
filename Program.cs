@@ -598,7 +598,7 @@ class Program
         {
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
             string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
-            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[{allQuests[i].questype}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {allQuests[i].RewardItem}");
+            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {allQuests[i].RewardItem}");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");
