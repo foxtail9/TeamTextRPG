@@ -504,6 +504,7 @@ class Program
         Console.Clear();
         Console.WriteLine("<<던전 입구에 도착했습니다>>");
         Console.WriteLine("이곳은 위험한 몬스터가 출몰합니다. 주의해주세요!");
+        Console.WriteLine();
         Console.Write("1.엘프의 숲 -난이도 : ");
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("쉬움");

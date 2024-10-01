@@ -440,5 +440,10 @@ public class Character
             Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
             Exp -= Level * 10;
         }
+        // 김동현 - 몬스터 처치시 레벨업이 지속되어 예외를 만들었습니다.
+        else
+        {
+            return;
+        }
     }
 }

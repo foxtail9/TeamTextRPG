@@ -3,12 +3,22 @@ using System.Threading;
 
 namespace TeamTextRPG;
 
+public struct Player_in_before
+{
+    public int Level_before;
+    public int Hp_before;
+    public int Mp_before;
+    public int Exp_before;
+}
+
+
 public class DungeonManager
 {
     // 현재 위치한 던전 정보
     private Dungeon Dungeon_in { get; set; }
 
     // 현재 전투에 참여하기 전 플레이어 정보
+    private Player_in_before Player_In_Dungeon_Before_Information;
 
     // 현재 전투에 참여한 플레이어 정보
     private Character Player_in;
@@ -19,11 +29,17 @@ public class DungeonManager
     // 현재 던전이 끝났는지 확인하는 변수
     private bool IsDungeonOver = false;
 
-
     public DungeonManager(Dungeon cur_dungeon, Character player)
     {
         Player_in = player;
         Dungeon_in = cur_dungeon;
+
+        Player_In_Dungeon_Before_Information = new Player_in_before();
+        Player_In_Dungeon_Before_Information.Level_before = Player_in.Level;
+        Player_In_Dungeon_Before_Information.Hp_before = Player_in.Hp;
+        Player_In_Dungeon_Before_Information.Mp_before = Player_in.Mp;
+        Player_In_Dungeon_Before_Information.Exp_before = Player_in.Exp;
+
 
         SpawnDungeonMonster();
     }
@@ -70,7 +86,7 @@ public class DungeonManager
         // 행동 선택
         Console.WriteLine();
         Console.WriteLine("1. 공격");
-        Console.WriteLine("2. 스킬 사용");
+        Console.WriteLine("2. 스킬");
         Console.WriteLine("3. 인벤토리");
         Console.WriteLine("4. 도망가기");
         Console.WriteLine();
@@ -83,7 +99,7 @@ public class DungeonManager
                 DisplayInSelectAttack();
                 break;
             case 2:
-                // ~
+                DisplayInSelectSkill();
                 break;
             case 3:
                 
@@ -155,14 +171,60 @@ public class DungeonManager
         }
     }
 
+    private void DisplayInSelectSkill()
+    {
+        Console.Clear();
+        Console.WriteLine("Battle!! - 스킬 선택");
+        Console.WriteLine();
+
+        // 현재 던전에 존재하는 몬스터 정보 출력
+        DisplayMonstersInfo(true);
+        Console.WriteLine();
+
+        // 플레이어 현재 정보 출력
+        DisplayPlayerInfo();
+
+        // 행동 선택
+        Console.WriteLine();
+        Console.WriteLine("0. 취소");
+        Console.WriteLine();
+        Console.WriteLine("대상을 선택해주세요.");
+
+        int result = CheckAttackInput(0, Monsters_spawn.Count);
+        switch (result)
+        {
+            case 0:
+                DisplayInDungeonBattle();
+                break;
+            default:
+                DisplayBattleSystem(result);
+
+                // 결과 검사 
+                // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
+                // 2. 플레이어의 Hp가 0인가?
+
+                KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
+                if (battleResult.Key)
+                {
+                    DisplayBattleResult(battleResult.Value);
+                    return;
+                }
+
+                break;
+        }
+    }
+
     private void DisplayBattleSystem(int targetIdx)
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
 
+        // 입력 변수 선언
+        int result = -1;
+
         // 공격 순서 랜덤 배치
-        int rouletteNum = Monsters_spawn.Count + 1; // 플레이어도 공격 순서에 껴있으니 포함시킨다.
+        int rouletteNum = Monsters_spawn.Count + 1; // 플레이어도 공격 순서에 포함되므로 인덱스의 수를 늘린다.
         int[] AttackSequence = new int[rouletteNum];
         for(int i = 0; i < rouletteNum; i++) AttackSequence[i] = i;
         AttackSequence = Shffle(AttackSequence);
@@ -171,58 +233,68 @@ public class DungeonManager
         int turnIdx = 1;
         for (int i = 0; i < AttackSequence.Length; i++)
         {
+            Console.Clear();
+
             int randomIdx = AttackSequence[i];
 
-            // 플레이어의 공격
+            // 플레이어의 차례
             if (randomIdx == 0)
             {
-                if (Player_in.Hp <= 0)
+                // 플레이어의 체력이 0 인 경우 즉시 전투 시스템을 중단한다.
+                if (Player_in.IsDie)
                 {
-                    Console.WriteLine($"{Player_in.Name}는 쓰러졌습니다...");
-                    Console.WriteLine();
-                    continue;
+                    break;
                 }
                     
-                Console.WriteLine($"TURN [{turnIdx}] {Player_in.Name}의 공격!!");
+                Console.WriteLine($"TURN [{turnIdx}] -> {Player_in.Name}");
+                Console.WriteLine();
                 DisplayPlayerAttackResult(Monsters_spawn[targetIdx - 1]);
                 turnIdx++;
                 Console.WriteLine();
             }
-            // 몬스터의 공격
+
+            // 몬스터의 차례
             else if(randomIdx != 0)
             {
-                if(Monsters_spawn[randomIdx - 1].Hp <= 0)
+                // 몬스터의 체력이 0 인 경우 차례가 넘어간다.
+                if(Monsters_spawn[randomIdx - 1].IsDie)
                 {
-                    Console.WriteLine($"{Monsters_spawn[randomIdx - 1].Name}은 전투불능입니다.");
-                    Console.WriteLine();
                     continue;
                 }
-                Console.WriteLine($"TURN [{turnIdx}] {Monsters_spawn[randomIdx - 1].Name}[{randomIdx}]의 공격!!");
+
+                // 플레이어의 체력이 0 인 경우 즉시 전투 시스템을 중단한다.
+                if (Player_in.IsDie)
+                {
+                    // 즉시 전투 시스템을 중단한다.
+                    break;
+                }
+
+                Console.WriteLine($"TURN [{turnIdx}] -> {Monsters_spawn[randomIdx - 1].Name}[{randomIdx}]");
+                Console.WriteLine();
                 DisplayMonsterAttackResult(Monsters_spawn[randomIdx - 1]);
                 turnIdx++;
                 Console.WriteLine();
             }
-        }
 
-        // 행동 선택
-        Console.WriteLine("0. 다음");
-        Console.WriteLine();
-        Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        int result = CheckAttackInput(0, Monsters_spawn.Count);
-        switch (result)
-        {
-            case 0:
-                break;
-            default:
-                DisplayBattleSystem(result);
-                break;
+            result = CheckInput(0, 0);
+            switch (result)
+            {
+                case 0:
+                    break;
+            }
         }
     }
 
     private void DisplayPlayerAttackResult(Monster monster)
     {
         Player_in.BasicAttack(monster);
+
+        // MonsterDefense 이 후, 해당 몬스터의 Exp를 얻는 로직을 수행한다.
+        Player_in.UpdatePlayerExp(monster);
     }
 
     private void DisplayMonsterAttackResult(Monster monster)
@@ -250,14 +322,22 @@ public class DungeonManager
         }
         Console.WriteLine();
 
-        // 플레이어 체력 / 경험치 등을 출력.
-        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} HP {Player_in.Hp}");
+        // 전투 보상 계산
+        // 드롭 아이템, 처지 몬스터 종류 계산
+        CalculateBattleCompensation();
+
+        // 던전 몬스터 처치 결과 출력
+        Console.WriteLine($"던전에서 몬스터 {Monsters_spawn.Count.ToString()}마리를 잡았습니다.");
+        DisplayMonstersInfo(false);
         Console.WriteLine();
 
-        ///
-        /// 여기에 처치한 몬스터의 종류 등을 기록하겠습니다!
-        ///
+        // 캐릭터 정보 출력 
+        DisplayPlayerBattleResult();
+        Console.WriteLine();
 
+        // 획득 아이템 출력
+        // ~~~~~
+        Console.WriteLine();
 
         // 행동 선택
         Console.WriteLine("0. 다음");
@@ -279,23 +359,82 @@ public class DungeonManager
         {
             string selectIdx = "";
             if (showIdx) selectIdx += ($"[{(i + 1).ToString()}] ");
-            if (Monsters_spawn[i].Hp <= 0)
+            if (Monsters_spawn[i].IsDie)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} Dead");
+                Console.Write($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} Dead");
             }
             else
             {
-                Console.WriteLine($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} HP {Monsters_spawn[i].Hp}");
+                Console.Write($"{selectIdx}Tier.{Monsters_spawn[i].Tier} ");
+                WriteColorString(Monsters_spawn[i].Name, ConsoleColor.Green);
+                Console.Write(" HP ");
+                WriteColorString(Monsters_spawn[i].Hp.ToString(), ConsoleColor.Red);
             }
             Console.ResetColor();
+            Console.WriteLine();
         }
     }
 
     private void DisplayPlayerInfo()
     {
         Console.WriteLine("[내정보]");
-        Console.WriteLine($"Lv.{Player_in.Level} {Player_in.Name} ({Player_in.Job}) HP {Player_in.Hp} / {Player_in.MaxHp}");
+        Console.Write($"Lv.{Player_in.Level} ");
+        WriteColorString(Player_in.Name, ConsoleColor.Cyan);
+        Console.Write($" ({Player_in.Job})");
+        Console.WriteLine();
+
+        Console.Write("HP ");
+        WriteColorString(Player_in.Hp.ToString(), ConsoleColor.Red);
+        Console.Write(" / ");
+        WriteColorString(Player_in.MaxHp.ToString(), ConsoleColor.DarkRed);
+        Console.WriteLine();
+
+        Console.Write($"MP ");
+        WriteColorString(Player_in.Mp.ToString(), ConsoleColor.Blue);
+        Console.Write(" / ");
+        WriteColorString(Player_in.MaxMp.ToString(), ConsoleColor.DarkBlue);
+
+        Console.WriteLine();
+    }
+
+    private void DisplayPlayerBattleResult()
+    {
+        Console.WriteLine("[캐릭터 정보]");
+        // 레벨 변화 표시
+        if(Player_In_Dungeon_Before_Information.Level_before < Player_in.Level)
+        {
+            Console.Write($"Lv.{Player_in.Level} ");
+            WriteColorString(Player_in.Name, ConsoleColor.Cyan);
+            Console.Write(" -> Lv.");
+            WriteColorString(Player_in.Level.ToString(), ConsoleColor.Yellow);
+        }
+        else
+        {
+            Console.Write($"Lv.{Player_in.Level} ");
+            WriteColorString(Player_in.Name, ConsoleColor.Cyan);
+        }
+        Console.WriteLine();
+
+        // 체력 변화 표시
+        Console.Write("HP ");
+        WriteColorString(Player_In_Dungeon_Before_Information.Hp_before.ToString(), ConsoleColor.Red);
+        Console.Write(" -> ");
+        WriteColorString(Player_in.Hp.ToString(), ConsoleColor.Red);
+        Console.WriteLine();
+
+        // 마력 변화 표시
+        Console.Write("MP ");
+        WriteColorString(Player_In_Dungeon_Before_Information.Mp_before.ToString(), ConsoleColor.Blue);
+        Console.Write(" -> ");
+        WriteColorString(Player_in.Mp.ToString(), ConsoleColor.Blue);
+        Console.WriteLine();
+
+        // 경험치 변화 표시
+        Console.Write("exp ");
+        WriteColorString(Player_In_Dungeon_Before_Information.Exp_before.ToString(), ConsoleColor.Yellow);
+        Console.Write(" -> ");
+        WriteColorString(Player_in.Exp.ToString(), ConsoleColor.Yellow);
     }
 
     // KeyValuePair<bool, bool>()
@@ -304,14 +443,21 @@ public class DungeonManager
     private KeyValuePair<bool, bool> CheckBattleEnd()
     {
         // 플레이어의 체력검사
-        if (Player_in.Hp <= 0) return new KeyValuePair<bool, bool>(true, false);
+        if (Player_in.IsDie) return new KeyValuePair<bool, bool>(true, false);
 
         // 방에 존재하는 몬스터의 체력검사
         foreach (var curMonster in Monsters_spawn)
         {
-            if (curMonster.Hp > 0) return new KeyValuePair<bool, bool>(false, true);
+            if (!curMonster.IsDie) return new KeyValuePair<bool, bool>(false, false);
         }
         return new KeyValuePair<bool, bool>(true, true);
+    }
+
+    private void CalculateBattleCompensation()
+    {
+        // 획득 물품 계산
+
+        
     }
 
     private int CheckAttackInput(int min, int max)
@@ -324,7 +470,7 @@ public class DungeonManager
             if (isNumber)
             {
                 if(result == 0) return 0;
-                if (result >= min && result <= max && Monsters_spawn[result - 1].Hp > 0)
+                if (result >= min && result <= max && !Monsters_spawn[result - 1].IsDie)
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");
@@ -347,6 +493,14 @@ public class DungeonManager
         }
 
         return sortArray;
+    }
+
+    private void WriteColorString(string str, ConsoleColor color, bool new_line = false)
+    {
+        Console.ForegroundColor = color;
+        if (new_line) Console.WriteLine(str);
+        else Console.Write(str);
+        Console.ResetColor();
     }
 
     private static int CheckInput(int min, int max)
