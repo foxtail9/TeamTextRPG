@@ -377,7 +377,6 @@ public class Character
     }
     public void UpdateQuestProgress(string monsterName)
     {
-        Console.WriteLine("퀘스트 확인 시퀀스 시작");
         //// 완료된 퀘스트를 저장할 리스트
         List<Quest> completedQuests = new List<Quest>();
 
@@ -392,7 +391,8 @@ public class Character
                 // 퀘스트 목표 달성 여부 확인
                 if (quest.RequiredMonsterCount <= 0)
                 {
-                    Console.WriteLine($"{quest.questname} 퀘스트 완료!");
+                    Console.WriteLine($"<<{quest.questname} 퀘스트 완료>>");
+                    Console.WriteLine($"퀘스트 보상획득 : {quest.GoldReward}경험치 상승 | {quest.GoldReward}골드 획득 | {quest.RewardItem.Name}획득");
 
                     this.Gold += quest.GoldReward; //골드보상
                     this.Exp += quest.GoldReward; //경험치 보상
