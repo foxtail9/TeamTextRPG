@@ -549,6 +549,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"{player.Gold} G");
         Console.ResetColor();
+        Console.WriteLine(")");
         Console.WriteLine();
         Console.WriteLine("1. 휴식하기");
         Console.WriteLine("0. 나가기");

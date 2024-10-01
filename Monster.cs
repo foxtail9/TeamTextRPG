@@ -75,7 +75,7 @@ namespace TeamTextRPG
             }
 
             DisplayMonsterColorString(player.Name.ToString(), ConsoleColor.Cyan);
-            Console.Write("을(를) 맞췄습니다.");
+            Console.Write("을(를) 맞췄습니다. ");
 
             if (critical_prob <= Critical)
             {
@@ -117,7 +117,7 @@ namespace TeamTextRPG
 
         public bool CheckMonsterAvoid(bool is_hawkeye)
         {
-            if (is_hawkeye == true) return false;
+            if (is_hawkeye) return false;
             Random random = new Random();
             int avoid_prob = random.Next(1, 101);
 

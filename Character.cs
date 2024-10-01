@@ -255,7 +255,7 @@ public class Character
 
         Console.Write($"Tier.{monster.Tier} ");
         DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
-        Console.Write("을(를) 맞췄습니다.");
+        Console.Write("을(를) 맞췄습니다. ");
 
         if (critical_prob <= Critical)
         {
