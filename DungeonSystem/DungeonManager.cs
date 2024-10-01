@@ -100,7 +100,7 @@ public class DungeonManager
                 DisplayInSelectSkill();
                 break;
             case 3:
-                
+                DisplayEdibleItem();
                 break;
             case 4:
                 IsDungeonOver = true;
@@ -108,20 +108,90 @@ public class DungeonManager
         }
     }
 
-    private void DisplayUseInven()
+    private void DisplayEdibleItem()
     {
         Console.Clear();
-        Console.WriteLine("Inven");
+        Console.WriteLine("Inven - 사용아이템");
         Console.WriteLine();
 
-        int result = CheckInput(0, Monsters_spawn.Count);
+        // 플레이어 현재 정보 출력
+        DisplayPlayerInfo();
+        Console.WriteLine();
+
+        Player_in.DisplayDropInventory(false);
+
+        Console.WriteLine();
+        Console.WriteLine("0. 취소");
+        Console.WriteLine("1. 아이템 사용하기");
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int result = CheckInput(0, Player_in.DropInventoryCount);
         switch (result)
         {
             case 0:
-
+                DisplayInDungeonBattle();
                 break;
             default:
+                DisplayUseEdibleItem();
+                break;
+        }
+    }
 
+    private void DisplayUseEdibleItem()
+    {
+        Console.Clear();
+        Console.WriteLine("Inven - 사용아이템 선택");
+        Console.WriteLine();
+
+        // 플레이어 현재 정보 출력
+        DisplayPlayerInfo();
+        Console.WriteLine();
+
+        Player_in.DisplayDropInventory(true);
+
+        // 행동 선택
+        Console.WriteLine();
+        Console.WriteLine("0. 취소");
+        Console.WriteLine();
+        Console.WriteLine("사용 대상을 선택해주세요.");
+
+        int result = CheckInput(0, Player_in.DropInventoryCount);
+        switch (result)
+        {
+            case 0:
+                DisplayEdibleItem();
+                break;
+
+            default:
+                Player_in.UsePotion(result);
+                DisplayUseEdibleItemResult();
+                break;
+        }
+    }
+
+    private void DisplayUseEdibleItemResult()
+    {
+        Console.Clear();
+        Console.WriteLine("Inven - 아이템 사용 결과");
+        Console.WriteLine();
+
+        // 플레이어 현재 정보 출력
+        DisplayPlayerInfo();
+        Console.WriteLine();
+
+        Player_in.DisplayDropInventory(false);
+
+        // 행동 선택
+        Console.WriteLine();
+        Console.WriteLine("0. 다음");
+        Console.WriteLine();
+
+        int result = CheckInput(0, 0);
+        switch (result)
+        {
+            case 0:
+                DisplayEdibleItem();
                 break;
         }
     }
