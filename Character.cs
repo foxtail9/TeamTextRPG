@@ -346,6 +346,11 @@ public class Character
         return true;
     }
 
+    public virtual void ActiveSkill(List<int> selectIdxs, List<Monster> monsters)
+    {
+        Console.WriteLine("현재 주소 넘겨짐.");
+    }
+
     public virtual void ActiveSkill(Monster monster)
     {
 

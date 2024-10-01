@@ -223,7 +223,7 @@ public class DungeonManager
                 DisplayInDungeonBattle();
                 break;
             default:
-                DisplayBattleSystem(result, false);
+                DisplayBattleSystemWithNormal(result);
 
                 // 결과 검사 
                 // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
@@ -242,16 +242,6 @@ public class DungeonManager
 
     private void DisplayInSelectSkill()
     {
-        Random rand = new Random();
-        int spawn_num = rand.Next(1, Monsters_spawn.Count);
-        List<int> random_list = new List<int>();
-
-        for (int i = 0; i < spawn_num; i++){
-            if (spawn_num == i) continue;
-            random_list.Add(i);
-        };
-        int two_spawn_num = random_list[rand.Next(0, random_list.Count)];
-
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
@@ -273,6 +263,7 @@ public class DungeonManager
         
         int result = CheckInput(0, 4);
         string player_job = Player_in.Job;
+        List<int> multiIndex;
         if (player_job.Equals("전사"))
         {
             switch(result)
@@ -281,12 +272,13 @@ public class DungeonManager
                 case 1:
                     // 강력한 한방
                     // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
-                    DisplayBattleSystem(0, true);
+                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
+                    DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 가드 - 일반 공격 시스템으로 진행
                     Player_in.UtilitySkill();
-                    DisplayBattleSystem(spawn_num);
+                    DisplayBattleSystemWithNormal(0);
                     break;
                 case 3:
                     // 아드레날린[패시브]
@@ -304,12 +296,14 @@ public class DungeonManager
                 case 1:
                     // 더블샷
                     // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
-                    DisplayBattleSystem(0, true);
+                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
+                    DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 호크아이
                     //Player_in.UtilitySkill(Monsters_spawn[spawn_num]);
-                    DisplayBattleSystem(0, true);
+                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
+                    DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 3:
                     // 신속한 이동
@@ -327,12 +321,14 @@ public class DungeonManager
                 case 1:
                     // 파이어볼
                     // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
-                    DisplayBattleSystem(0, true);
+                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
+                    DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 2:
                     // 워터밤
                     //Player_in.UtilitySkill(Monsters_spawn[spawn_num], Monsters_spawn[two_spawn_num]);
-                    DisplayBattleSystem(0, true);
+                    multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 2);
+                    DisplayBattleSystemWithSkill(multiIndex);
                     break;
                 case 3:
                     // 마나 재생
@@ -344,8 +340,10 @@ public class DungeonManager
         }
     }
 
+
+
     // 일반 공격 배틀 시스템
-    private void DisplayBattleSystem(int targetIdx)
+    private void DisplayBattleSystemWithNormal(int targetIdx)
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -420,7 +418,7 @@ public class DungeonManager
     }
 
     // 스킬 공격 배틀 시스템
-    private void DisplayBattleSystem(int skillIdx, bool isUseSkill)
+    private void DisplayBattleSystemWithSkill(List<int> skillIdx)
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -454,7 +452,7 @@ public class DungeonManager
                     
                 Console.WriteLine($"TURN [{turnIdx}]");
                 Console.WriteLine();
-                DisplayPlayerAttackResult(Monsters_spawn, skillIdx);
+                DisplayPlayerSkillAttackResult(skillIdx, Monsters_spawn);
                 turnIdx++;
                 Console.WriteLine();
             }
@@ -476,7 +474,7 @@ public class DungeonManager
 
                 Console.WriteLine($"TURN [{turnIdx}]");
                 Console.WriteLine();
-                DisplayMonsterAttackResult(Monsters_spawn);
+                DisplayMonsterAttackResult(Monsters_spawn[randomIdx - 1]);
                 turnIdx++;
                 Console.WriteLine();
             }
@@ -502,13 +500,13 @@ public class DungeonManager
     }
 
     // 스킬 공격 결과
-    private void DisplayPlayerAttackResult(Monster[] monsters, int skillIdx)
+    private void DisplayPlayerSkillAttackResult(List<int> selectIdxs, List<Monster> monsters)
     {
-        Player_in.ActiveSkill(monsters);
+        Player_in.ActiveSkill(selectIdxs, monsters);
 
         for(int i = 0; i < Monsters_spawn.Count; i++)
         {
-            Player_in.UpdatePlayerExp(monster);
+            Player_in.UpdatePlayerExp(Monsters_spawn[i]);
         }
     }
 
@@ -779,6 +777,34 @@ public class DungeonManager
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");
+        }
+    }
+
+    private List<int> CheckMultiInput(int min, int max, int selectMaxNum)
+    {
+        Console.WriteLine();
+        Console.WriteLine("스킬 대상을 입력해주십시오!");
+
+        int result;
+        List<int> selectIdxs = new List<int>();
+
+        while (true)
+        {
+            string input = Console.ReadLine();
+            bool isNumber = int.TryParse(input, out result);
+            if (isNumber)
+            {
+                if (result >= min && result <= max)
+                {
+                    selectIdxs.Add(result);
+
+                    if (selectIdxs.Count == selectMaxNum)
+                    {
+                        return selectIdxs;
+                    }
+                }
+            }
+            else Console.WriteLine("잘못된 입력입니다!!!!");
         }
     }
 
