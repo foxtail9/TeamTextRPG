@@ -277,6 +277,7 @@ public class Character
             Console.WriteLine("]"); 
         }
         monster.MonsterDefense(player_damage);
+        IsHawkeye = false;
     }
 
     public void PlayerDefense(int monster_damage)
