@@ -38,7 +38,7 @@ class Program
     static void SetData()
     {
         player = new Character();
-        //SetPlayerName();
+        SetPlayerName();
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
