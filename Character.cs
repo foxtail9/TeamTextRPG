@@ -21,6 +21,7 @@ public class Character
 
     public bool IsInvincible { get; protected set; } = false;
     public bool IsHawkeye { get; protected set; } = false;
+    public bool IsRegenerateMp { get; protected set; } = false;
     public bool OnPassive { get; protected set; } = false;
     public bool IsDie { get; protected set; } = false;
 
@@ -128,8 +129,6 @@ public class Character
                 ExtraDef -= EquipArmor.Akp;
                 EquipArmor = null;
             }
-               
-                
         }
         else
         {
@@ -246,7 +245,7 @@ public class Character
         DisplayPlayerColorString(Name, ConsoleColor.Cyan);
         Console.WriteLine("의 공격!");
 
-        if (monster.CheckMonsterAvoid(IsHawkeye) == true)
+        if (monster.CheckMonsterAvoid(IsHawkeye))
         {
             Console.Write($"Tier.{monster.Tier}");
             DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
@@ -308,6 +307,17 @@ public class Character
         else return false;
     }
 
+    public bool CheckMana(int player_mana)
+    {
+        if (Mp < player_mana)
+        {
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
+            Console.WriteLine("가 부족합니다.");
+            return false;
+        }
+        return true;
+    }
+
     public virtual void ActiveSkill(Monster monster)
     {
 
@@ -346,10 +356,10 @@ public class Character
         }
     }
 
-    public void DisplayPlayerColorString(string str, ConsoleColor color, bool newLine = false)
+    public void DisplayPlayerColorString(string str, ConsoleColor color, bool new_line = false)
     {
         Console.ForegroundColor = color;
-        if(newLine == true) Console.WriteLine(str);
+        if(new_line) Console.WriteLine(str);
         else Console.Write(str);
         Console.ResetColor();
     }

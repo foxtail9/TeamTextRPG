@@ -66,7 +66,7 @@ namespace TeamTextRPG
             DisplayMonsterColorString(Name, ConsoleColor.Green);
             Console.WriteLine("의 공격!");
 
-            if (player.CheckPlayerAvoid() == true || player.IsInvincible == true)
+            if (player.CheckPlayerAvoid() || player.IsInvincible)
             {
                 DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
                 if(player.IsInvincible == true) Console.WriteLine("이(가) Guard 스킬을 사용했으므로 데미지를 받지 않습니다.");
@@ -125,10 +125,10 @@ namespace TeamTextRPG
             else return false;
         }
 
-        public void DisplayMonsterColorString(string str, ConsoleColor color, bool newLine=false)
+        public void DisplayMonsterColorString(string str, ConsoleColor color, bool new_line=false)
         {
             Console.ForegroundColor = color;
-            if(newLine == true) Console.WriteLine(str);
+            if(new_line) Console.WriteLine(str);
             else Console.Write(str);
             Console.ResetColor();
         }
