@@ -395,8 +395,8 @@ public class Character
                     Console.WriteLine($"{quest.questname} 퀘스트 완료!");
 
                     this.Gold += quest.GoldReward; //골드보상
-                    //this.Exp += quest.GoldReward; 경험치 보상
-                    Inventory.Add(quest.RewardItem);
+                    this.Exp += quest.GoldReward; //경험치 보상
+                    Inventory.Add(quest.RewardItem); //아이템 보상
 
                     // 완료된 퀘스트 리스트에 추가
                     completedQuests.Add(quest);

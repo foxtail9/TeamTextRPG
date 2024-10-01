@@ -595,8 +595,9 @@ class Program
         for (int i = 0; i < allQuests.Count; i++)
         {
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
+            string rewardItemName = allQuests[i].RewardItem != null ? allQuests[i].RewardItem.Name : "???"; // RewardItem이 null일 경우 공백 처리
             string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
-            Console.WriteLine($"{(player.PlayerQuestList.Contains(allQuests[i]) ? status : $"{i + 1}.")}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {allQuests[i].RewardItem}");
+            Console.WriteLine($"{status}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {rewardItemName}");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");

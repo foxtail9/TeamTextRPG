@@ -36,8 +36,6 @@ public class Quest
     {
         Console.WriteLine($"[{questype}] | {questname} | {questDescription} | 보상: {GoldReward} 골드, {ExpReward} 경험치, 아이템: {RewardItem}");
     }
-
-
 }
 
 public static class QuestDatabase
