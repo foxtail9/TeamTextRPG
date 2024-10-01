@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
 
@@ -222,7 +223,7 @@ public class DungeonManager
                 DisplayInDungeonBattle();
                 break;
             default:
-                DisplayBattleSystem(result);
+                DisplayBattleSystem(result, false);
 
                 // 결과 검사 
                 // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
@@ -241,8 +242,18 @@ public class DungeonManager
 
     private void DisplayInSelectSkill()
     {
+        Random rand = new Random();
+        int spawn_num = rand.Next(1, Monsters_spawn.Count);
+        List<int> random_list = new List<int>();
+
+        for (int i = 0; i < spawn_num; i++){
+            if (spawn_num == i) continue;
+            random_list.Add(i);
+        };
+        int two_spawn_num = random_list[rand.Next(0, random_list.Count)];
+
         Console.Clear();
-        Console.WriteLine("Battle!! - 스킬 선택");
+        Console.WriteLine("Battle!!");
         Console.WriteLine();
 
         // 현재 던전에 존재하는 몬스터 정보 출력
@@ -254,34 +265,86 @@ public class DungeonManager
 
         // 행동 선택
         Console.WriteLine();
+        DisplayPlayerSkillInfo(Player_in);
+
         Console.WriteLine("0. 취소");
         Console.WriteLine();
         Console.WriteLine("대상을 선택해주세요.");
-
-        int result = CheckAttackInput(0, Monsters_spawn.Count);
-        switch (result)
+        
+        int result = CheckInput(0, 4);
+        string player_job = Player_in.Job;
+        if (player_job.Equals("전사"))
         {
-            case 0:
-                DisplayInDungeonBattle();
-                break;
-            default:
-                DisplayBattleSystem(result);
-
-                // 결과 검사 
-                // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
-                // 2. 플레이어의 Hp가 0인가?
-
-                KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
-                if (battleResult.Key)
-                {
-                    DisplayBattleResult(battleResult.Value);
-                    return;
-                }
-
-                break;
+            switch(result)
+            {
+                case 0: DisplayInDungeonBattle(); break;
+                case 1:
+                    // 강력한 한방
+                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
+                    DisplayBattleSystem(0, true);
+                    break;
+                case 2:
+                    // 가드 - 일반 공격 시스템으로 진행
+                    Player_in.UtilitySkill();
+                    DisplayBattleSystem(spawn_num);
+                    break;
+                case 3:
+                    // 아드레날린[패시브]
+                    Console.WriteLine("패시브 스킬은 선택할 수 없습니다.");
+                    Console.ReadLine();
+                    DisplayInDungeonBattle();
+                    break;
+            }
+        }
+        else if (player_job.Equals("궁수"))
+        {
+            switch (result)
+            {
+                case 0: DisplayInDungeonBattle(); break;
+                case 1:
+                    // 더블샷
+                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
+                    DisplayBattleSystem(0, true);
+                    break;
+                case 2:
+                    // 호크아이
+                    //Player_in.UtilitySkill(Monsters_spawn[spawn_num]);
+                    DisplayBattleSystem(0, true);
+                    break;
+                case 3:
+                    // 신속한 이동
+                    Console.WriteLine("패시브 스킬은 선택할 수 없습니다.");
+                    Console.ReadLine();
+                    DisplayInDungeonBattle();
+                    break;
+            }
+        }
+        else if (player_job.Equals("마법사"))
+        {
+            switch (result)
+            {
+                case 0: DisplayInDungeonBattle(); break;
+                case 1:
+                    // 파이어볼
+                    // Player_in.ActiveSkill(Monsters_spawn[spawn_num]);
+                    DisplayBattleSystem(0, true);
+                    break;
+                case 2:
+                    // 워터밤
+                    //Player_in.UtilitySkill(Monsters_spawn[spawn_num], Monsters_spawn[two_spawn_num]);
+                    DisplayBattleSystem(0, true);
+                    break;
+                case 3:
+                    // 마나 재생
+                    if(Player_in.IsRegenerateMp) Console.WriteLine("마나 재생은 이미 사용하셨습니다.");
+                    Console.ReadLine();
+                    DisplayInDungeonBattle();
+                    break;
+            }
         }
     }
 
+    // 일반 공격 배틀 시스템
     private void DisplayBattleSystem(int targetIdx)
     {
         Console.Clear();
@@ -356,12 +419,97 @@ public class DungeonManager
         }
     }
 
+    // 스킬 공격 배틀 시스템
+    private void DisplayBattleSystem(int skillIdx, bool isUseSkill)
+    {
+        Console.Clear();
+        Console.WriteLine("Battle!!");
+        Console.WriteLine();
+
+        // 입력 변수 선언
+        int result = -1;
+
+        // 공격 순서 랜덤 배치
+        int rouletteNum = Monsters_spawn.Count + 1; // 플레이어도 공격 순서에 포함되므로 인덱스의 수를 늘린다.
+        int[] AttackSequence = new int[rouletteNum];
+        for(int i = 0; i < rouletteNum; i++) AttackSequence[i] = i;
+        AttackSequence = Shffle(AttackSequence);
+
+        // 공격 과정 표시
+        int turnIdx = 1;
+        for (int i = 0; i < AttackSequence.Length; i++)
+        {
+            Console.Clear();
+
+            int randomIdx = AttackSequence[i];
+
+            // 플레이어의 차례
+            if (randomIdx == 0)
+            {
+                // 플레이어의 체력이 0 인 경우 즉시 전투 시스템을 중단한다.
+                if (Player_in.IsDie)
+                {
+                    break;
+                }
+                    
+                Console.WriteLine($"TURN [{turnIdx}]");
+                Console.WriteLine();
+                DisplayPlayerAttackResult(Monsters_spawn, skillIdx);
+                turnIdx++;
+                Console.WriteLine();
+            }
+
+            // 몬스터의 차례
+            else if(randomIdx != 0)
+            {
+                // 몬스터의 체력이 0 인 경우 차례가 넘어간다.
+                if(Monsters_spawn[randomIdx - 1].IsDie)
+                {
+                    continue;
+                }
+
+                // 플레이어의 체력이 0 인 경우 즉시 전투 시스템을 중단한다.
+                if (Player_in.IsDie)
+                {
+                    break;
+                }
+
+                Console.WriteLine($"TURN [{turnIdx}]");
+                Console.WriteLine();
+                DisplayMonsterAttackResult(Monsters_spawn);
+                turnIdx++;
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("0. 다음");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            result = CheckInput(0, 0);
+            switch (result)
+            {
+                case 0:
+                    break;
+            }
+        }
+    }
+
+    // 일반 공격 결과
     private void DisplayPlayerAttackResult(Monster monster)
     {
         Player_in.BasicAttack(monster);
-
-        // MonsterDefense 이 후, 해당 몬스터의 Exp를 얻는 로직을 수행한다.
         Player_in.UpdatePlayerExp(monster);
+    }
+
+    // 스킬 공격 결과
+    private void DisplayPlayerAttackResult(Monster[] monsters, int skillIdx)
+    {
+        Player_in.ActiveSkill(monsters);
+
+        for(int i = 0; i < Monsters_spawn.Count; i++)
+        {
+            Player_in.UpdatePlayerExp(monster);
+        }
     }
 
     private void DisplayMonsterAttackResult(Monster monster)
@@ -386,8 +534,10 @@ public class DungeonManager
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("You Lose...");
             Console.ResetColor();
+
         }
         Console.WriteLine();
+        Player_in.ResetIsRegenerateMp();
 
         // 던전 몬스터 처치 결과 출력
         Console.WriteLine($"던전에서 몬스터 {Monsters_spawn.Count.ToString()}마리를 잡았습니다.");
@@ -671,6 +821,43 @@ public class DungeonManager
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");
+        }
+    }
+
+    private static void DisplayPlayerSkillInfo(Character player_in)
+    {
+        switch (player_in.Job)
+        {
+            case "전사":
+                Console.Write("1. 강력한 한방 - MP ");
+                player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
+                Console.WriteLine("공격력 * 3으로 하나의 적을 공격합니다.");
+                Console.Write("2. 가드 - MP ");
+                player_in.DisplayPlayerColorString("10", ConsoleColor.Blue, true);
+                Console.WriteLine("적의 공격을 무조건 방어합니다.(1회)");
+                Console.WriteLine("3. 아드레날린[패시브]");
+                Console.WriteLine("체력이 50% 미만일 때 공격력이 1.5배 향상됩니다.");
+                break;
+            case "궁수":
+                Console.Write("1. 더블샷 - MP ");
+                player_in.DisplayPlayerColorString("10", ConsoleColor.Blue, true);
+                Console.WriteLine("공격력 * 2으로 하나의 적을 공격합니다.");
+                Console.Write("2. 호크아이 - MP ");
+                player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
+                Console.WriteLine("적에게 공격을 무조건 명중 시킵니다.(1회)");
+                Console.WriteLine("3. 민첩한 이동[패시브]");
+                Console.WriteLine("체력이 50% 미만일 때 공격력이 1.5배 향상됩니다.");
+                break;
+            case "마법사":
+                Console.Write("1. 파이어볼 - MP 5");
+                player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
+                Console.WriteLine("공격력 * 2으로 하나의 적을 공격합니다.");
+                Console.Write("2. 워터밤 - MP 5");
+                player_in.DisplayPlayerColorString("5", ConsoleColor.Blue, true);
+                Console.WriteLine("공격력 * 1으로 둘의 적을 공격합니다.");
+                Console.WriteLine("3. 마나재생");
+                Console.WriteLine("마나를 전부 회복합니다.");
+                break;
         }
     }
 }

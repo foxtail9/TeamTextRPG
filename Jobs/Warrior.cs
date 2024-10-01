@@ -60,13 +60,15 @@ namespace TeamTextRPG.Jobs
 
         public void Guard()
         {
-            // 다음 턴의 데미지 0
+            // 다음 턴의 데미지 0 - 마나소모 10
+            if (CheckMana(10) == false) return;
             Console.WriteLine("가드를 사용했습니다.");
             IsInvincible = true;
         }
 
         public void Adrenaline()
         {
+            // 체력이 50% 미만일 때 공격력이 1.5배 향상됩니다.
             if (!OnPassive) {
                 Console.WriteLine("아드레날린이 활성화 되었습니다.");
                 // 체력 50% 이하일 때 공격력 50% 증가  

@@ -18,7 +18,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        3, "늑대", 20, 15, 40, 1, 
+                        3, "늑대", 20, 15, 40, 1, 100,
                         new Item[] 
                         {
                             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500)
@@ -30,23 +30,10 @@ public static class DungeonDatabase
                         }
                     ),
                     
-                    new Monster
-                    (
-                        3, "여우", 5, 10, 20, 1,
-                        new Item[]
-                        {
-                            new Item("커먼","면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500)
-                        },
-
-                        new Drop[]
-                        {
-                            new Drop("MP 포션",1,"마나를 30회복 시킨다", 500),
-                        }
-                    ),
 
                     new Monster
                     (
-                        3, "멧돼지", 15, 20, 50, 1,
+                        3, "여우", 5, 10, 20, 1, 50,
                         new Item[]
                         {
                             new Item("커먼","면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500)
@@ -60,7 +47,21 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        3, "고블린", 10, 10, 30, 1,
+                        3, "멧돼지", 15, 20, 50, 1, 100,
+                        new Item[]
+                        {
+                            new Item("희귀", "???", 1, 1, "1", 1)
+                        },
+
+                        new Drop[]
+                        {
+                            new Drop("HP 포션",0,"체력을 30회복 시킨다", 500),
+                        }
+                    ),
+
+                    new Monster
+                    (
+                        3, "고블린", 10, 10, 30, 1, 80,
                         new Item[]
                         {
                             new Item("커먼","철검", 0, 6, "평범한 철검이다.", 800),
@@ -85,7 +86,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        2, "골렘", 30, 30, 40, 2,
+                        2, "골렘", 30, 30, 40, 2, 200,
                         new Item[]
                         {
                             new Item("언커먼","재련된 강철검", 0, 12, "강철 검이라고 해서 다 같은 강철 검은 아니다", 1500),
@@ -100,7 +101,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "오크", 30, 25, 50, 2,
+                        2, "오크", 30, 25, 50, 2, 180,
                         new Item[]
                         {
                             new Item("언커먼","재련된 강철검", 0, 12, "강철 검이라고 해서 다 같은 강철 검은 아니다", 1500),
@@ -118,7 +119,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "고스트", 50, 20, 20, 2,
+                        2, "고스트", 50, 20, 20, 2, 150,
                         new Item[]
                         {
                             new Item("언커먼","재련된 강철검", 0, 12, "강철 검이라고 해서 다 같은 강철 검은 아니다", 1500),
@@ -134,7 +135,7 @@ public static class DungeonDatabase
 
                     new Monster
                     (
-                        2, "좀비", 40, 20, 30, 2,
+                        2, "좀비", 40, 20, 30, 2, 130,
                         new Item[]
                         {
                             new Item("언커먼","재련된 강철검", 0, 12, "강철 검이라고 해서 다 같은 강철 검은 아니다", 1500),
@@ -160,7 +161,7 @@ public static class DungeonDatabase
                 {
                     new Monster
                     (
-                        1, "드래곤", 70, 70, 100, 3,
+                        1, "드래곤", 70, 70, 100, 3, 300,
                         new Item[]
                         {
                             new Item("레어","플레이트 아머", 1, 12, "고딕 양식 판금 갑옷이다.", 2000),
