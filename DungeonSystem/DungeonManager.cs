@@ -7,6 +7,8 @@ public class DungeonManager
     // 현재 위치한 던전 정보
     private Dungeon Dungeon_in { get; set; }
 
+    // 현재 전투에 참여하기 전 플레이어 정보
+
     // 현재 전투에 참여한 플레이어 정보
     private Character Player_in;
 
@@ -16,8 +18,6 @@ public class DungeonManager
     // 현재 던전이 끝났는지 확인하는 변수
     private bool IsDungeonOver = false;
 
-    // 처치한 몬스터의 수를 기록하는 변수
-    private int countMonsterKill = 0;
 
     public DungeonManager(Dungeon cur_dungeon, Character player)
     {
@@ -47,7 +47,6 @@ public class DungeonManager
         {
             // 해당 던전에서 출현 가능한 몬스터 List에서 
             // spawn_num의 수만큼 현재 전투에 참여한 몬스터 List에 추가합니다. 
-
             int random_monster = rand.Next(0, Dungeon_in.Monsters_can_appear.Count);
 
             Monsters_spawn.Add(new Monster(Dungeon_in.Monsters_can_appear[random_monster]));
@@ -86,12 +85,28 @@ public class DungeonManager
                 // ~
                 break;
             case 3:
-                // ~
-                // AddDropItem ~
-                // DisplayDropInven ~
+                
                 break;
             case 4:
                 IsDungeonOver = true;
+                break;
+        }
+    }
+
+    private void DisplayUseInven()
+    {
+        Console.Clear();
+        Console.WriteLine("Inven");
+        Console.WriteLine();
+
+        int result = CheckInput(0, Monsters_spawn.Count);
+        switch (result)
+        {
+            case 0:
+
+                break;
+            default:
+
                 break;
         }
     }
@@ -160,6 +175,13 @@ public class DungeonManager
             // 플레이어의 공격
             if (randomIdx == 0)
             {
+                if (Player_in.Hp <= 0)
+                {
+                    Console.WriteLine($"{Player_in.Name}는 쓰러졌습니다...");
+                    Console.WriteLine();
+                    continue;
+                }
+                    
                 Console.WriteLine($"TURN [{turnIdx}] {Player_in.Name}의 공격!!");
                 DisplayPlayerAttackResult(Monsters_spawn[targetIdx - 1]);
                 turnIdx++;
@@ -170,6 +192,8 @@ public class DungeonManager
             {
                 if(Monsters_spawn[randomIdx - 1].Hp <= 0)
                 {
+                    Console.WriteLine($"{Monsters_spawn[randomIdx - 1].Name}은 전투불능입니다.");
+                    Console.WriteLine();
                     continue;
                 }
                 Console.WriteLine($"TURN [{turnIdx}] {Monsters_spawn[randomIdx - 1].Name}[{randomIdx}]의 공격!!");
@@ -254,9 +278,15 @@ public class DungeonManager
         {
             string selectIdx = "";
             if (showIdx) selectIdx += ($"[{(i + 1).ToString()}] ");
-            if (Monsters_spawn[i].Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkGray;
-
-            Console.WriteLine($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} HP {Monsters_spawn[i].Hp}");
+            if (Monsters_spawn[i].Hp <= 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} Dead");
+            }
+            else
+            {
+                Console.WriteLine($"{selectIdx}Tier.{Monsters_spawn[i].Tier} {Monsters_spawn[i].Name} HP {Monsters_spawn[i].Hp}");
+            }
             Console.ResetColor();
         }
     }
