@@ -19,14 +19,13 @@ namespace TeamTextRPG.Jobs
             Level = level;
             Name = name;
             Job = "전사";
-            Atk = 40;
+            Atk = 540;
             Def = 60;
             MaxHp = 200;
             Hp = 200;
             MaxMp = 50;
             Mp = 50;
             Gold = gold;
-            PlayerQuestList = new List<Quest>();
         }
 
         public override void ActiveSkill(Monster monster)
@@ -47,27 +46,47 @@ namespace TeamTextRPG.Jobs
         public void PowerfulShot(Monster monster)
         {
             // 공격력 300% 피해, 마나소모 5
+            if (CheckMana(5) == false) return;
+
+            Console.WriteLine("강력한 한방을 사용했습니다.");
             int power_shot_damage = RandomDamage() * 3;
+            Console.Write("MP ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
-            monster.MonsterDefense(power_shot_damage, IsHawkeye);
+            monster.MonsterDefense(power_shot_damage);
+            Console.Write($" -> ");
+            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
         }
 
         public void Guard()
         {
             // 다음 턴의 데미지 0
+            Console.WriteLine("가드를 사용했습니다.");
             IsInvincible = true;
         }
 
         public void Adrenaline()
         {
             if (!OnPassive) {
-            // 체력 50% 이하일 때 공격력 50% 증가
+                Console.WriteLine("아드레날린이 활성화 되었습니다.");
+                // 체력 50% 이하일 때 공격력 50% 증가  
                 if(Hp <= (WARRIOR_MAX_HP / 2))
                 {
                     Atk += Atk / 2;
                     OnPassive = true;
                 }
             }
+        }
+
+        public override void CalcPlayerLevelUp()
+        {
+            base.CalcPlayerLevelUp();
+            MaxHp += 10;
+            Hp = MaxHp;
+            MaxMp += 5;
+            Mp = MaxMp;
+            Atk += 5;
+            Def += 10;
         }
     }
 }
