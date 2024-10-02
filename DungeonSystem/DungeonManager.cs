@@ -248,7 +248,7 @@ public class DungeonManager
 
         Console.WriteLine("0. 취소");
         Console.WriteLine();
-        Console.WriteLine("대상을 선택해주세요.");
+        Console.WriteLine("스킬을 선택해주세요.");
         
         int result = CheckInput(0, 4);
         string player_job = Player_in.Job;
@@ -266,7 +266,8 @@ public class DungeonManager
                     break;
                 case 2:
                     // 가드 - 일반 공격 시스템으로 진행
-                    int select_index = CheckAttackInput(0, Monsters_spawn.Count);
+                    Console.WriteLine("대상을 선택해주세요.");
+                    int select_index = CheckAttackInput(1, Monsters_spawn.Count);
                     Player_in.UtilitySkill();
                     DisplayBattleSystemWithNormal(select_index);
                     TurnEnd();
@@ -292,7 +293,8 @@ public class DungeonManager
                     break;
                 case 2:
                     // 호크아이
-                    int select_index = CheckAttackInput(0, Monsters_spawn.Count);
+                    Console.WriteLine("대상을 선택해주세요.");
+                    int select_index = CheckAttackInput(1, Monsters_spawn.Count);
                     Player_in.UtilitySkill();
                     DisplayBattleSystemWithNormal(select_index);
                     TurnEnd();
@@ -808,8 +810,8 @@ public class DungeonManager
             bool isNumber = int.TryParse(input, out result);
             if (isNumber)
             {
-                if(result == 0) return 0;
-                if (result >= min && result <= max && !Monsters_spawn[result - 1].IsDie)
+                if (result == 0 && min == 0) return 0;
+                else if (result >= min && result <= max && !Monsters_spawn[result - 1].IsDie)
                     return result;
             }
             Console.WriteLine("잘못된 입력입니다!!!!");

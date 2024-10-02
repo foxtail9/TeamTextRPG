@@ -470,7 +470,9 @@ public class Character
     public void DiaplyerSkillDamage(Monster monster, int skill_damage)
     {
         Console.WriteLine();
-        Console.Write($"Tier.{monster.Tier} {monster.Name}을(를) 맞췄습니다. ");
+        Console.Write($"Tier.{monster.Tier} ");
+        DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
+        Console.WriteLine(" 을(를) 맞췄습니다. ");
         Console.Write($"[데미지 : ");
         DisplayPlayerColorString(skill_damage.ToString(), ConsoleColor.Red);
         Console.WriteLine("]");
