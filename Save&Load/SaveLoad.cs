@@ -39,6 +39,7 @@ public class SaveLoadManager
                 string json = File.ReadAllText(saveFilePath);
                 // JSON 문자열을 캐릭터 객체로 역직렬화
                 Character player = JsonSerializer.Deserialize<Character>(json);
+
                 Console.WriteLine("게임이 불러와졌습니다.");
                 return player;
             }

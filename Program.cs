@@ -25,9 +25,9 @@ class Program
     // =====================
 
     public static Character player;
-    private static Item[] itemDb;
-    private static Drop[] dropDB;
-    private static Character[] invertory;
+    public static Item[] itemDb;
+    public static Drop[] dropDB;
+    public static Character[] invertory;
 
     static void Main(string[] args)
     {
@@ -605,16 +605,15 @@ class Program
     static void DisplayQuestUI()
     {
         Console.Clear();
-        List<Quest> allQuests = QuestDatabase.Quests;
         Console.WriteLine("<<퀘스트 게시판>>");
         Console.WriteLine("수행할 퀘스트를 선택해주세요!\n");
-
+        List<Quest> allQuests = QuestDatabase.Quests;
         Console.WriteLine("[퀘스트 목록]\n");
         for (int i = 0; i < allQuests.Count; i++)
         {
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
             string rewardItemName = allQuests[i].RewardItem != null ? allQuests[i].RewardItem.Name : "???"; // RewardItem이 null일 경우 공백 처리
-            string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
+            string status = player.PlayerQuestList.Any(q => q.QuestName == allQuests[i].QuestName) ? "[진행중]" : "";
             Console.WriteLine($"{status}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].QuestName} | {allQuests[i].QuestDescription} | 보상 : {rewardItemName}");
         }
         Console.WriteLine("");
@@ -637,7 +636,6 @@ class Program
                 break;
         }
     }
-    
     static void DisplaySaveUI() {
         Console.Clear();
         Console.WriteLine("<<지금까지의 모험을...>>\n");

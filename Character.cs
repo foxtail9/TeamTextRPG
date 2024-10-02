@@ -71,12 +71,14 @@ public class Character
             Item targetItem = Inventory[i];
 
             string displayIdx = showIdx ? $"{i + 1} " : "";
-            string displayEquipped =  "";
-            if (EquipArmor == Inventory[i] || EquipWeapon == Inventory[i])
+            string displayEquipped = "";
+
+            if (EquipWeapon == targetItem || EquipArmor == targetItem)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
             }
+
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
             Console.ResetColor();
         }
@@ -126,12 +128,14 @@ public class Character
         {
             if (targetItemType == 0)
             {
+                EquipWeapon = item;
                 ExtraAtk -= EquipWeapon.Akp;
                 EquipWeapon = null;
             }
                
             else
             {
+                EquipArmor = item;
                 ExtraDef -= EquipArmor.Akp;
                 EquipArmor = null;
             }
@@ -375,11 +379,11 @@ public class Character
     {
         if (!PlayerQuestList.Contains(quest)) // 중복 퀘스트 방지
         {
-            if(this.Level >= quest.RequiredLevel)
+            if (this.Level >= quest.RequiredLevel)
             {
+                quest.IsInProgress = true; // 퀘스트 진행 상태 설정
                 PlayerQuestList.Add(quest);
                 Console.WriteLine($"{quest.QuestName} 퀘스트가 추가되었습니다.");
-                // 잡아야 할 몬스터 리스트에 추가
                 if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
                 {
                     if (!RequiredMonsterNames.ContainsKey(quest.RequiredMonsterType))
@@ -398,6 +402,7 @@ public class Character
             Console.WriteLine("이미 해당 퀘스트를 진행하고 있습니다.");
         }
     }
+
     public void UpdateQuestProgress(string monsterName)
     {
         //// 완료된 퀘스트를 저장할 리스트
