@@ -39,6 +39,7 @@ public class SaveLoadManager
                 string json = File.ReadAllText(saveFilePath);
                 // JSON 문자열을 캐릭터 객체로 역직렬화
                 Character player = JsonSerializer.Deserialize<Character>(json);
+                ResetItemReferences(player);
 
                 Console.WriteLine("게임이 불러와졌습니다.");
                 return player;
@@ -79,5 +80,40 @@ public class SaveLoadManager
         {
             Console.WriteLine("파일 삭제 중 오류 발생: " + e.Message);
         }
+
+
+    }
+
+    private static void ResetItemReferences(Character player)
+    {
+        // 인벤토리 아이템 재설정
+        for (int i = 0; i < player.Inventory.Count; i++)
+        {
+            player.Inventory[i] = FindItemInDatabase(player.Inventory[i]);
+        }
+
+        // 장착 아이템 재설정
+        player.EquipWeapon = FindItemInDatabase(player.EquipWeapon);
+        player.EquipArmor = FindItemInDatabase(player.EquipArmor);
+
+        // 드롭 아이템 재설정
+        for (int i = 0; i < player.DropInventory.Count; i++)
+        {
+            player.DropInventory[i] = FindDropInDatabase(player.DropInventory[i]);
+        }
+    }
+
+    // 아이템 데이터베이스에서 아이템 찾기
+    private static Item FindItemInDatabase(Item item)
+    {
+        if (item == null) return null;
+        return Array.Find(Program.itemDb, i => i.Name == item.Name && i.Type == item.Type);
+    }
+
+    // 드롭 아이템 데이터베이스에서 아이템 찾기
+    private static Drop FindDropInDatabase(Drop drop)
+    {
+        if (drop == null) return null;
+        return Array.Find(Program.dropDB, d => d.Name == drop.Name && d.Type == drop.Type);
     }
 }
