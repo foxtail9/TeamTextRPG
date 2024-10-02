@@ -42,6 +42,7 @@ namespace TeamTextRPG.Jobs
             if (CheckMana(10) == false) return;
 
             Console.WriteLine("더블샷을 사용했습니다.");
+            Console.WriteLine();
             int double_shot_damage = RandomDamage() * 2;
 
             Console.Write($"Lv.{Level} ");
@@ -61,6 +62,7 @@ namespace TeamTextRPG.Jobs
             // 몬스터의 미스 확률 무시 마나소모 5
             if (CheckMana(5) == false) return;
             Console.WriteLine("호크아이를 발동했습니다.");
+            Console.WriteLine();
             IsHawkeye = true;
 
             Console.Write($"Lv.{Level} ");
@@ -70,6 +72,7 @@ namespace TeamTextRPG.Jobs
             Mp -= 5;
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
+            Console.WriteLine();
         }
 
         public void FastMovement()
@@ -79,6 +82,7 @@ namespace TeamTextRPG.Jobs
             Console.WriteLine("신속한 이동이 발동됩니다.");
             Avoid += 20;
             Console.WriteLine($"몬스터의 공격을 회피할 확률이 {Avoid}이 되었습니다.");
+            Console.WriteLine();
             Console.WriteLine("Enter 를 눌러주세요.");
             Console.ReadLine();
         }

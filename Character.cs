@@ -466,5 +466,6 @@ public class Character
         Console.Write($"[데미지 : ");
         DisplayPlayerColorString(skill_damage.ToString(), ConsoleColor.Red);
         Console.WriteLine("]");
+        Console.WriteLine();
     }
 }

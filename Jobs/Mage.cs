@@ -71,6 +71,7 @@ namespace TeamTextRPG.Jobs
             if (CheckMana(5) == false) return;
 
             Console.WriteLine("워터밤을 사용했습니다.");
+            Console.WriteLine();
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
@@ -88,6 +89,7 @@ namespace TeamTextRPG.Jobs
         {
             // 마나 재생 (전투 당 1회)
             Console.WriteLine("마나재생을 사용했습니다.");
+            Console.WriteLine();
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp = MaxMp;
@@ -104,6 +106,7 @@ namespace TeamTextRPG.Jobs
                 Console.Write($" -> ");
                 DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
             }
+            Console.WriteLine();
         }
 
         public override void CalcPlayerLevelUp()

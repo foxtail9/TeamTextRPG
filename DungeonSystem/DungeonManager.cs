@@ -433,6 +433,8 @@ public class DungeonManager
         {
             Console.Clear();
 
+            if (Player_in.Job.Equals("전사")) Player_in.PassiveSkill();
+
             int randomIdx = AttackSequence[i];
 
             // 플레이어의 차례

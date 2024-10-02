@@ -50,6 +50,7 @@ namespace TeamTextRPG.Jobs
             if (CheckMana(5) == false) return;
 
             Console.WriteLine("강력한 한방을 사용했습니다.");
+            Console.WriteLine();
             int power_shot_damage = RandomDamage() * 3;
 
             Console.Write($"Lv.{Level} ");
@@ -68,33 +69,31 @@ namespace TeamTextRPG.Jobs
             // 다음 턴의 데미지 0 - 마나소모 10
             if (CheckMana(10) == false) return;
             Console.WriteLine("가드를 사용했습니다.");
+            Console.WriteLine();
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 10;
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
             IsInvincible = true;
+            Console.WriteLine();
         }
 
         public void Adrenaline()
         {
             // 체력이 50% 미만일 때 공격력이 1.5배 향상됩니다.
-            if (!OnPassive) {
-                Console.WriteLine("아드레날린이 활성화 되었습니다.");
+            if (!OnPassive && Hp <= (WARRIOR_MAX_HP / 2)) {
                 // 체력 50% 이하일 때 공격력 50% 증가  
-                if(Hp <= (WARRIOR_MAX_HP / 2))
-                {
-                    Atk += Atk / 2;
-                    OnPassive = true;
-                }
+                Console.WriteLine("아드레날린이 활성화 되었습니다.");
+                Console.WriteLine();
+                Atk += Atk / 2;
+                OnPassive = true;
             }
-            else
-            {
-                if (Hp > (WARRIOR_MAX_HP / 2)){
-                    Console.WriteLine("아드레날린이 활성화 되었습니다.");
-                    Atk -= Atk / 2;
-                    OnPassive = false;
-                }
+            else if (OnPassive && Hp > (WARRIOR_MAX_HP / 2)){
+                Console.WriteLine("아드레날린이 해제 되었습니다.");
+                Console.WriteLine();
+                Atk -= Atk / 2;
+                OnPassive = false;
             }
         }
 
