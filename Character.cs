@@ -73,7 +73,7 @@ public class Character
             string displayIdx = showIdx ? $"{i + 1} " : "";
             string displayEquipped = "";
 
-            if (EquipWeapon == targetItem || EquipArmor == targetItem)
+            if (EquipWeapon.Name == targetItem.Name || EquipArmor.Name == targetItem.Name)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
