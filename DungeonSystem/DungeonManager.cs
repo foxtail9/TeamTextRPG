@@ -164,7 +164,7 @@ public class DungeonManager
                 break;
 
             default:
-                Player_in.UsePotion(result);
+                Player_in.UsePotion(result - 1);
                 DisplayUseEdibleItemResult();
                 break;
         }
@@ -223,17 +223,7 @@ public class DungeonManager
                 break;
             default:
                 DisplayBattleSystemWithNormal(result);
-
-                // 결과 검사 
-                // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
-                // 2. 플레이어의 Hp가 0인가?
-
-                KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
-                if (battleResult.Key)
-                {
-                    DisplayBattleResult(battleResult.Value);
-                    return;
-                }
+                TurnEnd();
 
                 break;
         }
@@ -272,12 +262,14 @@ public class DungeonManager
                     // 강력한 한방
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
+                    TurnEnd();
                     break;
                 case 2:
                     // 가드 - 일반 공격 시스템으로 진행
                     int select_index = CheckAttackInput(0, Monsters_spawn.Count);
                     Player_in.UtilitySkill();
                     DisplayBattleSystemWithNormal(select_index);
+                    TurnEnd();
                     break;
                 case 3:
                     // 아드레날린[패시브]
@@ -296,12 +288,14 @@ public class DungeonManager
                     // 더블샷
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
+                    TurnEnd();
                     break;
                 case 2:
                     // 호크아이
                     int select_index = CheckAttackInput(0, Monsters_spawn.Count);
                     Player_in.UtilitySkill();
                     DisplayBattleSystemWithNormal(select_index);
+                    TurnEnd();
                     break;
                 case 3:
                     // 신속한 이동
@@ -320,12 +314,14 @@ public class DungeonManager
                     // 파이어볼
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 1);
                     DisplayBattleSystemWithSkill(multiIndex);
+                    TurnEnd();
                     break;
                 case 2:
                     // 워터밤
                     if(Monsters_spawn.Count < 2) Console.WriteLine("개체 수가 2 이상이 아니어서 사용할 수 없습니다.");
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 2);
                     DisplayBattleSystemWithSkill(multiIndex);
+                    TurnEnd();
                     break;
                 case 3:
                     // 마나 재생
@@ -337,9 +333,7 @@ public class DungeonManager
             }
         }
     }
-
-
-
+    
     // 일반 공격 배틀 시스템
     private void DisplayBattleSystemWithNormal(int targetIdx)
     {
@@ -489,14 +483,6 @@ public class DungeonManager
                 case 0:
                     break;
             }
-        }
-
-        // 임시로 넣어놨습니다.
-        KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
-        if (battleResult.Key)
-        {
-            DisplayBattleResult(battleResult.Value);
-            return;
         }
     }
 
@@ -663,6 +649,20 @@ public class DungeonManager
         CalculateBattleCompensation();
     }
 
+    private void TurnEnd()
+    {
+        // 결과 검사 
+        // 1. 방에 존재하는 모든 몬스터의 체력이 0인가?
+        // 2. 플레이어의 Hp가 0인가?
+
+        KeyValuePair<bool, bool> battleResult = CheckBattleEnd();
+        if (battleResult.Key)
+        {
+            DisplayBattleResult(battleResult.Value);
+            return;
+        }
+    }
+
     // KeyValuePair<bool, bool>()
     // - Key 현재 게임이 끝났는가?
     // - Value 플레이어가 이겼는가?
@@ -706,7 +706,7 @@ public class DungeonManager
                 int dropIdx = random.Next(0, Monsters_spawn[i].DropItem.Count());
                 Item curDropItem = Monsters_spawn[i].DropItem[dropIdx]; // ...?
                 
-                if(dropItem.Count > 1)
+                if(dropItem.Count >= 1)
                 {
                     foreach(var inItem in dropItem)
                     {
@@ -732,7 +732,7 @@ public class DungeonManager
                 int dropIdx = random.Next(0, Monsters_spawn[i].EdibleItem.Count());
                 Drop curEdibleItem = Monsters_spawn[i].EdibleItem[dropIdx]; // ...?
 
-                if (dropEdibleItem.Count > 1)
+                if (dropEdibleItem.Count >= 1)
                 {
                     foreach (var inItem in dropEdibleItem)
                     {
