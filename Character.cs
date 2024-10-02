@@ -4,38 +4,38 @@ using System.Numerics;
 namespace TeamTextRPG;
 public class Character
 {
-    public int Level { get; protected set; }
-    public string Name { get; protected set; }
-    public string Job { get; protected set; }
-    public int Atk { get; protected set; }
-    public int Def { get; protected set; }
-    public int Hp { get; protected set; }
-    public int Mp { get; protected set; }
-    public int Gold { get; protected set; }
-    public int Critical { get; private set; } = 15;
-    public int Avoid { get; protected set; } = 10;
-    public int Exp { get; protected set; } = 0;
+    public int Level { get; set; }
+    public string Name { get; set; }
+    public string Job { get; set; }
+    public int Atk { get; set; }
+    public int Def { get; set; }
+    public int Hp { get; set; }
+    public int Mp { get; set; }
+    public int Gold { get; set; }
+    public int Critical { get; set; } = 15;
+    public int Avoid { get; set; } = 10;
+    public int Exp { get; set; } = 0;
 
-    public int MaxHp { get; protected set; }
-    public int MaxMp { get; protected set; }
+    public int MaxHp { get; set; }
+    public int MaxMp { get; set; }
 
-    public bool IsInvincible { get; protected set; } = false;
-    public bool IsHawkeye { get; protected set; } = false;
-    public bool IsRegenerateMp { get; protected set; } = false;
-    public bool OnPassive { get; protected set; } = false;
-    public bool IsDie { get; protected set; } = false;
+    public bool IsInvincible { get; set; } = false;
+    public bool IsHawkeye { get; set; } = false;
+    public bool IsRegenerateMp { get; set; } = false;
+    public bool OnPassive { get; set; } = false;
+    public bool IsDie { get;set; } = false;
 
-    public int ExtraAtk { get; private set; }
-    public int ExtraDef { get; private set; }
+    public int ExtraAtk { get; set; }
+    public int ExtraDef { get; set; }
 
-    private List<Item> Inventory = new List<Item>();
-    private List<Drop> DropInventory = new List<Drop>();
-    private List<Item> EquipList = new List<Item>();
+    public List<Item> Inventory { get; set; } = new List<Item>();
+    public List<Drop> DropInventory { get; set; } = new List<Drop>();
+    public List<Item> EquipList { get; set; } = new List<Item>();
     public Item EquipWeapon { get; set; }
     public Item EquipArmor { get; set; }
     public Dictionary<string, int> RequiredMonsterNames { get; set; } = new Dictionary<string, int>();
     public List<Quest> PlayerQuestList { get; set; } = new List<Quest>();
-    public List<Quest> PlayerCompletedQuests = new List<Quest>();
+    public List<Quest> PlayerCompletedQuests { get; set; } = new List<Quest>();
     public int InventoryCount
     {
         get
@@ -375,7 +375,7 @@ public class Character
             if(this.Level >= quest.RequiredLevel)
             {
                 PlayerQuestList.Add(quest);
-                Console.WriteLine($"{quest.questname} 퀘스트가 추가되었습니다.");
+                Console.WriteLine($"{quest.QuestName} 퀘스트가 추가되었습니다.");
                 // 잡아야 할 몬스터 리스트에 추가
                 if (!string.IsNullOrEmpty(quest.RequiredMonsterType))
                 {
@@ -406,12 +406,12 @@ public class Character
             if (quest.RequiredMonsterType == monsterName)
             {
                 quest.RequiredMonsterCount--; // 현재 잡은 몬스터 수 감소
-                Console.WriteLine($"{quest.questname} 퀘스트: {monsterName}을(를) 잡았습니다. 남은 몬스터 수: {quest.RequiredMonsterCount}");
+                Console.WriteLine($"{quest.QuestName} 퀘스트: {monsterName}을(를) 잡았습니다. 남은 몬스터 수: {quest.RequiredMonsterCount}");
 
                 // 퀘스트 목표 달성 여부 확인
                 if (quest.RequiredMonsterCount <= 0)
                 {
-                    Console.WriteLine($"<<{quest.questname} 퀘스트 완료>>");
+                    Console.WriteLine($"<<{quest.QuestName} 퀘스트 완료>>");
                     Console.WriteLine($"퀘스트 보상획득 : {quest.GoldReward}경험치 상승 | {quest.GoldReward}골드 획득 | {quest.RewardItem.Name}획득");
 
                     this.Gold += quest.GoldReward; //골드보상

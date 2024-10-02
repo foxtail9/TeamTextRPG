@@ -35,8 +35,6 @@ class Program
     }
     static void SetData()
     {
-        player = new Character();
-        SetPlayerName();
         itemDb = new Item[]
         {
             new Item("커먼","목검", 0, 5, "단단한 목검이다.", 500),
@@ -58,10 +56,18 @@ class Program
             new Drop("루비", 2,"붉은색의 보석이다. 체력를 10 올려준다",1000),
             new Drop("사파이어", 3,"푸른색의 보석이다. 마나를 10 올려준다",1000)
         };
-        for (int i = 0; i < 3; i++)
+
+        player = SaveLoadManager.LoadGame();
+
+        if (player == null)
         {
-            player.AddDropItem(dropDB[0]);
-            player.AddDropItem(dropDB[1]);
+            SetPlayerName();
+        }
+        else
+        {
+            Console.WriteLine($"{player.Name} 캐릭터로 게임을 시작합니다.");
+            Thread.Sleep(3000);
+            DisplayMainUI();
         }
     }
 
@@ -107,6 +113,12 @@ class Program
             case 2: player = new Archer(1, player_name, 1500); break;
             case 3: player = new Mage(1, player_name, 1500); break;
         }
+        for (int i = 0; i < 3; i++)
+        {
+            player.AddDropItem(dropDB[0]);
+            player.AddDropItem(dropDB[1]);
+        }
+        DisplayMainUI();
     }
     static void DisplayMainUI()
     {
@@ -120,10 +132,12 @@ class Program
         Console.WriteLine("4. 여관");
         Console.WriteLine("5. 던전");
         Console.WriteLine("6. 퀘스트 게시판");
+        Console.WriteLine("7. 저장하기");
+        Console.WriteLine("8. 게임종료");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        int result = CheckInput(1, 6);
+        int result = CheckInput(1, 8);
 
         switch (result)
         {
@@ -145,6 +159,11 @@ class Program
             case 6:
                 DisplayQuestUI();//퀘스트 UI
                 break;
+            case 7:
+                DisplaySaveUI();
+                break;
+            case 8:
+                return;
         }
     }
     static void DisplayStatUI()
@@ -596,7 +615,7 @@ class Program
             // 퀘스트의 진행 상태에 따라 표시 형식을 변경
             string rewardItemName = allQuests[i].RewardItem != null ? allQuests[i].RewardItem.Name : "???"; // RewardItem이 null일 경우 공백 처리
             string status = player.PlayerQuestList.Contains(allQuests[i]) ? "[진행중]" : "";
-            Console.WriteLine($"{status}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].questname} | {allQuests[i].questDescription} | 보상 : {rewardItemName}");
+            Console.WriteLine($"{status}[요구레벨 : {allQuests[i].RequiredLevel}] | {allQuests[i].QuestName} | {allQuests[i].QuestDescription} | 보상 : {rewardItemName}");
         }
         Console.WriteLine("");
         Console.WriteLine("0.나가기");
@@ -618,6 +637,55 @@ class Program
                 break;
         }
     }
+    
+    static void DisplaySaveUI() {
+        Console.Clear();
+        Console.WriteLine("<<지금까지의 모험을...>>\n");
+        Console.WriteLine("1. 저장합니다.");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("2. 삭제합니다.\n");
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("0. 돌아가기.");
+
+        int input = CheckInput(0, 2);
+
+        switch (input)
+        {
+            case 1:
+                SaveLoadManager.SaveGame(player);
+                DisplayMainUI();
+                break;
+            case 2:
+                DisplayDelUI();
+                break;
+            case 0:
+                DisplayMainUI();
+                break;
+        }
+    }
+    static void DisplayDelUI() {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("<<!!경고!!>>\n");
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"{player.Name}의 데이터를 삭제 하시겠습니까?\n");
+        Console.WriteLine("1. 삭제하기.");
+        Console.WriteLine("0. 취소(돌아가기)\n");
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+        int input = CheckInput(0, 2);
+
+        switch (input)
+        {
+            case 1:
+                SaveLoadManager.DeleteSaveFile();
+                intro(300);
+                break;
+            case 0:
+                DisplayMainUI();
+                break;
+        }
+    }
     static int CheckInput(int min, int max)
     {
         int result;
@@ -635,6 +703,7 @@ class Program
     }
     static void intro(int time)
     {
+        Console.Clear();
         Console.ForegroundColor = ConsoleColor.Blue;
         string[] asciiArtLines = {
            @" __  __     ____        ____       _____       ____       ____      ",
@@ -649,13 +718,11 @@ class Program
         foreach (string line in asciiArtLines)
         {
             Console.WriteLine(line);
-            Thread.Sleep(time); 
+            Thread.Sleep(50);
         }
         Thread.Sleep(time * 3);
         Console.ForegroundColor = ConsoleColor.White;
         SetData();
-        
-        DisplayMainUI();
     }
 
 

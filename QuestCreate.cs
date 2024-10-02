@@ -7,9 +7,9 @@
 
 public class Quest
 {
-    public QuestType questype { get; set; }  // 퀘스트 타입
-    public string questname { get; set; }    // 퀘스트 이름
-    public string questDescription { get; set; }  // 퀘스트 내용
+    public QuestType QuestType { get; set; }  // 퀘스트 타입
+    public string QuestName { get; set; }    // 퀘스트 이름
+    public string QuestDescription { get; set; }  // 퀘스트 내용
     public bool IsInProgress { get; set; } = false; // 퀘스트 진행 상태
     public int RequiredMonsterCount { get; set; } // 필요 몬스터 수
     public string RequiredMonsterType { get; set; } // 필요 몬스터 종류
@@ -18,11 +18,11 @@ public class Quest
     public Item RewardItem { get; set; }  // 보상 아이템
     public int RequiredLevel { get; set; } // 요구 레벨
 
-    public Quest(QuestType type, string name, string description, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, Item rewardItem, int requiredLevel)
+    public Quest(QuestType questType, string questName, string questDescription, int requiredMonsterCount, string requiredMonsterType, int goldReward, int expReward, Item rewardItem, int requiredLevel)
     {
-        questype = type;
-        questname = name;
-        questDescription = description;
+        QuestType = questType;
+        QuestName = questName;
+        QuestDescription = questDescription;
         RequiredMonsterCount = requiredMonsterCount;
         RequiredMonsterType = requiredMonsterType;
         GoldReward = goldReward;
@@ -34,7 +34,7 @@ public class Quest
 
     public void DisplayQuest()
     {
-        Console.WriteLine($"[{questype}] | {questname} | {questDescription} | 보상: {GoldReward} 골드, {ExpReward} 경험치, 아이템: {RewardItem}");
+        Console.WriteLine($"[{QuestType}] | {QuestName} | {QuestDescription} | 보상: {GoldReward} 골드, {ExpReward} 경험치, 아이템: {RewardItem}");
     }
 }
 
@@ -97,8 +97,8 @@ public static class QuestDatabase
     }
 
     // 퀘스트 이름으로 퀘스트 가져오기
-    public static Quest GetQuestByName(string questName)
+    public static Quest GetQuestByName(string QuestName)
     {
-        return Quests.Find(q => q.questname == questName);
+        return Quests.Find(q => q.QuestName == QuestName);
     }
 }
