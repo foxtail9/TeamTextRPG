@@ -318,7 +318,22 @@ public class DungeonManager
                     break;
                 case 2:
                     // 워터밤
-                    if(Monsters_spawn.Count < 2) Console.WriteLine("개체 수가 2 이상이 아니어서 사용할 수 없습니다.");
+
+                    // 현재 필드에 남아있는 몬스터 수 계산 
+                    int aliveMonsters = 0;
+                    foreach (var curMonster in Monsters_spawn)
+                    {
+                        if (!curMonster.IsDie) aliveMonsters++;
+                    }
+
+                    if (aliveMonsters < 2)
+                    {
+                        Console.WriteLine("개체 수가 2 이상이 아니어서 사용할 수 없습니다.");
+                        Console.ReadLine();
+                        DisplayInSelectSkill();
+                        break;
+                    }
+
                     multiIndex = CheckMultiInput(1, Monsters_spawn.Count, 2);
                     DisplayBattleSystemWithSkill(multiIndex);
                     TurnEnd();
@@ -511,6 +526,7 @@ public class DungeonManager
         monster.MonsterAttack(Player_in);
     }
 
+    // 전투 결과 출력
     private void DisplayBattleResult(bool isWin)
     {
         Console.Clear();
@@ -534,7 +550,13 @@ public class DungeonManager
         Player_in.ResetIsRegenerateMp();
 
         // 던전 몬스터 처치 결과 출력
-        Console.WriteLine($"던전에서 몬스터 {Monsters_spawn.Count.ToString()}마리를 잡았습니다.");
+        int deadMonsterCount = 0;
+        foreach(var curMonster in Monsters_spawn)
+        {
+            if (curMonster.IsDie) deadMonsterCount++;
+        }
+
+        Console.WriteLine($"던전에서 몬스터 {deadMonsterCount.ToString()}마리를 잡았습니다.");
         DisplayMonstersInfo(false);
         Console.WriteLine();
 
@@ -645,6 +667,7 @@ public class DungeonManager
         WriteColorString(Player_in.Exp.ToString(), ConsoleColor.Yellow);
     }
 
+    // 전투 보상 계산 및 콘솔 출력
     private void DisplayGetItem()
     {
         // 전투 보상 계산 및 콘솔 출력
@@ -698,6 +721,9 @@ public class DungeonManager
 
         for (int i = 0; i < Monsters_spawn.Count; i++)
         {
+            // 해당 몬스터를 잡았다면 아래 연산을 수행함.
+            if (!Monsters_spawn[i].IsDie) continue;
+
             // Gold 계산
             getTotalGold += Monsters_spawn[i].Gold;
 
@@ -806,7 +832,23 @@ public class DungeonManager
             {
                 if (result >= min && result <= max)
                 {
-                    selectIdxs.Add(result);
+                    // 선택 대상이 두 명일 때 입력이 중복되지 않는지 검사함.
+                    if(selectMaxNum >= 2 && selectIdxs.Contains(result))
+                    {
+                        Console.WriteLine($"대상이 중복되었습니다!!!! - [{result}]");
+                        continue;
+                    }
+
+                    // 선택한 몬스터가 살아있는지 검사함.
+                    else if (!Monsters_spawn[result - 1].IsDie)
+                    {
+                        selectIdxs.Add(result);
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"대상이 죽어있습니다... - [{result}]");
+                    }
 
                     if (selectIdxs.Count == selectMaxNum)
                     {
