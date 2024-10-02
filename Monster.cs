@@ -21,7 +21,7 @@ namespace TeamTextRPG
 
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
-        public int Exp { get; }
+        public int Exp { get; set; }
         public int Gold { get; }
         public bool IsDie { get; private set; }
         public Drop[] EdibleItem { get; }

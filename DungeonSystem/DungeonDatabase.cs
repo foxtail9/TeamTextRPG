@@ -50,7 +50,7 @@ public static class DungeonDatabase
                         3, "멧돼지", 15, 20, 50, 1, 100,
                         new Item[]
                         {
-                            new Item("희귀", "???", 1, 1, "1", 1)
+                             new Item("커먼","면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500)
                         },
 
                         new Drop[]

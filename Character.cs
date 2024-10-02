@@ -448,6 +448,11 @@ public class Character
     {
         if (monster.IsDie) {
             Exp += monster.Exp;
+
+            // 몬스터의 경험치를 한 번 얻으면
+            // 해당 몬스터의 경험치는 사라진다.
+            monster.Exp = 0;
+
             CalcPlayerLevelUp();
         };
     }
