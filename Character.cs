@@ -60,6 +60,7 @@ public class Character
         Console.WriteLine(ExtraDef == 0 ? $"방어력 : {Def}" : $"방어력 : {Def + ExtraDef} (+{ExtraDef})");
         Console.WriteLine($"체력 : {Hp}({MaxHp})");
         Console.WriteLine($"마나 : {Mp}({MaxMp})");
+        Console.WriteLine($"Exp : {Exp}");
         Console.WriteLine($"Gold : {Gold} G");
     }
 
@@ -263,10 +264,11 @@ public class Character
 
         DisplayPlayerColorString(Name, ConsoleColor.Cyan);
         Console.WriteLine("의 공격!");
+        Console.WriteLine();
 
         if (monster.CheckMonsterAvoid(IsHawkeye))
         {
-            Console.Write($"Tier.{monster.Tier}");
+            Console.Write($"Tier.{monster.Tier} ");
             DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
             Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
             return;
@@ -292,6 +294,7 @@ public class Character
             DisplayPlayerColorString(player_damage.ToString(), ConsoleColor.Red);
             Console.WriteLine("]"); 
         }
+        Console.WriteLine();
         monster.MonsterDefense(player_damage);
         IsHawkeye = false;
     }
@@ -472,7 +475,7 @@ public class Character
         Console.WriteLine();
         Console.Write($"Tier.{monster.Tier} ");
         DisplayPlayerColorString(monster.Name, ConsoleColor.Green);
-        Console.WriteLine(" 을(를) 맞췄습니다. ");
+        Console.Write("을(를) 맞췄습니다. ");
         Console.Write($"[데미지 : ");
         DisplayPlayerColorString(skill_damage.ToString(), ConsoleColor.Red);
         Console.WriteLine("]");
