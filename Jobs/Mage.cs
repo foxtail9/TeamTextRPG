@@ -60,7 +60,7 @@ namespace TeamTextRPG.Jobs
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
 
-            DiaplyerSkillDamage(fire_ball_damage);
+            DiaplyerSkillDamage(monster, fire_ball_damage);
             monster.MonsterDefense(fire_ball_damage);
         }
 
@@ -80,7 +80,7 @@ namespace TeamTextRPG.Jobs
 
             foreach(Monster monster in monsters)
             {
-                DiaplyerSkillDamage(Atk);
+                DiaplyerSkillDamage(monster, Atk);
                 monster.MonsterDefense(Atk);
             }
         }
@@ -111,7 +111,7 @@ namespace TeamTextRPG.Jobs
 
         public override void CalcPlayerLevelUp()
         {
-            if ((Level * 10) < Exp)
+            if ((Level * 10) <= Exp)
             {
                 base.CalcPlayerLevelUp();
                 MaxHp += 5;

@@ -459,15 +459,16 @@ public class Character
 
     public virtual void CalcPlayerLevelUp()
     {
-        Level++;
         Console.Write($"레벨업하여 ");
         DisplayPlayerColorString(Name, ConsoleColor.Cyan);
-        Console.WriteLine($"(이/가) {Level} 레벨이 되었습니다.");
         Exp -= Level * 10;
+        Console.WriteLine($"(이/가) {++Level} 레벨이 되었습니다.");
     }
 
-    public void DiaplyerSkillDamage(int skill_damage)
+    public void DiaplyerSkillDamage(Monster monster, int skill_damage)
     {
+        Console.WriteLine();
+        Console.Write($"Tier.{monster.Tier} {monster.Name}을(를) 맞췄습니다. ");
         Console.Write($"[데미지 : ");
         DisplayPlayerColorString(skill_damage.ToString(), ConsoleColor.Red);
         Console.WriteLine("]");
