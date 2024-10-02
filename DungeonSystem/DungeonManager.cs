@@ -343,7 +343,6 @@ public class DungeonManager
                 case 3:
                     // 마나 재생
                     if(Player_in.IsRegenerateMp) Console.WriteLine("마나 재생은 이미 사용하셨습니다.");
-                    Console.ReadLine();
                     Player_in.UtilitySkill();
                     DisplayInSelectSkill();
                     break;

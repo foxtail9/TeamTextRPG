@@ -86,6 +86,7 @@ namespace TeamTextRPG
             Console.Write($"Tier.{Tier} ");
             DisplayMonsterColorString(Name, ConsoleColor.Green);
             Console.WriteLine("의 공격!");
+            Console.WriteLine();
 
             if (player.CheckPlayerAvoid() || player.IsInvincible)
             {
@@ -98,6 +99,10 @@ namespace TeamTextRPG
                 else Console.WriteLine("을(를) 공격했지만 아무일도 일어나지 않았습니다.");
                 return;
             }
+
+            Console.Write($"Lv.{player.Level} ");
+            DisplayMonsterColorString(player.Name, ConsoleColor.Cyan);
+            Console.Write("을(를) 맞췄습니다. ");
 
             if (critical_prob <= Critical)
             {
@@ -115,6 +120,7 @@ namespace TeamTextRPG
                 DisplayMonsterColorString(monster_damage.ToString(), ConsoleColor.Red);
                 Console.WriteLine("]");
             }
+            Console.WriteLine();
             player.PlayerDefense(monster_damage);
         }
 

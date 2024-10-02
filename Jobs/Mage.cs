@@ -52,8 +52,12 @@ namespace TeamTextRPG.Jobs
             if (CheckMana(5) == false) return;
             
             Console.WriteLine("파이어볼을 사용했습니다.");
+            Console.WriteLine();
+
             int fireball_damage = RandomDamage() * 2;
 
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
@@ -72,6 +76,10 @@ namespace TeamTextRPG.Jobs
 
             Console.WriteLine("워터밤을 사용했습니다.");
             Console.WriteLine();
+
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
+
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 5;
@@ -89,17 +97,13 @@ namespace TeamTextRPG.Jobs
         public void RegenerateMp()
         {
             // 마나 재생 (전투 당 1회)
-            Console.WriteLine("마나재생을 사용했습니다.");
-            Console.WriteLine();
-            Console.Write("MP ");
-            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
-            Mp = MaxMp;
-            Console.Write($" -> ");
-            DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
 
             if (IsRegenerateMp) Console.WriteLine("이번 전투에 마나재생을 사용했습니다.");
             else
             {
+                Console.WriteLine("마나재생을 사용했습니다.");
+                Console.Write($"Lv.{Level} ");
+                DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
                 IsRegenerateMp = true;
                 Console.Write("MP ");
                 DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
@@ -108,6 +112,7 @@ namespace TeamTextRPG.Jobs
                 DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
             }
             Console.WriteLine();
+            Thread.Sleep(1000);
         }
 
         public override void CalcPlayerLevelUp()

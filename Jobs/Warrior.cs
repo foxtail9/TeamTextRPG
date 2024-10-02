@@ -69,7 +69,9 @@ namespace TeamTextRPG.Jobs
             // 다음 턴의 데미지 0 - 마나소모 10
             if (CheckMana(10) == false) return;
             Console.WriteLine("가드를 사용했습니다.");
-            Console.WriteLine();
+
+            Console.Write($"Lv.{Level} ");
+            DisplayPlayerColorString(Name, ConsoleColor.Cyan, true);
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
             Mp -= 10;
@@ -77,6 +79,7 @@ namespace TeamTextRPG.Jobs
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
             IsInvincible = true;
             Console.WriteLine();
+            Thread.Sleep(1000);
         }
 
         public void Adrenaline()
