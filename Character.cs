@@ -244,9 +244,10 @@ public class Character
     public int RandomDamage()
     {
         // 오차 범위 계산
-        int damage_range = (int)Math.Ceiling(Atk * 0.1f);
-        int start_damage = Atk - damage_range;
-        int end_damage = Atk + damage_range;
+        int total_atk = Atk + ExtraAtk;
+        int damage_range = (int)Math.Ceiling(total_atk * 0.1f);
+        int start_damage = total_atk - damage_range;
+        int end_damage = total_atk + damage_range;
 
         Random random = new Random();
         int result_damage = random.Next(start_damage, end_damage + 1);
@@ -297,7 +298,8 @@ public class Character
 
     public void PlayerDefense(int monster_damage)
     {
-        int new_monster_damage = monster_damage - Def;
+        int total_def = Def + ExtraDef;
+        int new_monster_damage = monster_damage - total_def;
         new_monster_damage = monster_damage > 0 ? monster_damage : 0;
 
         Console.Write($"Lv.{Level} ");

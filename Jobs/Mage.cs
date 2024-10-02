@@ -52,7 +52,7 @@ namespace TeamTextRPG.Jobs
             if (CheckMana(5) == false) return;
             
             Console.WriteLine("파이어볼을 사용했습니다.");
-            int fire_ball_damage = RandomDamage() * 2;
+            int fireball_damage = RandomDamage() * 2;
 
             Console.Write("MP ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue);
@@ -60,8 +60,8 @@ namespace TeamTextRPG.Jobs
             Console.Write($" -> ");
             DisplayPlayerColorString(Mp.ToString(), ConsoleColor.Blue, true);
 
-            DiaplyerSkillDamage(monster, fire_ball_damage);
-            monster.MonsterDefense(fire_ball_damage);
+            DiaplyerSkillDamage(monster, fireball_damage);
+            monster.MonsterDefense(fireball_damage);
         }
 
         public void WaterBomb(List <Monster> monsters)
@@ -80,8 +80,9 @@ namespace TeamTextRPG.Jobs
 
             foreach(Monster monster in monsters)
             {
-                DiaplyerSkillDamage(monster, Atk);
-                monster.MonsterDefense(Atk);
+                int water_bomb_damage = RandomDamage();
+                DiaplyerSkillDamage(monster, water_bomb_damage);
+                monster.MonsterDefense(water_bomb_damage);
             }
         }
 

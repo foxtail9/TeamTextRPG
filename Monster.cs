@@ -17,7 +17,6 @@ namespace TeamTextRPG
         public string Name { get; }
         public int Atk { get;  }
         public int Hp { get; set; }
-        //public int Mp { get;  }
 
         public int Critical { get; } = 15;
         public int Avoid { get; } = 10;
@@ -29,18 +28,18 @@ namespace TeamTextRPG
 
         public Character player;
 
-        //      티어 공격력 방어력 hp  exp
-        // 늑대	3	20	15	40	1
-        // 여우	3	5	10	20	1
-        // 멧돼지	3	15	20	50	1
-        // 고블린	3	10	10	30	1
+        //      티어 공격력 hp  exp
+        // 늑대	3	20	40	1
+        // 여우	3	5	20	1
+        // 멧돼지	3	15	50	1
+        // 고블린	3	10	30	1
         // 
-        // 골렘	2	30	30	40	2
-        // 오크	2	30	25	50	2
-        // 고스트	2	50	20	20	2
-        // 좀비	2	40	20	30	2
+        // 골렘	2	30	40	2
+        // 오크	2	30	50	2
+        // 고스트	2	50	20	2
+        // 좀비	2	40	30	2
         // 
-        // 드래곤	1	70	70	100	3
+        // 드래곤	1	70	100	3
 
         public Monster(Monster original)
         {
@@ -54,7 +53,7 @@ namespace TeamTextRPG
             EdibleItem = original.EdibleItem;
         }
 
-        public Monster(int tier, string name, int atk, int def, int hp, int exp, int gold, Item[] dropItem, Drop[] edibleItem)
+        public Monster(int tier, string name, int atk, int hp, int exp, int gold, Item[] dropItem, Drop[] edibleItem)
         {
             Tier = tier;
             Name = name;
