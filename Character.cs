@@ -78,6 +78,10 @@ public class Character
                 Console.ForegroundColor = ConsoleColor.Green;
                 displayEquipped = "[E]";
             }
+            else
+            {
+                displayEquipped = "";
+            }
 
             Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
             Console.ResetColor();

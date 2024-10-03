@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using System.Numerics;
 using TeamTextRPG.Jobs;
 
 namespace TeamTextRPG;
@@ -48,7 +49,9 @@ class Program
             new Item("언커먼","가죽 스커트", 1, 5, "가죽으로 만든 치마다. 남자도 입을 수 있다.", 800),
             new Item("레어","체인메일", 1, 9, "철사 따위로 만든 고리를 엮은 사슬 형태로 된 갑옷이다.", 1500),
             new Item("레어","플레이트 아머", 1, 12, "고딕 양식 판금 갑옷이다.", 2000),
-        };
+            new Item("커먼", "퀘스트로 받은 철검", 0, 10, "강력한 철로 만든 검입니다.", 150),
+            new Item("커먼", "퀘스트로 받은 면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500)
+    };
         dropDB = new Drop[]
         {
             new Drop("HP 포션",0,"체력을 30회복 시킨다", 500),
@@ -109,9 +112,9 @@ class Program
         int input = CheckInput(1, 3);
         switch (input)
         {
-            case 1: player = new Warrior(1, player_name, 1500); break;
-            case 2: player = new Archer(1, player_name, 1500); break;
-            case 3: player = new Mage(1, player_name, 1500); break;
+            case 1: player = new Warrior(1, player_name, 51500); break;
+            case 2: player = new Archer(1, player_name, 51500); break;
+            case 3: player = new Mage(1, player_name, 51500); break;
         }
         for (int i = 0; i < 3; i++)
         {
