@@ -83,7 +83,14 @@ public class Character
                 displayEquipped = "";
             }
 
-            Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
+            if (Inventory[i] == null)
+            {
+                Console.WriteLine("");
+            }
+            else
+            {
+                Console.WriteLine($"- {displayIdx}{displayEquipped} {targetItem.ItemInfoText()}");
+            }
             Console.ResetColor();
         }
     }

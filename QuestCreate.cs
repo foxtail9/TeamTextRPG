@@ -44,8 +44,8 @@ public static class QuestDatabase
 
     static QuestDatabase()
     {
-        var sword = new Item("커먼", "퀘스트로 받은 철검", 0, 10, "강력한 철로 만든 검입니다.", 150);
-        var teeshirt = new Item("커먼", "퀘스트로 받은 면 셔츠", 1, 3, "면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500);
+        var sword = new Item("커먼","퀘스트로 받은 철검", 0, 10,"강력한 철로 만든 검입니다.", 150);
+        var teeshirt = new Item("커먼","퀘스트로 받은 면 셔츠", 1, 3,"면으로 만든 셔츠다. 최소한의 방어력을 제공한다.", 500);
 
         Quests = new List<Quest>
         {
