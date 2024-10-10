@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TeamTextRPG.Drop">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAACAAQAgQAAAAAA=</HashCode>
+      <FileName>item\Drop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Item">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAIAAAAAAAABAAAAAAAAAQAAAAAAAAAAQBgQAAAAAA=</HashCode>
+      <FileName>item\Item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Jobs.Archer">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="TeamTextRPG.Character" ManuallyRouted="true">
+      <Path>
+        <Point X="10.812" Y="0.5" />
+        <Point X="10.812" Y="0.385" />
+        <Point X="16" Y="0.385" />
+        <Point X="16" Y="0.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAEACAAAAAAAAAggAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Jobs\Archer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Jobs.Mage">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="TeamTextRPG.Character" ManuallyRouted="true">
+      <Path>
+        <Point X="11.5" Y="1.919" />
+        <Point X="11.75" Y="1.919" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAgAAQAggAAAAAAIAAAAEAAAA=</HashCode>
+      <FileName>Jobs\Mage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Jobs.Warrior">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="TeamTextRPG.Character" ManuallyRouted="true">
+      <Path>
+        <Point X="10.812" Y="0.5" />
+        <Point X="10.812" Y="0.387" />
+        <Point X="14.25" Y="0.387" />
+        <Point X="14.25" Y="0.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABACCAAAAAAAAggAEAAAAAAAAEAAABA=</HashCode>
+      <FileName>Jobs\Warrior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Character">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BUAKExGiAAoEEAiCAQQEBAQAiiiDDoARCQkAAwAgQxk=</HashCode>
+      <FileName>Character.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Monster">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAKEAAAAgAAAAAgAAAQAAQAAACBAIABACAIwAAAQAE=</HashCode>
+      <FileName>Monster.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamTextRPG.Program">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAACAABEAAAAEoBEgBAIAoAAQCCAQAhCAABBABggAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quest">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAlAAAAkAAAAAAgAAIAABAEAAAQAAAA=</HashCode>
+      <FileName>QuestCreate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QuestDatabase">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuestCreate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="QuestType">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAQAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>QuestCreate.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
